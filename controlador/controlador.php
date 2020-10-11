@@ -290,8 +290,7 @@ class ControllerDoc
     }
 
     //metodos de empresa
-    public function verDatoPorId($id)
-    {
+    public function verDatoPorId($id){
         return $this->objModUs->verDatoPorId($id);
     }
     public function verEmpresa()
@@ -324,7 +323,43 @@ class ControllerDoc
     public function verPuntosYusuario($id_us){
         return $this->objModUs->verPuntosYusuario($id_us);
     }
-
+    // formCategoria.php
+    public function insertCategoria($a){
+        return $this->objModUs->insertCategoria($a);
+    }
+    public function actualizarDatosCategoria($a){
+        return $this->objModUs->actualizarDatosCategoria($a);
+    }
+    public function eliminarCategoria($a){
+        return $this->objModUs->eliminarCategoria($a);
+    }
+    // formEmpresa.php
+    public function eliminarEmpresa($a){
+        return $this->objModUs->eliminarEmpresa($a);
+    }
+    //formEmpresa.php
+    public function insertEmpresa($a){
+        return $this->objModUs->insertEmpresa($a);
+    }
+    public function verDatoEmpresaPorId($id){
+        return $this->objModUs->verDatoEmpresaPorId($id);
+    }
+    public function actualizarDatosEmpresa($a){
+        return  $this->objModUs->actualizarDatosEmpresa($a);
+    }
+    // formMedida.php
+    public function insertMedia($a){
+        return $this->objModUs->insertMedia($a);
+    }
+    public function eliminarDatosMedia($a){
+        return $this->objModUs->eliminarDatosMedia($a);
+    }
+    public function verMedidaPorId($id){
+        return $this->objModUs->verMedidaPorId($id);
+    }
+    public function actualizarDatosMedida($a){
+        return $this->objModUs->actualizarDatosMedida($a);
+    }
    
     public function ver($dato, $sale=0, $float= false, $email=''){
         echo '<div style="background-color:#fbb; border:1px solid maroon;  margin:auto 5px; text-align:left;'. ($float? ' float:left;':'').' padding:7px; border-radius:7px; margin-top:10px">';

@@ -1,6 +1,6 @@
 <?php
-include_once '../controlador/controladorsession';
-include_once '../controlador/controlador.php';
+include_once '../controlador/controladorrutas.php';
+rutFromIni();
 ?>
 <!DOCTYPE html>
 

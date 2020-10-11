@@ -333,23 +333,18 @@ return $r;
 //CCATEGORIA
 
     // Insertar datos           C
-    public function insertCategoria()
-    {
+    public function insertCategoria($a){
         $sql = "INSERT INTO categoria (nom_categoria ) VALUES (:nom_categoria )";
         $consultar = $this->db->prepare($sql);
-        $consultar->bindValue(":nom_categoria", $this->nom_categoria);
-        $insert = $consultar->execute();
-         if ($insert) { echo "<script>alert('Registro de categoria exitoso')</script>"; echo "<script>window.location.replace('../vista/formCategoria.php')</script>"; }
-         else{ echo "<script>alert('Error de registro categoria')</script>"; echo "<script>window.location.replace('../vista/formCategoria.php')</script>";   } 
-        if ($insert) {
-            $_SESSION['message'] = "Se creo categoria";
-            $_SESSION['color'] = "success";
-        } else {
-            $_SESSION['message'] = "No creo categoria";
-            $_SESSION['color'] = "danger";
+        $consultar->bindValue(":nom_categoria", $a[0], PDO::PARAM_STR );
+        $bool = $consultar->execute();
+         if($bool){
+            return true;
+         }else{
+            return $a;
         }
-        header("location:../vista/formCategoria.php ");
-    }
+   }
+
 
     // Ver categorias           R
     public function verCategoria(){
@@ -362,57 +357,47 @@ return $r;
 
 
         // Eliminar categoria           D
-    public function eliminarCategoria($id_get){       
-        $sql1 = "SET FOREIGN_KEY_CHECKS = 0";
-        $consulta2 =$this->db->prepare($sql1);
-        $rest1 = $consulta2->execute();
-        if ($rest1) {
-            $sql2 = "DELETE FROM categoria WHERE  ID_categoria = :id ";
-            $consulta3=$this->db->prepare($sql2); 
-            $consulta3->bindValue(":id", $id_get);
-            $rest2=$consulta3->execute();
-        }
-        if ($rest2) {
-            $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
-            $consulta4 = $this->db->prepare($sql3);
-            $rest3=$consulta4->execute();
-
-        if ($rest3) { echo "<script>alert('Elimino el registro')</script>"; echo "<script>window.location.replace('../vista/formCategoria.php')</script>"; }
-        else{ echo "<script>alert('Error al eliminar el registro categoria')</script>"; echo "<script>window.location.replace('../vista/formCategoria.php')</script>";   } 
-          //  if ($rest3) {
-          //      $_SESSION['message'] = "Elimino categoria";
-          //      $_SESSION['color'] = "danger";
-          //  } else {
-          //      $_SESSION['message '] = "No se Elimino categoria";
-          //      $_SESSION['color'] = "danger";
-          //  }
-            header("location: ../vista/formCategoria.php");
-        }
-    } // fin de metodo eliminar categoria
+   public function eliminarCategoria($a){       
+      $sql1 = "SET FOREIGN_KEY_CHECKS = 0";
+      $consulta2 =$this->db->prepare($sql1);
+      $rest1 = $consulta2->execute();
+      if ($rest1) {
+         $sql2 = "DELETE FROM categoria WHERE  ID_categoria = :id ";
+         $consulta3=$this->db->prepare($sql2); 
+         $consulta3->bindValue(":id", $a[0], PDO::PARAM_INT);
+         $rest2=$consulta3->execute();
+      }
+      if ($rest2) {
+         $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
+         $consulta4 = $this->db->prepare($sql3);
+         $rest3=$consulta4->execute();
+         if ($rest3) {
+            return true;
+         } else{ 
+            return false;
+         } 
+      }
+   } // fin de metodo eliminar categoria
 
 
 
-     // Actualizar datos             U
-     public function actualizarDatosCategoria($id_get){
-        $sql = "UPDATE categoria SET nom_categoria = :nom_categoria  WHERE ID_categoria = :ID_categoria ";
-        $consulta = $this->db->prepare($sql);
-        $consulta->bindValue(":ID_categoria", $this->$id_get);
-        $consulta->bindValue(":nom_categoria", $this->nom_categoria);
-        $result = $consulta->execute();
-
-
-
-         if($result){ echo "<script>alert('Actualizasion categoria exitoso')</script>"; echo "<script>window.location.replace('../vista/formCategoria.php')</script>"; }else{ echo "<script>alert('Error en actualizacion de categoria')</script>"; echo "<script>window.location.replace('../vista/formCategoria.php')</script>";   }  
-        // if ($result) {
-        //     $_SESSION['message'] = "Se actualizo categoria";
-        //     $_SESSION['color'] = "primary";
-        // } else {
-        //     $_SESSION['message'] = "No se actualizo categoria";
-        //     $_SESSION['color'] = "danger";
-        // }
-         header("location: ../vista/formCategoria.php");
-     }
-
+   // Actualizar datos             U
+   public function actualizarDatosCategoria($a){
+      $sql = 
+      "UPDATE categoria 
+         SET nom_categoria = :nom_categoria  
+         WHERE ID_categoria = :ID_categoria ";
+      $consulta = $this->db->prepare($sql);
+      $consulta->bindValue(":ID_categoria", $a[0], PDO::PARAM_INT );
+      $consulta->bindValue(":nom_categoria", $a[1], PDO::PARAM_STR);
+      $result = $consulta->execute();
+      if($result){ 
+         return true;
+      }else{
+         return false;
+      }
+   }
+    
      public function verCategoriaId($id){
          $sql = "SELECT * 
          FROM categoria
@@ -521,25 +506,28 @@ public function verCiudad(){
 //==============================================================
 //CEMPRESA
     //Metodo insertar 
-    public function insertEmpresa(){
+   public function insertEmpresa($a){
       $sql = "INSERT INTO empresa_provedor (ID_rut, nom_empresa)VALUES( :ID_rut, :nom_empresa)";
       $stm = $this->db->prepare($sql);
-      $stm->bindValue(":ID_rut", $this->ID_rut);
-      $stm->bindValue(":nom_empresa", $this->nom_empresa);
+      $stm->bindValue(":ID_rut", $a[0], PDO::PARAM_STR);
+      $stm->bindValue(":nom_empresa", $a[1], PDO::PARAM_STR);
       $insert = $stm->execute();
       if($insert){
-          echo '<script>alert("inserto datos")</script>';
-        //  include_once '../assest/session/sessiones.php';
-          $_SESSION['message'] = "Registro Empresa";
-          $_SESSION['color'] = "success";
-       }else{ 
-          echo '<script>alert("Registro Fallido")</script>';
-
-          $this->ver($insert);
-          $_SESSION['message'] = "No registro Empresa";
-          $_SESSION['color'] = "success";
+         return true;
+      }else{ 
+         return false;
       }
+   }
+
+   public function verDatoEmpresaPorId($id){
+      $sql = "SELECT * FROM empresa_provedor WHERE ID_rut = :ID ";
+      $consulta= $this->db->prepare($sql);
+      $consulta->bindValue(":ID", $id, PDO::PARAM_STR);
+      $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
   }
+   //====================================
 
 
 
@@ -560,17 +548,16 @@ public function verCiudad(){
   }
 
   // Eliminar 
-  public function eliminarEmpresa($id){
+  public function eliminarEmpresa($a){
       $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
       $consulta1 = $this->db->prepare($sql1);
       $res =  $consulta1->execute();
       if($res){
           $sql2 = "DELETE  FROM empresa_provedor WHERE ID_rut = :id ";
           $consulta2=$this->db->prepare($sql2); 
-          $consulta2->bindValue(":id", $id);
+          $consulta2->bindValue(":id", $a[0], PDO::PARAM_STR);
           $res1 = $consulta2->execute();
      }
- 
      if($res1){
           $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
           $consulta3=$this->db->prepare($sql3);
@@ -578,40 +565,35 @@ public function verCiudad(){
      }
 
       if ($res2) {
-          $_SESSION['message'] = "Elimino empresa";
-          $_SESSION['color'] = "danger";
+         return true;
       } else {
-          $_SESSION['message'] = "Elimino empresa";
-          $_SESSION['color'] = "danger";
+         return false;
       }
-      header("location: ../vista/formEmpresa.php ");
   }
  
   public function verDatoPorId($id){
       $sql = "SELECT * FROM usuario WHERE ID_us = :ID ";
       $consulta= $this->db->prepare($sql);
-      $consulta->bindValue(":ID", $id);
-      $result = $consulta->execute();
+      $consulta->bindValue(":ID", $id, PDO::PARAM_STR);
+      $consulta->execute();
       $result = $consulta->fetchAll();
       return $result;
   }
 
-  public function actualizarDatosEmpresa($id, $nom_empresa){ 
-      $sql = "UPDATE empresa_provedor SET nom_empresa = :nom_empresa WHERE ID_rut = :ID ";
+  public function actualizarDatosEmpresa($a){ 
+    // 
+      $sql = "UPDATE empresa_provedor 
+      SET nom_empresa = :nom_empresa 
+      WHERE ID_rut = :ID ";
       $consulta = $this->db->prepare($sql);
-      $consulta->bindValue(":ID", $id);
-      $consulta->bindValue(":nom_empresa", $nom_empresa);
+      $consulta->bindValue(":ID",         $a[0], PDO::PARAM_STR);
+      $consulta->bindValue(":nom_empresa",$a[1], PDO::PARAM_STR);
       $result = $consulta->execute();
-      if ($result = true) {
-          echo '<script>alert("inserto datos");</script>';
-         // $_SESSION['message'] = "Actualizacion exitosa";
-         // $_SESSION['color'] = "primary";
+      if ($result) {
+         return true;
       } else {
-          echo '<script>alert("no actualizo");</script>';
-         // $_SESSION['message'] = "Fallo actualizacion";
-         // $_SESSION['color'] = "danger";
+         return false;
       }
-      header("location: ../vista/FormEmpresa.php");
   }
 
   // ver empresa
@@ -853,82 +835,79 @@ public  function verLocalidadId($ID_ciudad){
 //============================================
 //============================================
 //CMEDIDA
-public function insertMedia(){
-$sql = "INSERT INTO tipo_medida(nom_medida, acron_medida)VALUES( :nom_medida,  :acron_medida)";
-// v$ejecucion = $db->query($sql);
-$stm = $this->db->prepare($sql);
-$stm->bindValue(":nom_medida", $this->nom_medida);
-$stm->bindValue(":acron_medida", $this->acron_medida);
-$insert = $stm->execute();
-if ($insert ) {
-    $_SESSION['message'] = "Se creo medida";
-    $_SESSION['color'] = "success";
-} else {
-    $_SESSION['message'] = "error al crear medida";
-    $_SESSION['color'] = "danger";
-}
-header("location: ../vista/formMedida.php");
-} // fin de insertar medida
-//CREACION DE METODOS acceso sin ser una extancia
-//metodo mostrar datos
-public function verMedida()
-{
-//include_once 'class.conexion.php';
-//$conexion = new Conexion;
+public function insertMedia($a){
+   $sql = "INSERT INTO tipo_medida(nom_medida, acron_medida)VALUES( :nom_medida,  :acron_medida)";
+   $stm = $this->db->prepare($sql);
+   $stm->bindValue(":nom_medida", $a[0],   PDO::PARAM_STR);
+   $stm->bindValue(":acron_medida", $a[1], PDO::PARAM_STR);
+   $insert = $stm->execute();
+   if ($insert ) {
+      return true;
+   } else {
+      return false;
+   }
+} 
+
+
+
+public function verMedida(){
 $sql = "SELECT * FROM  tipo_medida";
 $stm = $this->db->prepare($sql);
 $stm->execute();
 $result = $stm->fetchAll(); 
 return $result;
-//$result = $conexion->query($sql);
-//return $result;
 }
+
+
+public function verMedidaPorId($ID){
+   $sql = "SELECT * FROM  tipo_medida
+   WHERE ID_medida = :ID ";
+   $stm = $this->db->prepare($sql);
+   $stm->bindValue(":ID", $ID, PDO::PARAM_INT);
+   $stm->execute();
+   $result = $stm->fetchAll(); 
+   return $result;
+   }
 
 //mostrar datos por ID
 
 
 //Actualizar datos 
-public function actualizarDatosMedida($id)
-{
-// include_once 'class.conexion.php';
-// $c = new Conexion;
-$sql = "UPDATE tipo_medida SET nom_medida = '$this->nom_medida'  , acron_medida = '$this->acron_medida' WHERE ID_medida = '$id' ";
-$stm = $this->db->prepare($sql);
-$stm->bindValue(":id",$this->id_medida);
-$stm->bindValue(":nom_medida",$this->nom_medida);
-$stm->bindValue(":acron_medida",$this->acron_medida);
-$result = $stm->execute();
-//"UPDATE sitio_t SET nom_sitio = '$sitio', Fk_capital = '$FK_capital'  WHERE id_sitio = $id "
-//$ejecucion = $c->query($sql);
-if ($result) {
-    $_SESSION['message'] = "Se actualizo medida";
-    $_SESSION['color'] = "primary";
-} else {
-    $_SESSION['message'] = "error al actualizar medida";
-    $_SESSION['color'] = "danger";
-}
-header("location: ../vista/formMedida.php");
+public function actualizarDatosMedida($a){
+   $sql =
+      "UPDATE tipo_medida 
+      SET nom_medida = :nom_medida , acron_medida = :acron_medida  
+      WHERE ID_medida = :id ";
+   $stm = $this->db->prepare($sql);
+   $stm->bindValue(":id", $a[0] , PDO::PARAM_INT );
+   $stm->bindValue(":nom_medida", $a[1] , PDO::PARAM_STR );
+   $stm->bindValue(":acron_medida", $a[2] , PDO::PARAM_STR );
+   $result = $stm->execute();
+   if ($result) {
+      return true;
+   } else {
+      return false;
+   }
+   header("location: ../vista/formMedida.php");
 }
 
 
 //eliminar registros
-public function eliminarDatosMedia($id)
-{
-//include_once 'class.conexion.php';
-// $con = new Conexion();
-$sql = "DELETE FROM tipo_medida WHERE ID_medida = '$id' ";
-$stm = $this->db->prepare($sql);
-$stm->bindValue(":id",$this->id_medida);
-$result = $stm->execute();
-// $ejecucion = $con->query($sql);
-if ($result) {
-    $_SESSION['message'] = "Elimino medida";
-    $_SESSION['color'] = "danger";
-} else {
-    $_SESSION['message'] = "Error Elimino medida";
-    $_SESSION['color'] = "danger";
-}
-header("location: ../vista/formMedida.php");
+public function eliminarDatosMedia($a){
+  // $this->ver($a, 1);
+   $sql = 
+      "DELETE FROM tipo_medida 
+      WHERE ID_medida = :id ";
+   $stm = $this->db->prepare($sql);
+   $stm->bindValue(":id",$a[0], PDO::PARAM_INT );
+   $result = $stm->execute();
+
+  //  $this->ver( $a[0], 1);
+   if ($result) {
+      return true;
+   } else {
+      return false;
+   }
 }
 //==============================
 //==============================
@@ -1453,21 +1432,12 @@ public function insertPuntos( $FK_us , $FK_tipo_doc)
           $stm->bindValue( 4 ,$d[11] , PDO::PARAM_STR );
           $stm->bindValue( 5 ,$d[12] ,  PDO::PARAM_STR );
          }
-         echo $sql;
          $bool = $stm->execute();
-        
-      
-           
-        
-            if($bool){
-               echo '<script>alert("inserto datos de usario");</script>';
-               return true;
-            }else{
-               echo '<script>alert("No inserto datos");</script>';
-               return $a;
-         
+         if($bool){
+            return true;
+         }else{
+            return $a;
         }
-      
       }
    
 

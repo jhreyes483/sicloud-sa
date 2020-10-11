@@ -1,6 +1,6 @@
 <?php
-include_once '../controlador/controladorrutas.php';
-rutFromIni();
+
+
 
 //comprobacion de rol
 $in = false;
@@ -162,6 +162,7 @@ if ($in == false) {
 
         <div class="col-lg-2 mx-auto">
             <div class="card card-body ">
+            <!--  -->
                 <a class = "btn btn-blok btn-dark" type="text" href="ajax/showFactura.php">Factura</a>
             </div>
         </div>

@@ -1,13 +1,5 @@
 <?php
-/*
-include_once 'plantillas/plantilla.php';
-include_once '../controlador/controlador.php';
-include_once '../modelo/class.empresa.php';
-include_once '../modelo/class.conexion.php';
-include_once 'plantillas/cuerpo/inihtmlN2.php';
-include_once 'plantillas/nav/navN2.php';
-include_once '../controlador/controladorsession.php';
-*/
+
 //----------------------------------------------------------------------
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
@@ -18,6 +10,7 @@ cardtitulo('Edicion de empresa');
 //accion editar 
 if ((isset($_GET['id']))) {
     $id = $_GET['id'];
+    echo $id;
 
 ?>
 
@@ -28,11 +21,11 @@ if ((isset($_GET['id']))) {
                 <div class="card">
                     <div class="card-header">Registro</div>
                     <div class="card-body">
-                        <form action="../controlador/post.php?id=<?php echo $_GET['id'] ?>" method="POST">
+                        <form action="../controlador/api.php?id=<?= $_GET['id'] ?>&&apicall=insertUdateEmpresa" method="POST">
 
                             <?php 
                             $objModEmp = new ControllerDoc();
-                            $datos = $objModEmp->verDatoPorId($id);
+                            $datos = $objModEmp->verDatoEmpresaPorId($id);
                             //while ($row = $datos->fetch_array()) {
                                 foreach($datos as $i => $row){
                              ?>

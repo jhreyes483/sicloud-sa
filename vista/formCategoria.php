@@ -9,7 +9,7 @@ $objCon = new ControllerDoc();
         var confirmacion = 
 confirm('Esta seguro que desea elminar categoria con id: ' + id_to_delete + ' ?');
 if(confirmacion){
-window.location = "../controlador/controlador.php?accion=eliminarCategoria&&id="+ id_to_delete;
+window.location = "../controlador/api.php?apicall=eliminarCategoria&&id="+ id_to_delete;
 }
 
    }
@@ -37,7 +37,7 @@ window.location = "../controlador/controlador.php?accion=eliminarCategoria&&id="
             <div class="card">
                 <div class="card-header">Registro Categoria</div>
                 <div class="card-body">
-                    <form action="../controlador/post.php" method="POST">
+                    <form action="../controlador/api.php?apicall=insertcategoria" method="POST">
                         <div class="form-group"><input class="form-control" type="text" name="nom_categoria" placeholder="Categoria" required autofocus maxlength="30"></div>
                         <input type="hidden" name="accion" value="insertCategoria">
                         <div class="form-group"><input class="form-control btn btn-primary" type="submit" name="submit" value="Registrar categoria"></div>

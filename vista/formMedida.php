@@ -11,7 +11,7 @@ cardtitulo("Medida");
 function eliminarMed(id_med){
     var conf = confirm('Esta seguro de eliminar medida con id' + id_med + " ?");
     if(conf){
-        window.location ="../controlador/controlador.php?accion=eliminarMedida&&id=" + id_med ;
+        window.location ="../controlador/api.php?apicall=eliminarMedida&&id=" + id_med ;
     }
 }
 </script>
@@ -37,10 +37,12 @@ function eliminarMed(id_med){
                 setMessage();
             }
             ?>
-            <div class="card ">
+
+<div class="container">
+            <div class="   card ">
                 <div class="card-header">Registro</div>
                 <div class="card-body">
-                    <form action="../controlador/post.php" method="POST">
+                    <form action="../controlador/api.php?apicall=insertMedida" method="POST">
                         <div class="form-group"><input class="form-control" type="text" name="nom_medida" placeholder="Medida" required autofocus maxlength="35"></div>
                         <div class="form-group"><input class="form-control" type="text" name="acron_medida" placeholder="Acronimo" required autofocus maxlength="5"></div>
                         <input type="hidden" name="accion" value="insertMedida">
@@ -48,14 +50,14 @@ function eliminarMed(id_med){
                     </form>
                 </div><!-- fin card body -->
             </div><!-- fin de card -->
-        </div><!-- fin de div responce formluario -->
-    </div>
+  
 
     </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 p2 mt-3">
+    </div>
+
+
+        <div class="col-lg-6 p2 mt-3">
             <table class=" table table-bordered  table-striped bg-white table-sm text-center">
                 <thead>
 
@@ -81,7 +83,7 @@ function eliminarMed(id_med){
                     <td><?php echo $row['nom_medida'] ?></td>
                     <td><?php echo $row['acron_medida'] ?></td>
                     <td>
-                        <a href=" formEdicionMedida.php?accion=editarMedia&&id=<?php echo $row['ID_medida'] ?>; " class="btn btn-circle btn-secondary"><i class="fas fa-marker"></i></a>
+                        <a href=" formEdicionMedida.php?accion=editarMedia&&id=<?php echo $row['ID_medida'] ?> " class="btn btn-circle btn-secondary"><i class="fas fa-marker"></i></a>
                         <a onclick="eliminarMed(<?php echo $row['ID_medida'] ?>)" href="#" class="btn btn-circle btn-danger"><i class="far fa-trash-alt"></i></a>
                     </td>
                 </tbody>

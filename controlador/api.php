@@ -1,7 +1,5 @@
 <?php
-//session_start();
-//session_destroy();
-// http://localhost/javier/global/appi.php?apicall=readusuarios
+
 require_once '../controlador/controlador.php';
 //rutApi();
 $db = new ControllerDoc();
@@ -223,6 +221,207 @@ if(isset($_GET['apicall'])){
             $response['contenido']  = $r;
          }
       break;
+      case 'insertcategoria':
+         $a = [
+            $_POST['nom_categoria']
+         ];
+          $r = $db->insertCategoria($a);
+          if(!$r){
+            $response['error']      = true;
+            $response['menssage']   = 'No inserto categora';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Error no creo categoria";
+            $_SESSION['color']      = "danger";
+            
+         }else{
+            $response['error']      = false;
+            $response['message']    = 'Inserto categoria'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Inserto categoria";
+            $_SESSION['color']      = "success";
+         }
+      header( 'location:  ../vista/formCategoria.php');
+      break;
+      case 'eliminarCategoria':
+         $a = [
+            $_GET['id']
+         ];
+          $r = $db->eliminarCategoria($a);
+          if(!$r){
+            $response['error']      = true;
+            $response['menssage']   = 'No elimino';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Error no creo categoria";
+            $_SESSION['color']      = "danger";
+            
+         }else{
+            $response['error']      = false;
+            $response['message']    = 'Elimino categoria'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Elimino categoria";
+            $_SESSION['color']      = "success";
+         }
+      header( 'location:  ../vista/formCategoria.php');
+      break;
+
+      case 'eliminarEmpresa':
+         $a = [
+            $_GET['id']
+         ];
+          $r = $db->eliminarEmpresa($a);
+          
+          if($r){
+            $response['error']      = true;
+            $response['menssage']   = 'No elimino';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Elimino empresa";
+            $_SESSION['color']      = "success";
+         }else{
+            $response['error']      = false;
+            $response['message']    = 'Error no elimino empresa'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Error no elimino empresa";
+            $_SESSION['color']      = "danger";
+         }
+      header( 'location:  ../vista/formEmpresa.php');
+      break;
+      case 'insertUdateCategoria':
+         $a = [
+            $_GET['id'], 
+            $_POST['categoria']
+         ];
+          $r = $db->actualizarDatosCategoria($a);
+          if($r){
+            $response['error']      = true;
+            $response['menssage']   = 'Error, no Actualizo empresa';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Error, no Actualizo empresa";
+            $_SESSION['color']      = "danger";
+         }else{
+            $response['error']      = false;
+            $response['message']    = 'Actualizo empresa'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Actualizo empresa";
+            $_SESSION['color']      = "success";
+         }
+      header( 'location:  ../vista/formCategoria.php');
+      break;
+      case 'insertUdateEmpresa':
+         $a = [
+            $_POST['ID_rut'],
+            $_POST['nom_empresa'],
+         ];
+          $r = $db->actualizarDatosEmpresa($a);
+          if($r){
+            $response['error']      = true;
+            $response['menssage']   = 'Error, no actualizo empresa';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Error, no actualizo empresa";
+            $_SESSION['color']      = "danger";
+         }else{
+            $response['error']      = false;
+            $response['message']    = 'Actualizo empresa'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Actualizo empresa";
+            $_SESSION['color']      = "success";
+         }
+      header( 'location:  ../vista/formEmpresa.php');
+      break;
+      case 'insertEmpresa':
+         $a = [
+            $_POST['ID_rut'],
+            $_POST['nom_empresa']
+         ];
+          $r = $db->insertEmpresa($a);
+          if($r == false){
+            $response['error']      = true;
+            $response['menssage']   = 'Error, no creo empresa';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Error, no no creo empresa";
+            $_SESSION['color']      = "danger";
+         }else{
+            $response['error']      = false;
+            $response['message']    = 'Creo empresa'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Creo empresa";
+            $_SESSION['color']      = "success";
+         }
+      header( 'location:  ../vista/formEmpresa.php');
+      break;
+      case 'insertMedida':
+         $a = [
+            $_POST['nom_medida'],
+            $_POST['acron_medida']
+         ];
+          $r = $db->insertMedia($a);
+          if($r){
+            $response['error']      = false;
+            $response['menssage']   = 'Creo unidad medida';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = 'Creo unidad medida';
+            $_SESSION['color']      = 'success';
+         }else{
+            $response['error']      =  true;
+            $response['message']    = 'Error, no creo unidad de medida'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Error, no creo unidad de medida";
+            $_SESSION['color']      = 'danger';
+         }
+      header( 'location:  ../vista/formMedida.php');
+      break;
+      case 'eliminarMedida':
+         $a = [
+            $_GET['id'],
+         ];
+  
+          $r = $db->eliminarDatosMedia($a);
+          if($r){
+            $response['error']      = false;
+            $response['menssage']   = 'Elimino medida';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = 'Elimino medida';
+            $_SESSION['color']      = 'success';
+         }else{
+            $response['error']      =  true;
+            $response['message']    = 'Error, no creo unidad de medida'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = "Error, no creo unidad de medida";
+            $_SESSION['color']      = 'danger';
+         }
+      header( 'location:  ../vista/formMedida.php');
+      break;
+      case 'insertUdateMedia':
+         $a = [
+            $_GET['id'],
+            $_POST['nom'],
+            $_POST['acron']
+         ];
+  
+          $r = $db->actualizarDatosMedida($a);
+          if($r){
+            $response['error']      = false;
+            $response['menssage']   = 'Actualizar medida';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = 'Actualizar medida';
+            $_SESSION['color']      = 'success';
+         }else{
+            $response['error']      =  true;
+            $response['message']    = 'Error, Al actulizar medida'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = 'Error, Al actulizar medida';
+            $_SESSION['color']      = 'danger';
+         }
+      header( 'location:  ../vista/formMedida.php');
+      break;
+
+
+
+
+
+
+
+
+
       default:
       $response['error']      = true;
       $response['message']    = 'ingreso a api "no esta en ningun metodo"'; 
