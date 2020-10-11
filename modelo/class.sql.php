@@ -777,8 +777,8 @@ public function verIntervaloFecha($fechaIni, $fechaFin)
     //include_once 'class.conexion.php';
     //$c = new Conexion;
     $sql = "SELECT * FROM factura
-        where fecha <= '$fechaFin' and  fecha >= '$fechaIni' 
-        order by fecha asc";
+        WHERE fecha <= '$fechaFin' AND  fecha >= '$fechaIni' 
+        ORDER BY fecha ASC";
     $stm = $this->db->prepare($sql);
     $stm->execute();
     $result = $stm->fetchAll(); 
@@ -787,21 +787,17 @@ public function verIntervaloFecha($fechaIni, $fechaFin)
     //return $arr;
 }
 // Ver datos  usuario en factura
-public function verUsuarioFactura($id)
-{
-
-    //$cnx = new Conexion;
+public function verUsuarioFactura($id){
     $sql = "SELECT U.nom1, U.nom2, U.ape1, U.ape2 , T.tel , D.dir
-        from  usuario U join telefono T on T.CF_us = U.ID_us
-        join direccion D on D.CF_us = U.ID_us
-        where U.ID_us = '$id'
-        limit 1";
+        FROM usuario U JOIN telefono T ON T.CF_us = U.ID_us
+        JOIN direccion D ON D.CF_us = U.ID_us
+        WHERE U.ID_us = ?
+        LIMIT 1";
     $stm = $this->db->prepare($sql);
+    $stm->bindValue( 1, $id, PDO::PARAM_STR );
     $stm->execute();
     $result = $stm->fetchAll(); 
     return $result;
-    //$result = $cnx->query($sql);
-    //return $result;
 }
 public function verFactura($id)
 {
