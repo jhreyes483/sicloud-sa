@@ -130,9 +130,31 @@ class ControllerDoc
     public function readUsuarioModel(){
         return $this->objModUs->readUsuarioModel();
     }
-    public function eliminarUsuario($id_get)
-    {
-        return  $this->objModUs->eliminarUsuario($id_get);
+    public function eliminarUsuario($id_get){
+        $r1 = $this->objModUs->eliminarUsuario($id_get);
+        if($r1){
+            $fecha  = date('Y-m-d');
+            $descrip = "Usario eliminado ID " .$id_get;
+            $FK_modific = "2";
+            $hora = '00:00:00';
+            $tDoc_us_session = $_SESSION['usuario'] ['ID_acronimo'] ;
+            $ID_us_session = $_SESSION['usuario']['ID_us'];
+            $arm=[
+                $descrip,
+                $fecha,
+                $hora, 
+                $ID_us_session,
+                $tDoc_us_session,
+                $FK_modific
+            ];
+            $r4 = $this->objModUs->insertModificacion($arm);
+            if($r4){
+                return true;
+            }else{
+                return false;    
+            }
+
+        }
     }
     public function actualizarDatosUsuario($id, $array){
         $r1 = $this->objModUs->actualizarDatosUsuario($id, $array);

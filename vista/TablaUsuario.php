@@ -1,11 +1,26 @@
 <?php
+include_once '../controlador/controladorrutas.php';
+rutFromIni();
 
-include_once 'plantillas/plantilla.php';
-include_once 'plantillas/nav/navgeneral.php';
-include_once 'plantillas/cuerpo/inihtmlN1.php';
-include_once '../modelo/class.sql.php';
-include_once '../controlador/controladorsession.php';
-include_once '../controlador/controlador.php';
+//comprobacion de rol
+$in = false;
+switch ($_SESSION['usuario']['ID_rol_n']) {
+    case 1:
+        $in = true;
+    break;
+  
+    default:
+        echo "<script>alert('No tiene permiso para ingresar a este modulo');</script>";
+        echo "<script>window.location.replace('index.php');</script>";
+    break;
+}
+if ($in == false) {
+    echo "<script>alert('No tiene permiso para ingresar a este modulo');</script>";
+    echo "<script>window.location.replace('index.php');</script>";
+} else {
+
+
+
 
 ?>
 
@@ -37,13 +52,27 @@ window.location = "../controlador/api.php?accion=eliminarUsuario&&id="+ id_to_de
         </div>
     </div>
 
+    <?php
 
-
+if (isset($_SESSION['message'])) {  ?>
+    <!-- alerta boostrap -->
+    <div class="alert text-center col-md-4 mx-auto alert-<?= $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
+        <?php
+        echo  $_SESSION['message']  ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<?php
+    setMessage();
+}
+?>
 
         <div class="col-md-10 my-5 mx-auto">
             <table class="table table-bordered  table-striped bg-white table-sm mx-auto text-center">
                 <thead class="thead-dark">
                     <tr>
+                        <th scope="col">foto</th>
                         <th scope="col">ID</th>
                         <th scope="col">primer nombre</th>
                         <th scope="col">segundo nombre</th>
@@ -51,7 +80,6 @@ window.location = "../controlador/api.php?accion=eliminarUsuario&&id="+ id_to_de
                         <th scope="col">segundo apellido</th>
                         <th scope="col">fecha</th>
                         <th scope="col">contraseña</th>
-                        <th scope="col">foto</th>
                         <th scope="col">correo</th>
                         <th scope="col">tipo documento</th>
                         <th scope="col">Accion</th>
@@ -72,13 +100,13 @@ window.location = "../controlador/api.php?accion=eliminarUsuario&&id="+ id_to_de
 
                 <tbody>
                 <tr>
+                <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?= $d[7]; ?>" alt="Card image cap" height="65" width="70"></td>
                     <td><?= $d[0] ?></td>
                     <td><?= $d[1] ?></td>
                     <td><?= $d[2] ?></td>
                     <td><?= $d[3] ?></td>
                     <td><?= $d[4] ?></td>
                     <td><?= $d[5] ?></td>
-                    <td><?= $d[6] ?></td>
                     <td><?= $d[7] ?></td>
                     <td><?= $d[8] ?></td>
                     <td><?= $d[9] ?></td>
@@ -95,6 +123,7 @@ window.location = "../controlador/api.php?accion=eliminarUsuario&&id="+ id_to_de
 
                                 }
                             }
+                        }
                             ?>
                 </tbody>
             </table>

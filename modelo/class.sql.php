@@ -213,9 +213,11 @@ class SQL extends Conexion{
          $consulta4 = $this->db->prepare($sql3);
          $rest3=$consulta4->execute();
       if ($rest3) {
-         //header("location: ../vista/TablaUsuario.php");
-         echo "<script>alert('Elimino el registro')</script>"; echo "<script>window.location.replace('../vista/TablaUsuario.php')</script>"; }
-      else{ echo "<script>alert('Error al eliminar el registro categoria')</script>"; echo "<script>window.location.replace('../vista/TablaUsuario.php')</script>";   } 
+         return true;
+      }
+      else{ 
+         return false;
+        } 
 
         
       }
@@ -978,7 +980,7 @@ public function horaActual(){
 //------------------------------------------
 //insertar modificacion 
 public function insertModificacion($a){
-
+  // $this->ver($a, 1);
    $sql = "INSERT INTO modific(descrip , fecha , hora ,
    FK_us , FK_doc , FK_modific) 
    VALUE ( :descrip , :fecha , :hora , :FK_us , :FK_doc , :FK_modific )";
@@ -990,7 +992,6 @@ public function insertModificacion($a){
    $stm->bindValue(":FK_doc",    $a[4], PDO::PARAM_STR);
    $stm->bindValue(":FK_modific",$a[5], PDO::PARAM_STR);
    $insert = $stm->execute();
-    // $this->ver($insert, 1);
    if ($insert) {
       return true;
    } else {
@@ -1006,7 +1007,8 @@ public function insertModificacion($a){
          from tipo_modific T_M JOIN modific M on T_M.ID_t_modific =  M.FK_modific
          JOIN usuario U ON M.FK_us = U.ID_us
          JOIN rol_usuario R_U on U.ID_us = R_U.FK_us
-         JOIN rol R on R_U.FK_rol = R.ID_rol_n";
+         JOIN rol R on R_U.FK_rol = R.ID_rol_n
+         ORDER BY fecha";
       $consulta= $this->db->prepare($sql);
       $result = $consulta->execute();
       $result = $consulta->fetchAll();

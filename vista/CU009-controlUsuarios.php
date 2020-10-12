@@ -25,12 +25,7 @@ if ($in == false) {
 } else {
 
     //--------------------------------------------------------------------------
-    /*
-    include_once '../controlador/controlador.php';
-    include_once 'plantillas/plantilla.php';
-    include_once 'plantillas/cuerpo/inihtmlN1.php';
-    include_once 'plantillas/nav/navN1.php';
-    */
+
     $objCon = new ControllerDoc();
     $tabla = false;
     cardtituloS("Administrador de solicitiudes")

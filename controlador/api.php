@@ -93,12 +93,17 @@ if(isset($_GET['apicall'])){
         // $db = new ControllerDoc();
          $bool =   $db->eliminarUsuario($_GET['id'] );
          if( $bool ){
-           $response['error'] = false;
-           $response['message'] = 'Elimino usuario';
+            $response['error'] = true;
+            $response['message'] = 'No elimino usuario';
+            $_SESSION['message'] = '';
+            $_SESSION['color'] =   'success';
          }else{
-           $response['error'] = true;
-           $response['message'] = 'No elimino usuario';
+            $response['error'] = false;
+            $response['message'] = 'Elimino usuario';
+            $_SESSION['message'] = 'Error, no elimino usuario  ';
+            $_SESSION['color'] =   'danger';
          }
+       echo "<script>window.location.replace('../vista/TablaUsuario.php')</script>"; 
       break;        
       case 'actualizarUsuario';
    
