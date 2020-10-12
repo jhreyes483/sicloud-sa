@@ -79,14 +79,7 @@ if (isset($_SESSION['usuario'])) {
        </a>
         <span class="sr-only">(current)</span>
         </a>
-      <li class="nav-item dropdown no-arrow">
-        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
-
-
-
-
-        <span class="sr-only">(current)</span>
-        </a>
+ 
       <li class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
 
