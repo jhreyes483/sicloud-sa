@@ -2,6 +2,7 @@
 <?php
 //session_destroy();
 include_once '../modelo/class.sql.php';
+include_once 'controladorsession.php';
 
 class ControllerDoc
 {
@@ -21,11 +22,24 @@ class ControllerDoc
     public function loginUsuarioController($ID_us,  $pass, $doc)
     {
         $datosController[] = [$ID_us, $pass, $doc];
-        //  if( isset($_SESSION['usuario']  ) ){
-        //  session_start(); }
-
-        return $this->objModUs->loginUsuarioModel($datosController);
+        $USER = $this->objModUs->loginUsuarioModel($datosController);
+        //$this->ver( $USER  );
+        if( $USER ){ 
+        
+        $objSession = new Session();
+        $_SESSION['usuario']  = $USER;
+        $objSession->verificarAcceso();
+            return  $USER ;
+        }else{
+            header("location: ../vista/loginregistrar.php");
+            $_SESSION['message'] = 'Contraseña incorreta o usuario no registrado';
+            $_SESSION['color']   = 'danger';
+        }
     }
+        
+
+
+
     public function createUsuariosController(
         $ID_us,
         $nom1,
@@ -193,11 +207,6 @@ class ControllerDoc
             $ruta    = $a[8];
             $id_prod = $a[0];
         }
- 
-        echo $foto;
-        echo $ruta;
-
-       // echo '<pre>'; print_r($a); echo '</pre>'; die();
         $destino = '../vista/fonts/img/'.$foto;
         copy($ruta, $destino);
         $bool2 = $this->objModUs->inserTfotoProd( $foto, $id_prod);
@@ -208,8 +217,7 @@ class ControllerDoc
         }else{
             $_SESSION['message'] = "Error no inserto foto";
             $_SESSION['color']   = "danger";
-            return false;
-            
+            return false;      
         }
     }
     
@@ -359,6 +367,34 @@ class ControllerDoc
     }
     public function actualizarDatosMedida($a){
         return $this->objModUs->actualizarDatosMedida($a);
+    }
+
+    public function selectUsuarios($id){
+        return $this->objModUs->selectUsuarios($id);
+    }
+    public function insertUpdateUsuarioCliente($a){
+        return $this->objModUs->insertUpdateUsuarioCliente($a);
+    }
+    public function validaContraseña($a){
+        $passAterior =  $this->objModUs->validarPass( $a[0], $a[1] );
+         // validacion de contraseña en base de datos
+            if($passAterior){
+                if( $a[2] ==  $a[3] ){
+                    $r1 = $this->objModUs->cambioPass( $a[0], $a[3] );
+                    if($r1){
+                        $_SESSION['message'] = "Cambio contraseña de manera exitosa";
+                        $_SESSION['color']   = "success";
+                    }
+                }else{
+                    $_SESSION['message']     = "Campos de contraseña nueva no son iguales";
+                    $_SESSION['color']       = "danger";
+                }
+            }else{
+                $_SESSION['message'] = "Contraseña incorrecta";
+                $_SESSION['color'] = "danger";
+            }
+        
+
     }
    
     public function ver($dato, $sale=0, $float= false, $email=''){

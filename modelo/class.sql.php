@@ -2,39 +2,35 @@
 include_once 'class.conexion.php';
 include_once '../controlador/controladorsession.php';
 
-
 class SQL extends Conexion{
    public $db;
    public function __construct() {
       $this->db = Conexion::conexionPDO();
    } 
-  
    static function ningunDato(){
       return new self ();
    }
-
    //============================================================================
    //CUSUARIO
 
-  public function verPuntosYusuario($id){
-    $sql = " SELECT U.ID_us  , U.nom1 , U.nom2 , U.ape1 , U.ape2 , U.fecha , U.pass , U.foto , U.correo , 
-    TD.nom_doc , 
-    RU.estado , 
-    R.ID_rol_n , R.nom_rol , 
-    P.puntos
-       FROM tipo_doc TD 
-       JOIN usuario U ON TD.ID_acronimo = U.FK_tipo_doc 
-       JOIN rol_usuario RU ON U.ID_us = RU.FK_us 
-       JOIN rol R ON FK_rol = R.ID_rol_n 
-       JOIN puntos P ON U.ID_us = P.FK_us
-       WHERE U.ID_us = :id"; 
-    $c = $this->db->prepare($sql);
-    $c->bindValue(':id', $id);
-    $c->execute();
-    $r = $c->fetch(PDO::FETCH_ASSOC);
-    return $r;
- }
-
+   public function verPuntosYusuario($id){
+      $sql = " SELECT U.ID_us  , U.nom1 , U.nom2 , U.ape1 , U.ape2 , U.fecha , U.pass , U.foto , U.correo , 
+      TD.nom_doc , 
+      RU.estado , 
+      R.ID_rol_n , R.nom_rol , 
+      P.puntos
+         FROM tipo_doc TD 
+         JOIN usuario U ON TD.ID_acronimo = U.FK_tipo_doc 
+         JOIN rol_usuario RU ON U.ID_us = RU.FK_us 
+         JOIN rol R ON FK_rol = R.ID_rol_n 
+         JOIN puntos P ON U.ID_us = P.FK_us
+         WHERE U.ID_us = :id"; 
+      $c = $this->db->prepare($sql);
+      $c->bindValue(':id', $id);
+      $c->execute();
+      $r = $c->fetch(PDO::FETCH_ASSOC);
+      return $r;
+   }
 
    // METODO INSERT USUARIO PDO MVC ---------------------------------------------------------------------
    public function InsertUsuario($a){ 
@@ -69,6 +65,25 @@ class SQL extends Conexion{
       $result = $consulta->fetchAll();
       return $result;  
    }
+
+     // Incio de select usuario
+   public function selectUsuarios($id){
+      $sql = "SELECT U.FK_tipo_doc, U.ID_us, 
+      U.nom1, U.nom2, U.ape1, 
+      U.ape2,  U.pass, U.foto, 
+      U.correo,  U.fecha, 
+      R.nom_rol, R_U.estado, R.ID_rol_n
+      FROM usuario U 
+      JOIN  rol_usuario R_U ON R_U.FK_us = U.ID_us
+      JOIN rol  R ON R_U.FK_rol = R.ID_rol_n 
+      WHERE ID_us = :id
+      ";
+      $c = $this->db->prepare($sql);
+      $c->bindValue(":id", $id, PDO::PARAM_STR);
+      $c->execute();
+      $r = $c->fetchAll();
+      return $r;
+   } // Fin de select usuario
    //-------------------------------------------------------------------------------------------------------
    //METODO LOGIN USUARIO PDO MVC--------------------------------------------------------------------------
    public function loginUsuarioModel($datosModel){
@@ -84,16 +99,22 @@ class SQL extends Conexion{
    AND TD.ID_acronimo  = :ID_acronimo";
    //AND identificacion = :identificacion";
    $consulta = $this->db->prepare($sql);
-
- 
    foreach($datosModel as $i =>  $d ){
-      $consulta->bindValue( ':ID_us',       $d[0] , PDO::PARAM_STR);
+      $consulta->bindValue( ':ID_us',       $d[0] , PDO::PARAM_STR );
       $consulta->bindValue( ':pass',        $d[1] , PDO::PARAM_STR );
-      $consulta->bindValue( ':ID_acronimo', $d[2], PDO::PARAM_STR );
+      $consulta->bindValue( ':ID_acronimo', $d[2], PDO::PARAM_STR  );
    }
    $consulta->execute();
+   $USER = $consulta->fetch(PDO::FETCH_ASSOC);
+   if( $consulta->rowCount() > 0 ){ 
+      return $USER;
+   }else{
+      return false;
+   }
 
 
+
+/*
   // $array = $consulta->fetchAll();
       if( $consulta->rowCount() > 0 ){ 
          $USER = $consulta->fetch(PDO::FETCH_ASSOC);
@@ -112,7 +133,48 @@ class SQL extends Conexion{
       }else{
         // return false;
       }
+
+      */
+ 
    }
+
+
+      //Cambio contraseña por usuario
+      public function validarPass($id, $pass){
+         $sql = "SELECT * FROM usuario 
+            WHERE ID_us = :ID_us 
+            AND pass = :pass ";
+         $c =$this->db->prepare($sql);
+         $c->bindValue( ':ID_us', $id, PDO::PARAM_STR  );
+         $c->bindValue( ':pass', $pass, PDO::PARAM_STR  );
+         $c->execute();
+         $r = $c->fetchAll();
+
+         if($r){
+            return $r;
+         }else{
+            return false;
+         }
+      }
+
+      // Cambiar contraseña
+      //Cambio de contraseña
+  public function cambioPass($id,  $contraseñaNueva){
+   $sql = "UPDATE usuario 
+      SET pass = :pass 
+      WHERE ID_us = :ID_us ";
+     $c =$this->db->prepare($sql);
+     $c->bindValue( ':ID_us', $id,            PDO::PARAM_STR  );
+     $c->bindValue( ':pass', $contraseñaNueva, PDO::PARAM_STR  );
+     $r = $c->execute();
+     if($r){
+        return true;
+     }else{
+        return false;
+     }
+  }
+  //-------------------------------------------------------------------------
+
    //-------------------------------------------------------------------------------------------------------
    //METODO DELETE USUARIO PDO MVC-------------------------(FALTA METODO API)-------------------------------
    public function eliminarUsuario($id_get){       
@@ -219,7 +281,7 @@ return $r;
   public function selectIdUsuario($id){
    $sql = "SELECT distinct U.FK_tipo_doc, U.ID_us, U.nom1, U.nom2, U.ape1, U.ape2, U.pass, U.foto, U.correo, 
       R.nom_rol,  R.nom_rol,
-      R_U.estado
+      R_U.estado, U.fecha
       FROM usuario U 
       JOIN  rol_usuario R_U ON R_U.FK_us = U.ID_us
       JOIN rol  R ON R_U.FK_rol = R.ID_rol_n 
@@ -305,25 +367,34 @@ return $r;
    
 
    // Actualzacion de datos por rol usuario---------------------------------------------------------
-  public function insertUpdateUsuarioCliente($idg){
+  public function insertUpdateUsuarioCliente($a){
    
    $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
    $consulta1 = $this->db->prepare($sql1);
         $res =  $consulta1->execute();   
    if ($res) {
-      $sql2 = "UPDATE usuario SET  nom1 = :nom1 ,  nom2 = :nom2 ,ape1 = :ape1 , ape2 = :ape2 , fecha = :fecha   , correo = :correo  WHERE  ID_us = :ID_us ";
-      $res1 = $this->db->prepare($sql2);
+      $sql2 = "UPDATE usuario 
+      SET  nom1 = :nom1 ,  nom2 = :nom2 ,ape1 = :ape1 , ape2 = :ape2 , fecha = :fecha   , correo = :correo  
+      WHERE  ID_us = :ID_us ";
+      $consulta = $this->db->prepare($sql2);
+      $consulta->bindValue( ':ID_us',  $a[0] , PDO::PARAM_STR );
+      $consulta->bindValue( ':nom1',   $a[1] , PDO::PARAM_STR );
+      $consulta->bindValue( ':nom2',   $a[2] , PDO::PARAM_STR );
+      $consulta->bindValue( ':ape1',   $a[3] , PDO::PARAM_STR );
+      $consulta->bindValue( ':ape2',   $a[4] , PDO::PARAM_STR );
+      $consulta->bindValue( ':fecha',  $a[5] , PDO::PARAM_STR );
+      $consulta->bindValue( ':correo', $a[6] , PDO::PARAM_STR );
+      $res1 = $consulta->execute();
    }   
    if ($res1) {
       $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
-      $res2 = $this->db->prepare($sql3);
+      $consulta3 = $this->db->prepare($sql3);
+      $res2 = $consulta3->execute();
    }
    if ($res2) {
-      $_SESSION['message'] = $_SESSION['usuario']['nom1'] . ' Actualizo datos';
-      $_SESSION['color'] = 'success';
+      return true;
    } else {
-      $_SESSION['message'] = 'Error al actualizar datos';
-      $_SESSION['color'] = 'danger';
+      return false;
    }
 }
 
@@ -642,707 +713,557 @@ public function eliminarErrorLog($id)
 //CFACTURA
 
 
-public function verFecha($f)
-{
-    
-    //$c = new Conexion;
-    $sql = "SELECT cantidad, sum(f.total) as total, day(f.fecha) as dia
-    from det_factura detf
-    join factura f on f.ID_factura = detf.FK_det_factura
-    where f.fecha = '$f'
-    group by dia";
-    $stm = $this->db->prepare($sql);
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
+   public function verFecha($f){
+      $sql = "SELECT cantidad, sum(f.total) as total, day(f.fecha) as dia
+      from det_factura detf
+      join factura f on f.ID_factura = detf.FK_det_factura
+      where f.fecha = '$f'
+      group by dia";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
 
-
-    //$dat =   $c->query($sql);
-    //return $dat;
-} // fin  de ver fecha U
+   } // fin  de ver fecha U
 
 //  METODOS
 
 // verjoinFactura
 
-public function verjoinFactura()
-{
-    //include_once 'class.conexion.php';
-
-    $sql = "SELECT  ID_us  ,nom1, ape1 ,nom_prod, f.fecha , nom_tipo_pago , total
-        from det_factura df
-        join usuario u on df.CF_us = u.ID_us and df.CF_tipo_doc = u.FK_tipo_doc
-        join producto p on df.FK_det_prod = p.ID_prod
-        join factura f on df.FK_det_factura = f.ID_factura
-        join tipo_pago  tp on f.FK_c_tipo_pago = tp.ID_tipo_pago  order by nom1 asc  ";
-        $stm = $this->db->prepare($sql);
-        $stm->execute();
-        $result = $stm->fetchAll(); 
-        return $result;
-    //$con = new Conexion;
-    //$dat =  $con->query($sql);
-    //return $dat;
-} // fin de metodo ver join factura
+   public function verjoinFactura(){
+      $sql = "SELECT  ID_us  ,nom1, ape1 ,nom_prod, f.fecha , nom_tipo_pago , total
+      from det_factura df
+      join usuario u on df.CF_us = u.ID_us and df.CF_tipo_doc = u.FK_tipo_doc
+      join producto p on df.FK_det_prod = p.ID_prod
+      join factura f on df.FK_det_factura = f.ID_factura
+      join tipo_pago  tp on f.FK_c_tipo_pago = tp.ID_tipo_pago  order by nom1 asc  ";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   } // fin de metodo ver join factura
 
 
 //----------------------------------------------------------
 
 //-------------------------------------------------------------
 //Consulta de que usuarios han realizado compras = Vista = comprasUsuarios.php
-public function usuariosComprasRealizadas()
-{
-    $sql = "SELECT U.ID_us , U.nom2 , U.nom1 , U.ape1 , U.ape2 , U.foto , U.correo , DF.FK_det_factura , F.fecha
-    from factura F join det_factura DF on F.ID_factura = DF.FK_det_factura
-    right join  usuario U on U.ID_us = DF.CF_us
-    order by (DF.FK_det_factura) desc, (F.fecha) desc ,(U.nom1) desc";
-    $stm = $this->db->prepare($sql);
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
-    //$consulta = $this->db->query($sql);
-    //return $consulta;
-}
+   public function usuariosComprasRealizadas(){
+      $sql = "SELECT U.ID_us , U.nom2 , U.nom1 , U.ape1 , U.ape2 , U.foto , U.correo , DF.FK_det_factura , F.fecha
+      from factura F join det_factura DF on F.ID_factura = DF.FK_det_factura
+      right join  usuario U on U.ID_us = DF.CF_us
+      order by (DF.FK_det_factura) desc, (F.fecha) desc ,(U.nom1) desc";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
 //-------------------------------------------------------------
-public function verDia()
-{
-    //include_once 'class.conexion.php';
-    //$c = new Conexion;
-    $sql = "SELECT cantidad, sum(f.total) as total, day(f.fecha) as dia
-        from det_factura detf
-        join factura f on f.ID_factura = detf.FK_det_factura
-        group by dia";
-    $stm = $this->db->prepare($sql);
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
-    //$dat = $c->query($sql);
-    //return $dat;
-}
-public function verSemana()
-{
-    //include_once 'class.conexion.php';
-    //$c = new Conexion;
-    $sql = "SELECT count(*) as 'cantidad',sum(F.total) as Total, DATE_ADD(
+   public function verDia(){
+      $sql = "SELECT cantidad, sum(f.total) as total, day(f.fecha) as dia
+          from det_factura detf
+          join factura f on f.ID_factura = detf.FK_det_factura
+          group by dia";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
+   public function verSemana(){
+      $sql = "SELECT count(*) as 'cantidad',sum(F.total) as Total, DATE_ADD(
         DATE (F.fecha),
         interval(7 - dayofweek(F.fecha)) day)
         dia_final_semana FROM factura F
         group by dia_final_semana
         order by fecha asc";
-    $stm = $this->db->prepare($sql);
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
-    
-    //$i = $c->query($sql);
-    //return $i;
-}
-public function verMes()
-{
-    //include_once 'class.conexion.php';
-    //$c = new Conexion;
-    $sql = "SELECT count(*) as 'cantidad',sum(F.total) as Total, DATE_ADD(
-        DATE (F.fecha),
-        interval(30 - dayofmonth(F.fecha)) day)
-        dia_final_mes FROM factura F
-        group by dia_final_mes
-        order by fecha asc";
-    $stm = $this->db->prepare($sql);
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
-    //$i = $c->query($sql);
-    //return $i;
-}
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
+   public function verMes(){
+      $sql = "SELECT count(*) as 'cantidad',sum(F.total) as Total, DATE_ADD(
+         DATE (F.fecha),
+         interval(30 - dayofmonth(F.fecha)) day)
+         dia_final_mes FROM factura F
+         group by dia_final_mes
+         order by fecha asc";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
 // valida factura en un periodo de fechas
-public function verIntervaloFecha($fechaIni, $fechaFin)
-{
-    //include_once 'class.conexion.php';
-    //$c = new Conexion;
-    $sql = "SELECT * FROM factura
-        WHERE fecha <= '$fechaFin' AND  fecha >= '$fechaIni' 
-        ORDER BY fecha ASC";
-    $stm = $this->db->prepare($sql);
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
-    //$arr = $c->query($sql);
-    //return $arr;
-}
+   public function verIntervaloFecha($fechaIni, $fechaFin){
+      $sql = "SELECT * FROM factura
+          WHERE fecha <= '$fechaFin' AND  fecha >= '$fechaIni' 
+          ORDER BY fecha ASC";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
 // Ver datos  usuario en factura
-public function verUsuarioFactura($id){
-    $sql = "SELECT U.nom1, U.nom2, U.ape1, U.ape2 , T.tel , D.dir
-        FROM usuario U JOIN telefono T ON T.CF_us = U.ID_us
-        JOIN direccion D ON D.CF_us = U.ID_us
-        WHERE U.ID_us = ?
-        LIMIT 1";
-    $stm = $this->db->prepare($sql);
-    $stm->bindValue( 1, $id, PDO::PARAM_STR );
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
-}
-public function verFactura($id)
-{
-    //$c = new Conexion;
-    $sql = "SELECT   U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , TD.nom_doc , U.ID_us
-        from factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-        join det_factura DF on F.ID_factura = DF.FK_det_factura
-        join producto Pr on Pr.ID_prod = DF.FK_det_prod
-        join usuario U  on U.ID_us =  DF.CF_us
-        join direccion D on D.CF_us = U.ID_us
-        join tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
-        where ID_factura = '$id'
-        limit 1";
-    $stm = $this->db->prepare($sql);
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
-    //$result = $c->query($sql);
-    //return $result;
-}
-public function verFactural($id)
-{
-    //$c = new Conexion;
-    $sql = "SELECT  U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , Pr.nom_prod
-        from factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-        join det_factura DF on F.ID_factura = DF.FK_det_factura
-        join producto Pr on Pr.ID_prod = DF.FK_det_prod
-        join usuario U  on U.ID_us =  DF.CF_us
-        join direccion D on D.CF_us = U.ID_us
-        where ID_factura = '$id'";
-    $stm = $this->db->prepare($sql);
-    $stm->execute();
-    $result = $stm->fetchAll(); 
-    return $result;
-    //$result = $c->query($sql);
-    //return $result;
-}
+   public function verUsuarioFactura($id){
+      $sql = "SELECT U.nom1, U.nom2, U.ape1, U.ape2 , T.tel , D.dir
+         FROM usuario U JOIN telefono T ON T.CF_us = U.ID_us
+         JOIN direccion D ON D.CF_us = U.ID_us
+         WHERE U.ID_us = ?
+         LIMIT 1";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id, PDO::PARAM_STR );
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
+   public function verFactura($id){
+      $sql = "SELECT   U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , TD.nom_doc , U.ID_us
+         FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
+         JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+         JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
+         JOIN usuario U  on U.ID_us =  DF.CF_us
+         JOIN direccion D on D.CF_us = U.ID_us
+         JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+         WHERE ID_factura = '$id'
+         LIMIT 1";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
+   public function verFactural($id){
+      $sql = "SELECT  U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , Pr.nom_prod
+         from factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
+         join det_factura DF on F.ID_factura = DF.FK_det_factura
+         join producto Pr on Pr.ID_prod = DF.FK_det_prod
+         join usuario U  on U.ID_us =  DF.CF_us
+         join direccion D on D.CF_us = U.ID_us
+         where ID_factura = '$id'";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
 //==============================================
 //==============================================
 //CLOCALIDAD
-
-public  function verLocalidadId($ID_ciudad){
-   //include_once 'class.conexion.php';
-   //$c = new Conexion;
-   $sql = "SELECT ID_localidad , nom_localidad FROM localidad WHERE FK_ciudad = '$ID_ciudad'";
-           $stm = $this->db->prepare($sql);
-           $stm->execute();
-           $result = $stm->fetchAll(); 
-           return $result;
-   //$r = $c->query($sql);
-   //return $r;
-}
+   public  function verLocalidadId($ID_ciudad){
+      $sql = "SELECT ID_localidad , nom_localidad 
+      FROM localidad 
+      WHERE FK_ciudad = ? ";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":nom_medida", $ID_ciudad, PDO::PARAM_STR);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
+   }
 //============================================
 //============================================
 //CMEDIDA
-public function insertMedia($a){
-   $sql = "INSERT INTO tipo_medida(nom_medida, acron_medida)VALUES( :nom_medida,  :acron_medida)";
-   $stm = $this->db->prepare($sql);
-   $stm->bindValue(":nom_medida", $a[0],   PDO::PARAM_STR);
-   $stm->bindValue(":acron_medida", $a[1], PDO::PARAM_STR);
-   $insert = $stm->execute();
-   if ($insert ) {
-      return true;
-   } else {
-      return false;
+   public function insertMedia($a){
+      $sql = "INSERT INTO tipo_medida(nom_medida, acron_medida)
+      VALUES( :nom_medida,  :acron_medida)";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":nom_medida", $a[0],   PDO::PARAM_STR);
+      $stm->bindValue(":acron_medida", $a[1], PDO::PARAM_STR);
+      $insert = $stm->execute();
+      if ($insert ) {
+         return true;
+      } else {
+         return false;
+      }
+   } 
+   public function verMedida(){
+      $sql = "SELECT * FROM  tipo_medida";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
    }
-} 
 
-
-
-public function verMedida(){
-$sql = "SELECT * FROM  tipo_medida";
-$stm = $this->db->prepare($sql);
-$stm->execute();
-$result = $stm->fetchAll(); 
-return $result;
-}
-
-
-public function verMedidaPorId($ID){
-   $sql = "SELECT * FROM  tipo_medida
-   WHERE ID_medida = :ID ";
-   $stm = $this->db->prepare($sql);
-   $stm->bindValue(":ID", $ID, PDO::PARAM_INT);
-   $stm->execute();
-   $result = $stm->fetchAll(); 
-   return $result;
+   public function verMedidaPorId($ID){
+      $sql = "SELECT * FROM  tipo_medida
+      WHERE ID_medida = :ID ";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":ID", $ID, PDO::PARAM_INT);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
    }
 
 //mostrar datos por ID
 
 
 //Actualizar datos 
-public function actualizarDatosMedida($a){
-   $sql =
-      "UPDATE tipo_medida 
-      SET nom_medida = :nom_medida , acron_medida = :acron_medida  
-      WHERE ID_medida = :id ";
-   $stm = $this->db->prepare($sql);
-   $stm->bindValue(":id", $a[0] , PDO::PARAM_INT );
-   $stm->bindValue(":nom_medida", $a[1] , PDO::PARAM_STR );
-   $stm->bindValue(":acron_medida", $a[2] , PDO::PARAM_STR );
-   $result = $stm->execute();
-   if ($result) {
-      return true;
-   } else {
-      return false;
+   public function actualizarDatosMedida($a){
+      $sql =
+         "UPDATE tipo_medida 
+         SET nom_medida = :nom_medida , acron_medida = :acron_medida  
+         WHERE ID_medida = :id ";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":id", $a[0] , PDO::PARAM_INT );
+      $stm->bindValue(":nom_medida", $a[1] , PDO::PARAM_STR );
+      $stm->bindValue(":acron_medida", $a[2] , PDO::PARAM_STR );
+      $result = $stm->execute();
+      if ($result) {
+         return true;
+      } else {
+         return false;
+      }
+      header("location: ../vista/formMedida.php");
    }
-   header("location: ../vista/formMedida.php");
-}
 
 
 //eliminar registros
-public function eliminarDatosMedia($a){
-  // $this->ver($a, 1);
-   $sql = 
-      "DELETE FROM tipo_medida 
-      WHERE ID_medida = :id ";
-   $stm = $this->db->prepare($sql);
-   $stm->bindValue(":id",$a[0], PDO::PARAM_INT );
-   $result = $stm->execute();
-
-  //  $this->ver( $a[0], 1);
-   if ($result) {
-      return true;
-   } else {
-      return false;
+   public function eliminarDatosMedia($a){
+      $sql = 
+         "DELETE FROM tipo_medida 
+         WHERE ID_medida = :id ";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":id",$a[0], PDO::PARAM_INT );
+      $result = $stm->execute();
+      if ($result) {
+         return true;
+      } else {
+         return false;
+      }
    }
-}
 //==============================
 //==============================
 //CNOTIFICACION
 //------------------------------------------
 //Ver fecha actual
-public function fechaActual()
-{
-  //include_once 'class.conexion.php';
-  //$c = new Conexion;
-  $sql = "SELECT CURDATE() as fecha";
+public function fechaActual(){
+   $sql = "SELECT CURDATE() as fecha";
    $stm= $this->db->prepare($sql);
-        $result = $stm->execute();
-        $result = $stm->fetchAll();
-        return $result;
-  //$dat =  $c->query($sql);
-  //$datos = $dat->fetch_assoc();
-  //$fecha =  $datos['fecha'];
-  $fecha = $result['fecha'];
-  return $fecha;
+   $result = $stm->execute();
+   $result = $stm->fetchAll();
+   return $result;
+   $fecha = $result['fecha'];
+   return $fecha;
 }
 //------------------------------------------
 //------------------------------------------
 //Ver fecha hora
-public function horaActual()
-{
-  //include_once 'class.conexion.php';
-  //$c = new Conexion;
+public function horaActual(){
   $sql = "  SELECT DATE_FORMAT(NOW( ), '%H:%i:%S' )as hora ;";
   $stm =$this->db->prepare($sql);
   $result = $stm->execute();
   $result = $stm->fetchAll();
-  //$dat =  $c->query($sql);
-  //$datos = $dat->fetch_assoc();
   $hora =  $result['hora'];
   return $hora;
 }
 //------------------------------------------
 //------------------------------------------
 //insertar modificacion 
-public function insertModificacion(){
-    //include_once 'class.conexion.php';
-    //$c =  new Conexion;
-    $sql = "INSERT into modific(descrip , fecha , hora ,FK_us , FK_doc , FK_modific) value ( '$this->descrip' , '$this->fecha' , '$this->hora' , '$this->FK_us' , '$this->FK_doc' , '$this->FK_modific')";
-     // insert into sicloud.modific(descrip , fecha , hora ,FK_us , FK_doc , FK_modific) value ( null , '2019-07-14' , '20:30:05' , '2' , 'CC' , '1'  ),
-    $stm = $this->db->prepare($sql);
-    $stm->bindValue(":descrip",$this->descrip);
-    $stm->bindValue(":fecha",$this->fecha);
-    $stm->bindValue(":hora",$this->hora);
-    $stm->bindValue(":FK_us",$this->FK_us);
-    $stm->bindValue(":FK_doc",$this->FK_doc);
-    $stm->bindValue(":FK_modific",$this->FK_modific);
-    $insert = $stm->execute();
-     //$insert = $c->query($sql);
-    //echo $sql;
-    if ($insert) {
-        $_SESSION['message'] = "Se inserto registro de modificacion";
-        $_SESSION['color'] = "success";
-      } else {
-        $_SESSION['message'] = "No se inserto registro de modificacion";
-        $_SESSION['color'] = "success";
-      }
+public function insertModificacion($a){
+   $sql = "INSERT INTO modific(descrip , fecha , hora ,
+   FK_us , FK_doc , FK_modific) 
+   VALUE ( :descrip , :fecha , :hora , :FK_us , :FK_doc , :FK_modific )";
+   $stm = $this->db->prepare($sql);
+   $stm->bindValue(":descrip",   $a[0], PDO::PARAM_STR);
+   $stm->bindValue(":fecha",     $a[1], PDO::PARAM_STR);
+   $stm->bindValue(":hora",      $a[2], PDO::PARAM_STR);
+   $stm->bindValue(":FK_us",     $a[3], PDO::PARAM_STR);
+   $stm->bindValue(":FK_doc",    $a[4], PDO::PARAM_STR);
+   $stm->bindValue(":FK_modific",$a[5], PDO::PARAM_STR);
+   $insert = $stm->execute();
+   if ($insert) {
+      return true;
+   } else {
+      return false;
+   }
 }// fin de insersion modificacion
 //------------------------------------------
 //------------------------------------------
 //ver join de modificaciones
-public function verJoinModificacionesDB(){
-    //include_once 'class.conexion.php';
-    //$c =  new Conexion;
-
-
-    $sql = "SELECT M.ID_modifc , M.descrip , M.fecha , M.hora , M.FK_us , M.FK_doc  ,  U.nom1 , U.ape1 ,  T_M.nom_modific , R.nom_rol  
-        from tipo_modific T_M JOIN modific M on T_M.ID_t_modific =  M.FK_modific
-        JOIN usuario U ON M.FK_us = U.ID_us
-        JOIN rol_usuario R_U on U.ID_us = R_U.FK_us
-        JOIN rol R on R_U.FK_rol = R.ID_rol_n";
-         $consulta= $this->db->prepare($sql);
-         $result = $consulta->execute();
-         $result = $consulta->fetchAll();
-         return $result;
-     //insert into sicloud.modific(descrip , fecha , hora ,FK_us , FK_doc , FK_modific) value ( null , '2019-07-14' , '20:30:05' , '2' , 'CC' , '1'  ),
-     //$consulta=  $c->query($sql);
-     //return $consulta;   
-}// fin de join modificacion
+   public function verJoinModificacionesDB(){
+      $sql = "SELECT M.ID_modifc , M.descrip , M.fecha , M.hora , 
+      M.FK_us , M.FK_doc  ,  U.nom1 , U.ape1 ,  T_M.nom_modific , R.nom_rol  
+         from tipo_modific T_M JOIN modific M on T_M.ID_t_modific =  M.FK_modific
+         JOIN usuario U ON M.FK_us = U.ID_us
+         JOIN rol_usuario R_U on U.ID_us = R_U.FK_us
+         JOIN rol R on R_U.FK_rol = R.ID_rol_n";
+      $consulta= $this->db->prepare($sql);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;   
+   }// fin de join modificacion
 //------------------------------------------
 //METODOS
 //fecha actual
- public function insertEntrada(){
-     //include_once 'class.conexion.php';
-     //$c = new Conexion;
-     $sql = "INSERT INTO orden_entrada ( fecha_ingreso , CF_rol , CF_rol_us , CF_tipo_doc) VALUES ('$this->fecha_ingreso' , '$this->CF_rol' , '$this->CF_rol_us' , '$this->CF_tipo_doc' )";
-     $stm = $this->db->prepare($sql);
-     $stm->bindValue(":fecha_ingreso",$this->fecha_ingreso);
-     $stm->bindValue(":CF_rol",$this->CF_rol);
-     $stm->bindValue(":CF_rol_us",$this->CF_rol_us);
-     $stm->bindValue(":CF_tipo_doc",$this->CF_tipo_doc);
-     $insert = $stm->execute();
-     //$query =   $c->query($sql);       
-  if($insert){   
-   $_SESSION['message'] =  'Se a insrtado entrada';
-   $_SESSION['color'] = 'success'; 
-
-}else{
-$_SESSION['message'] =  'Error al insertar entrada';
-$_SESSION['color'] = 'danger'; 
-
-}// fin de insrtar datos
-}
+   public function insertEntrada($a){
+      $sql = "INSERT INTO orden_entrada ( fecha_ingreso , CF_rol , CF_rol_us , CF_tipo_doc) 
+      VALUES (? , ? , ? , ? )";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":fecha_ingreso",$a[0], PDO::PARAM_STR );
+      $stm->bindValue(":CF_rol",       $a[1], PDO::PARAM_INT );
+      $stm->bindValue(":CF_rol_us",    $a[2], PDO::PARAM_STR );
+      $stm->bindValue(":CF_tipo_doc",  $a[3], PDO::PARAM_STR );
+      $insert = $stm->execute();
+      if($insert){   
+         return true;
+      }else{
+         return true;
+      }// fin de insrtar datos
+   }
 //===========================================
 //===========================================
 //CPAGO
-public function verPago(){
-   //$c = new Conexion;
-           $sql = "SELECT *  FROM tipo_pago";
-   //$dat = $c->query($sql);
-   //return $dat;
-           $stm = $this->db->prepare($sql);
-           $stm->execute();
-           $result = $stm->fetchAll(); 
-           return $result;
+   public function verPago(){
+      $sql = "SELECT *  FROM tipo_pago";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll(); 
+      return $result;
    }
 //===========================================
 //CPRODUCTO
    //query insertar producto                                     C
-   public function insertarProducto($a)
-   {
-       $sql = "INSERT INTO producto (ID_prod, nom_prod, val_prod, stok_prod, estado_prod, CF_categoria, CF_tipo_medida)
-       VALUES(?, ? ,? , ? ,? ,? ,?)";
-       //      $sql = "INSERT INTO sicloud.tipo_medida(nom_medida, acron_medida)VALUES('$this->nom_medida','$this->acron_medida')";
-       //$ejecucion = $db->query($sql);
-       $stm = $this->db->prepare($sql);
-       $stm->bindValue(1, $a[0]);
-       $stm->bindValue(2, $a[1]);
-       $stm->bindValue(3, $a[2]);
-       $stm->bindValue(4, $a[3]);
-       $stm->bindValue(5, $a[4]);
-       $stm->bindValue(6, $a[5]);
-       $stm->bindValue(7, $a[6]);
-       $ejecucion = $stm->execute();
-       if ($ejecucion) {
-           $_SESSION['message'] = "Se creo producto";
-           $_SESSION['color'] = "success";
-           return true;
-       } else {
-           $_SESSION['message'] = "No se creo producto";
-           $_SESSION['color'] = "danger";
-           return false;
-       }
-       // header("location: ../CU004-crearProductos.php");
+   public function insertarProducto($a){
+      $sql = "INSERT INTO producto (ID_prod, nom_prod, 
+      val_prod, stok_prod, estado_prod, 
+      CF_categoria, CF_tipo_medida)
+      VALUES(?, ? ,? , ? ,? ,? ,?)";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(1, $a[0]);
+      $stm->bindValue(2, $a[1]);
+      $stm->bindValue(3, $a[2]);
+      $stm->bindValue(4, $a[3]);
+      $stm->bindValue(5, $a[4]);
+      $stm->bindValue(6, $a[5]);
+      $stm->bindValue(7, $a[6]);
+      $ejecucion = $stm->execute();
+      if ($ejecucion) {
+          return true;
+      } else {
+          return false;
+      }
    } // fin de javaScript
 
 
 
    //query ver productos                                        R
-   public function verProductos()
-   {
-       //include_once 'class.conexion.php';
-       //$db = new Conexion;
-       $sql = "SELECT P.ID_prod , P.img , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , C.nom_categoria , M.nom_medida
-               from producto P join categoria C on C.ID_categoria = P.CF_categoria
-               join tipo_medida M on P.CF_tipo_medida = M.ID_medida
-               order by  P.stok_prod  desc , P.nom_prod asc;";
-       $stm = $this->db->prepare($sql);
-       $stm->execute();
-       $result = $stm->fetchAll();
-       return $result;
-       //$result = $db->query($sql);
-       //return $result;
+   public function verProductos(){
+      $sql = "SELECT P.ID_prod , P.img , P.nom_prod , 
+      P.val_prod , P.stok_prod , P.estado_prod , 
+      C.nom_categoria , M.nom_medida
+      from producto P join categoria C on C.ID_categoria = P.CF_categoria
+      join tipo_medida M on P.CF_tipo_medida = M.ID_medida
+      order by  P.stok_prod  desc , P.nom_prod asc;";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll();
+      return $result;
    } // fin de ver productos
 
 
-   public function verProductosGrafica()
-   {
-       //include_once 'class.conexion.php';
-       //$db = new Conexion;
-       $sql = "SELECT  nom_prod , stok_prod  FROM producto order by stok_prod";
-       $stm = $this->db->prepare($sql);
-       $stm->execute();
-       $result = $stm->fetchAll();
-       return $result;
-       //$result = $db->query($sql);
-       //return $result;
-
+   public function verProductosGrafica(){
+      $sql = "SELECT  nom_prod , stok_prod  
+      FROM producto 
+      order by stok_prod";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll();
+      return $result;
    }
 
    //query ver productos                                        R
-   public function verPromociones()
-   {
-       //include_once 'class.conexion.php';
-       //$db = new Conexion;
-       $sql = "SELECT P.ID_prod , P.img , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , C.nom_categoria , M.nom_medida
-           from producto P join categoria C on C.ID_categoria = P.CF_categoria
-           join tipo_medida M on P.CF_tipo_medida = M.ID_medida where estado_prod = 'Promoción'
-           order by P.nom_prod asc ";
-       $stm = $this->db->prepare($sql);
-       $stm->execute();
-       $result = $stm->fetchAll();
-       return $result;
-       //$result = $db->query($sql);
-       //return $result;
+   public function verPromociones(){
+      $sql = "SELECT P.ID_prod , P.img , P.nom_prod , P.val_prod , 
+      P.stok_prod , P.estado_prod , C.nom_categoria , M.nom_medida
+      from producto P join categoria C on C.ID_categoria = P.CF_categoria
+      join tipo_medida M on P.CF_tipo_medida = M.ID_medida 
+      where estado_prod = 'Promoción'
+      order by P.nom_prod asc ";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll();
+      return $result;
    } // fin de ver productos
 
    //query ver productos                                       
-   public function verProductosId($id)
-   {
-       //include_once 'class.conexion.php';
-       //$db = new Conexion;
-       $sql = "SELECT P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , C.nom_categoria, T_M.nom_medida
-          from producto P 
-          join categoria C on P.CF_categoria = C.ID_categoria 
-          join tipo_medida T_M on P.CF_tipo_medida = T_M.ID_medida 
-          WHERE ID_prod = '$id' ";
-       $stm = $this->db->prepare($sql);
-       $stm->execute();
-       $result = $stm->fetchAll();
-       return $result;
-       //SELECT * FROM SICLOUD.producto  WHERE ID_prod = '9808953743';
-       //$result = $db->query($sql);
-       //return $result;
+   public function verProductosId($id){
+      $sql = "SELECT P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , C.nom_categoria, T_M.nom_medida
+         from producto P 
+         join categoria C on P.CF_categoria = C.ID_categoria 
+         join tipo_medida T_M on P.CF_tipo_medida = T_M.ID_medida 
+         WHERE ID_prod = '$id' ";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll();
+      return $result;
    } // fin de ver productos por id
 
 
-   public function verJoin($id)
-   {
-       //include_once 'class.conexion.php';
-       //$db = new Conexion;
-       $sql = "SELECT C.ID_categoria , C.nom_categoria, 
-          P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , P.estado_prod , 
-          T.ID_medida , T.nom_medida , T.acron_medida, EP.nom_empresa
-          FROM categoria C 
-          JOIN producto P ON C.ID_categoria = P.CF_categoria 
-          JOIN tipo_medida T ON T.ID_medida = P.CF_tipo_medida
-          JOIN det_producto DP ON P.ID_prod = DP.FK_prod
-          JOIN empresa_provedor EP ON DP.FK_rut = EP.ID_rut 
-          WHERE  P.ID_prod = '$id' LIMIT 1";
-       $stm = $this->db->prepare($sql);
-       $stm->execute();
-       $result = $stm->fetchAll();
-       return $result;
-       //$sql = "SELECT C.ID_categoria , C.nom_categoria , P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , P.estado_prod, T.ID_medida , T.nom_medida , T.acron_medida FROM SICLOUD.categoria C JOIN SICLOUD.producto P on ID_categoria = CF_categoria JOIN sicloud.tipo_medida T WHERE ID_prod = '$id'   LIMIT 1 ";
-       //$a =  $db->query($sql);
-       //return $a;
+   public function verJoin($id){
+      $sql = "SELECT C.ID_categoria , C.nom_categoria, 
+         P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , P.estado_prod , 
+         T.ID_medida , T.nom_medida , T.acron_medida, EP.nom_empresa
+         FROM categoria C 
+         JOIN producto P ON C.ID_categoria = P.CF_categoria 
+         JOIN tipo_medida T ON T.ID_medida = P.CF_tipo_medida
+         JOIN det_producto DP ON P.ID_prod = DP.FK_prod
+         JOIN empresa_provedor EP ON DP.FK_rut = EP.ID_rut 
+         WHERE  P.ID_prod = '$id' LIMIT 1";
+      $stm = $this->db->prepare($sql);
+      $stm->execute();
+      $result = $stm->fetchAll();
+      return $result;
    }
 
 
 
    //EDITAR PRODUCTO                                             U
-   public function editarProducto($id)
-   {
-       //include_once 'class.conexion.php';
-       //$con = new Conexion;
-       $sql = "UPDATE producto SET ID_prod = '$this->ID_prod' , nom_prod = '$this->nom_prod' , val_prod = '$this->val_prod' , stok_prod = '$this->stok_prod' , estado_prod = '$this->estado_prod', CF_categoria = '$this->CF_categoria' , CF_tipo_medida = '$this->CF_tipo_medida'  WHERE ID_prod = '$id' ";
-       $stm = $this->db->prepare($sql);
-       $stm = $this->db->prepare($sql);
-       $stm->bindValue(":ID_prod", $this->ID_prod);
-       $stm->bindValue(":nom_prod", $this->nom_prod);
-       $stm->bindValue(":val_prod", $this->val_prod);
-       $stm->bindValue(":stok_prod", $this->stok_prod);
-       $stm->bindValue(":estado_prod", $this->estado_prod);
-       $stm->bindValue(":CF_coategoria", $this->CF_categoria);
-       $stm->bindValue(":CF_tipo_medida", $this->CF_tipo_medida);
-       $r = $stm->execute();
-       //$r = $con->query($sql);
-       if ($r) {
-           $_SESSION['message'] = "Actualizacion de producto exitosa";
-           $_SESSION['color'] = "primary";
-       } else {
-           $_SESSION['message'] = "Error al actualizar producto";
-           $_SESSION['color'] = "danger";
-       }
-       header("location: ../vista/CU004-crearProductos.php?accion=verProducto");
+   public function editarProducto($a){
+      $sql = "UPDATE producto SET ID_prod = :ID_prod , 
+         nom_prod = :nom_prod , val_prod = :val_prod , 
+         stok_prod = :stok_prod , estado_prod = :estado_prod, 
+         CF_categoria = :CF_categoria , CF_tipo_medida = :CF_tipo_medida  
+      WHERE ID_prod = ? ";
+      $stm = $this->db->prepare($sql);
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":ID_prod",        $a[0] , PDO::PARAM_STR );
+      $stm->bindValue(":nom_prod",       $a[1] , PDO::PARAM_STR );
+      $stm->bindValue(":val_prod",       $a[2] , PDO::PARAM_INT );
+      $stm->bindValue(":stok_prod",      $a[3] , PDO::PARAM_INT );
+      $stm->bindValue(":estado_prod",    $a[4] , PDO::PARAM_STR );
+      $stm->bindValue(":CF_categoria",   $a[5] , PDO::PARAM_INT );
+      $stm->bindValue(":CF_tipo_medida", $a[6] , PDO::PARAM_INT );
+      $r = $stm->execute();
+      if ($r) {
+         return true;
+      } else {
+         return false;
+      }
    } // fin de editar productos
 
 
 
    //ELIMINAR PRODUCTO                                    D
-   public function eliminarProducto($id)
-   {
-       //include_once 'class.conexion.php';
-       //$con = new Conexion;
-       $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
-       $consulta1 = $this->db->prepare($sql1);
-       $res =  $consulta1->execute();
-
-       if ($res) {
-           $sql2 = " DELETE FROM producto  WHERE ID_prod = '$id'  ";
-           $consulta2 = $this->db->prepare($sql2);
-           $consulta2->bindValue(":id", $id);
-           $res1 = $consulta2->execute();
-           //$res1 = $con->query($sql2);
-       }
-
-       if ($res1) {
-           $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
-           $consulta3 = $this->db->prepare($sql3);
-           $res2 = $consulta3->execute();
-           //$res2 = $con->query($sql3);
-       }
-
-       if ($res2) {
-           $_SESSION['message'] = "Elimino producto";
-           $_SESSION['color'] = "danger";
-           return true;
-       } else {
-           $_SESSION['message'] = "Error al eliminar producto";
-           $_SESSION['color'] = "danger";
-           return false;
-       }
-       header("location: ../vista/CU004-crearProductos.php?accion=verProducto");
+   public function eliminarProducto($id){
+      $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
+      $consulta1 = $this->db->prepare($sql1);
+      $res =  $consulta1->execute();
+      if ($res) {
+         $sql2 = " DELETE FROM producto  WHERE ID_prod = :id  ";
+         $consulta2 = $this->db->prepare($sql2);
+         $consulta2->bindValue(":id", $id, PDO::PARAM_STR );
+         $res1 = $consulta2->execute();
+      }
+      if ($res1) {
+         $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
+         $consulta3 = $this->db->prepare($sql3);
+         $res2 = $consulta3->execute();
+      }
+      if ($res2) {
+         return true;
+      } else {
+         return false;
+      }
    }
 
 
-   public function inserCatidadProducto($cant, $stock, $id)
-   {
-       // include_once 'class.conexion.php';
-       //$c = new Conexion;
-       $t = $stock + $cant;
-       // UPDATE sicloud.producto SET stok_prod = '8' WHERE ID_prod = '0529063441';
-       $sql = "UPDATE producto SET stok_prod = '$t' WHERE ID_prod = '$id' ";
-       $stm = $this->db->prepare($sql);
-       $stm->bindValue(":stok_prod", $this->stok_prod);
-       $stm->bindValue(":ID_prod", $this->ID_prod);
-       $result = $stm->execute();
-       //$c->query($sql);
-
-
-       if ($result) {
-           $_SESSION['message'] = "Agrego existencia";
-           $_SESSION['color'] = "success";
-       } else {
-           $_SESSION['message'] = "Error al agregar existencia";
-           $_SESSION['color'] = "danger";
-       }
-       header("location: ../vista/CU003-ingresoProducto.php?accion=verProducto");
+   public function inserCatidadProducto($cant, $stock, $id){
+      $t = $stock + $cant;
+      // UPDATE sicloud.producto SET stok_prod = '8' WHERE ID_prod = '0529063441';
+      $sql = "UPDATE producto SET stok_prod = :stok_prod WHERE ID_prod = :ID_prod ";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":id", $id,       PDO::PARAM_STR );
+      $stm->bindValue(":stok_prod", $t, PDO::PARAM_INT );
+      $stm->bindValue(":ID_prod", $id,  PDO::PARAM_STR );
+      $result = $stm->execute();
+      if ($result) {
+         return true;
+      } else {
+         return true;
+      }
    }
 
-   public function verProductosAlfa($id)
-   {
-       // include_once 'class.conexion.php';
-       // $c = new Conexion;
-       $sql = "SELECT nom_prod , stok_prod , nom_categoria  from producto sp
-           join categoria sc on sp.CF_categoria = sc.ID_categoria 
-           WHERE ID_categoria = $id 
-           order by nom_prod asc";
-       $consulta = $this->db->prepare($sql);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result;
-       //$dat = $c->query($sql);
-       //return $dat;
+   public function verProductosAlfa($id){
+      $sql = "SELECT nom_prod , stok_prod , nom_categoria  from producto sp
+         JOIN categoria sc on sp.CF_categoria = sc.ID_categoria 
+         WHERE sc.ID_categoria = :ID_categoria
+         ORDER BY nom_prod asc";
+      $consulta = $this->db->prepare($sql);
+      $consulta->bindValue(":ID_categoria", $id,  PDO::PARAM_STR );
+      $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
    }
 
-   public function ConteoProductosT()
-   {
-       //include_once 'class.conexion.php';
-       //$c = new Conexion;
-       $sql = "SELECT nom_prod , sum(stok_prod) as total FROM producto GROUP BY nom_prod
-       UNION
-       SELECT estado_prod, sum(stok_prod) as total
-       FROM producto";
-       $consulta = $this->db->prepare($sql);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result;
-       // $dat = $c->query($sql);
-       //return $dat;
+   public function ConteoProductosT(){
+      $sql = "SELECT nom_prod , sum(stok_prod) as total 
+      FROM producto GROUP BY nom_prod
+      UNION
+      SELECT estado_prod, sum(stok_prod) as total
+      FROM producto";
+      $consulta = $this->db->prepare($sql);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
    }
 
    // METODO para ver los productos de una categoria 
-   public function verPorCategoria($id)
-   {
-       $sql = "SELECT  P.ID_prod ,  P.nom_prod ,P.img , P.val_prod , P.stok_prod , P.estado_prod  , P.CF_tipo_medida , 
-           C.ID_categoria , C.nom_categoria
-           FROM producto P JOIN categoria C ON  P.CF_categoria = C.ID_categoria
-           where C.ID_categoria = :id
-           order by P.nom_prod asc";
-       $consulta = $this->db->prepare($sql);
-       $consulta->bindValue(':id', $id);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result;
-       //$consulta = $c->query($sql);
-       //return $consulta;
+   public function verPorCategoria($id){
+      $sql = "SELECT  P.ID_prod ,  P.nom_prod ,P.img , P.val_prod , 
+         P.stok_prod , P.estado_prod  , P.CF_tipo_medida , 
+         C.ID_categoria , C.nom_categoria
+         FROM producto P 
+         JOIN categoria C ON  P.CF_categoria = C.ID_categoria
+         WHERE C.ID_categoria = :id
+         order by P.nom_prod asc";
+      $consulta = $this->db->prepare($sql);
+      $consulta->bindValue(':id', $id);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
    }
 
    // METODO
    //-----------------------------------------------------------------
    //Imagenes en pantalla
-   public function listaProductosImg()
-   {
-       //   include_once '../../plantillas/inihtmlN3';
-       include_once   '../controlador/controaldorsession.php';
-       include_once   'class.conexion.php';
-       // $cnx = new Conexion;
-       $sql = "SELECT * from producto";
-       $consulta = $this->db->prepare($sql);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result; //$result = $cnx->query($sql);
+   public function listaProductosImg(){
+      $sql = "SELECT * from producto";
+      $consulta = $this->db->prepare($sql);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
    }
    //-----------------------------------------------------------------
    //-----------------------------------------------------------------
    //busquda de producto por primera letra
-   public function primeraLetra($letra)
-   {
-       //include_once   'clases/class.conexion.php';
-       //  $cnx = new Conexion;
-       $sql = "SELECT * from producto where nom_prod LIKE '$letra%'";
-       $consulta = $this->db->prepare($sql);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result;
-       //$array = $cnx->query($sql);
-       //return $array;
+   public function primeraLetra($letra){
+      $sql = "SELECT * from producto 
+      WHERE nom_prod LIKE '$letra%'";
+      $consulta = $this->db->prepare($sql);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
    }
    //----------------------------------------------------------------
    //imput bscador
-   public function buscarPorNombreProducto($buscar)
-   {
-       //include_once   'clases/class.conexion.php';
-       //$cnx = new Conexion;
-       $sql = "SELECT  P.ID_prod ,  P.nom_prod ,P.img , P.val_prod , P.stok_prod , P.estado_prod  , P.CF_tipo_medida , C.ID_categoria , C.nom_categoria
-           FROM producto P JOIN categoria C ON  P.CF_categoria = C.ID_categoria
-           WHERE (ID_prod LIKE '%$buscar%' or nom_prod  LIKE '%$buscar%') order by nom_prod";
+   public function buscarPorNombreProducto($buscar){
+      $sql = "SELECT  P.ID_prod ,  P.nom_prod ,P.img , 
+      P.val_prod , P.stok_prod , P.estado_prod  , 
+      P.CF_tipo_medida , C.ID_categoria , 
+      C.nom_categoria
+      FROM producto P 
+      JOIN categoria C ON  P.CF_categoria = C.ID_categoria
+      WHERE (ID_prod 
+      LIKE '%$buscar%' or nom_prod  
+      LIKE '%$buscar%') 
+      order by nom_prod";
        $consulta = $this->db->prepare($sql);
        $result = $consulta->execute();
        $result = $consulta->fetchAll();
        return $result;
-       //$array = $cnx->query($sql);
-       //return $array;
    }
 
-
    public function inserTfotoUs( $foto,  $id_us){
-       $sql = "UPDATE  usuario SET foto = ? where ID_us = ? ";
+       $sql = "UPDATE  usuario 
+       SET foto = ? 
+       where ID_us = ? ";
        $consulta = $this->db->prepare($sql);
        $consulta->bindValue( 1 ,  $foto, PDO::PARAM_STR );
        $consulta->bindValue( 2 ,  $id_us, PDO::PARAM_STR );
@@ -1351,31 +1272,32 @@ public function verPago(){
    }
 
    public function inserTfotoProd( $foto,  $ID_prod){
-      $sql = "UPDATE  producto SET img = ? where ID_prod = ? ";
+      $sql = "UPDATE  producto 
+      SET img = ? 
+      where ID_prod = ? ";
       $consulta = $this->db->prepare($sql);
       $consulta->bindValue( 1 ,  $foto, PDO::PARAM_STR );
       $consulta->bindValue( 2 ,  $ID_prod, PDO::PARAM_STR );
       $consulta = $consulta->execute();
       return true;
-  }
+   }
 
 
 
 
-   public function verProductosIdCarrito($id)
-   {
-       //include_once 'class.conexion.php';
-       //$db = new Conexion;
-       $sql = "SELECT P.img , P.ID_prod , P.nom_prod , P.stok_prod , P.descript , P.val_prod , P.estado_prod , C.nom_categoria, T_M.nom_medida
-               from producto P join categoria C on P.CF_categoria = C.ID_categoria 
-               join tipo_medida T_M on P.CF_tipo_medida = T_M.ID_medida WHERE P.ID_prod = '$id' ";
-       $consulta = $this->db->prepare($sql);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result;
-       //            SELECT * FROM SICLOUD.producto  WHERE ID_prod = '9808953743';
-       //$result = $db->query($sql);
-       //return $result;
+   public function verProductosIdCarrito($id){
+      $sql = "SELECT P.img , P.ID_prod , P.nom_prod , 
+      P.stok_prod , P.descript , P.val_prod , 
+      P.estado_prod , C.nom_categoria, 
+      T_M.nom_medida
+      from producto P 
+      join categoria C on P.CF_categoria = C.ID_categoria 
+      join tipo_medida T_M on P.CF_tipo_medida = T_M.ID_medida 
+      WHERE P.ID_prod = '$id' ";
+      $consulta = $this->db->prepare($sql);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
    }
 
    //=================================================
@@ -1387,24 +1309,20 @@ public function verPago(){
       $c->execute();
       $r = $c->fetchAll();
       return $r;
-  }
+   }
 //===================================================
 //===================================================
 //CPUNTOS
-public function insertPuntos( $FK_us , $FK_tipo_doc)
-{
-  //include_once 'class.conexion.php';
-  //$c = new Conexion;
-  $sql = "INSERT INTO puntos ( puntos , fecha , FK_us , FK_tipo_doc)VALUE(  '$this->puntos' , '$this->fecha' , '$FK_us' , '$FK_tipo_doc')";
+public function insertPuntos( $a ){
+  $sql = "INSERT INTO puntos ( puntos , fecha , FK_us , FK_tipo_doc)
+  VALUE(  :puntos , :fecha , :FK_us , :FK_tipo_doc)";
   $stm = $this->db->prepare($sql);
-  $stm->bindValue(":puntos",$this->puntos);
-  $stm->bindValue(":fecha",$this->fecha);
+  $stm->bindValue(":puntos",      $a[0] );
+  $stm->bindValue(":fecha",       $a[1] );
+  $stm->bindValue(":FK_us",       $a[2] );
+  $stm->bindValue(":FK_tipo_doc", $a[3] );
+  $stm->execute();
   
-  // $c->query($sql);
-
-
-//   INSERT INTO puntos ( puntos , fecha , FK_us , FK_tipo_doc)VALUE(  '1' , '1990-08-15' , '1' , 'CC'   );
-
 }// fin de insert punto
 //=============================================
 //============================================
@@ -1412,171 +1330,126 @@ public function insertPuntos( $FK_us , $FK_tipo_doc)
 
   //METODOS
 
-
-
-
-
-  public function insertrRolUs($a){
-      echo 'array de rol'.'<pre>';   print_r($a);    echo '</pre>';
-           $sql = "INSERT INTO rol_usuario(FK_rol,FK_us,FK_tipo_doc,fecha_asignacion,estado)
-            VALUES (?,?,?,?,?)";
-
-            // $STH->bindParam(':12', $_POST['napomena'], PDO::PARAM_STR);
-            //PDO::PARAM_INT
-            //PDO::PARAM_STR
-            $stm = $this->db->prepare($sql);
-            foreach( $a as $i => $d ){
-          $stm->bindValue( 1, $d[10], PDO::PARAM_INT );
-          $stm->bindValue( 2 ,$d[0] , PDO::PARAM_STR );
-          $stm->bindValue( 3 ,$d[9] , PDO::PARAM_STR  );
-          $stm->bindValue( 4 ,$d[11] , PDO::PARAM_STR );
-          $stm->bindValue( 5 ,$d[12] ,  PDO::PARAM_STR );
-         }
-         $bool = $stm->execute();
-         if($bool){
-            return true;
-         }else{
-            return $a;
-        }
+   public function insertrRolUs($a){
+      $sql = "INSERT INTO rol_usuario(FK_rol,FK_us,FK_tipo_doc,fecha_asignacion,estado)
+      VALUES (?,?,?,?,?)";
+      //PDO::PARAM_INT
+      //PDO::PARAM_STR
+      $stm = $this->db->prepare($sql);
+      foreach( $a as $i => $d ){
+      $stm->bindValue( 1, $d[10], PDO::PARAM_INT );
+      $stm->bindValue( 2 ,$d[0] , PDO::PARAM_STR );
+      $stm->bindValue( 3 ,$d[9] , PDO::PARAM_STR  );
+      $stm->bindValue( 4 ,$d[11] , PDO::PARAM_STR );
+      $stm->bindValue( 5 ,$d[12] ,  PDO::PARAM_STR );
       }
+      $bool = $stm->execute();
+      if($bool){
+        return true;
+      }else{
+        return $a;
+      }
+   }
    
 
 //========================================
 //=======================================
 //CROL
 
-// metodo ver roles                            R
-public function verRol(){
-   $sql = "SELECT * FROM rol";
-   $consulta = $this->db->prepare($sql);
-   $consulta->execute();
-   $result = $consulta->fetchAll();
-   return $result;
-}// fin de lectura rol
+   // metodo ver roles                            R
+   public function verRol(){
+      $sql = "SELECT * FROM rol";
+      $consulta = $this->db->prepare($sql);
+      $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
+   }// fin de lectura rol
 
+   // metodo ver rol por id                   R
+   public function verRolId($id){
+      $sql = "SELECT * FROM rol WHERE ID_rol_n = $id";
+      $consulta = $this->db->prepare($sql);
+      $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
+   }// fin de ver rol por ID
 
+   // Actualizar datos                       U
+   public function insertUpdateRol($a){ 
+      $sql = "UPDATE rol SET nom_rol = :nom_rol  WHERE ID_rol_n = :ID_rol_n";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":nom_rol", $a[0], PDO::PARAM_STR );
+      $stm->bindValue(":ID_rol_n",$a[1], PDO::PARAM_STR );
+      $ri = $stm->execute();
+      if($ri){ 
+         return true;
+      }
+      if($ri){
+         return true;
+      }
+   }// fin de insert update rol       
 
-// metodo ver rol por id                   R
-public function verRolId($id){
-//include_once 'class.conexion.php';
-  // $con = new Conexion;
-   $sql = "SELECT * FROM rol WHERE ID_rol_n = $id";
-   $consulta = $this->db->prepare($sql);
-   $consulta->execute();
-   $result = $consulta->fetchAll();
-   return $result;
-   //$r = $con->query($sql);
-   //return $r;
-}// fin de ver rol por ID
-
-
-// Actualizar datos                       U
-public function insertUpdateRol($id){ 
-//include_once 'class.conexion.php';
-
-  //  $con = new Conexion;
-    $sql = "UPDATE rol SET nom_rol = '$this->nom_rol'  WHERE ID_rol_n = $id";
-    $stm = $this->db->prepare($sql);
-    $stm->bindValue(":nom_rol",$this->nom_rol);
-    $stm->bindValue(":ID_rol_n",$this->ID_rol);
-    $ri = $stm->execute();
-    //$ri = $con->query($sql);
-    if($ri){ echo "<script>alert('Se actualizo Rol exitioso');</script>"; echo "<script>window.location.replace('../vista/formRol.php');</script>"; }else{  echo "<script>alert('Error al actualizar rol ');</script>"; echo "<script>window.location.replace('../vista/formRol.php');</script>"; }
-  
- if($ri){
-     $_SESSION['message'] = "Se actualizo el rol";
-     $_SESSION['color'] = "primary";
-
- }
- header("location: ../forms/formRol.php ");
-}// fin de insert update rol       
-
-
-// Borrar rol                               D
-public function eliminarRol($id){ 
-//include_once 'class.conexion.php';
-//$con = new Conexion;
-$sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
-$stm = $this->db->prepare($sql1);
-$res = $stm->execute();
-//     $res =   $con->query($sql1);
-
-if($res){
-    $sql2 = " DELETE FROM rol WHERE ID_rol_n = $id  ";
-    $stm = $this->db->prepare($sql2);
-    $res1 = $stm->execute();
-    //$res1 = $con->query($sql2); 
-}
-
-if($res1){
-    $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
-    $stm = $this->db->prepare($sql3);
-    $res2 = $stm->execute();
-    // $res2 = $con->query($sql3);
-}
-
-
-if($res2){ echo "<script>alert('Se elimino Rol exitioso');</script>"; echo "<script>window.location.replace('../vista/formRol.php');</script>"; }else{  echo "<script>alert('Error al eliminar rol ');</script>"; echo "<script>window.location.replace('../vista/formRol.php');</script>"; }
-if($res2){
-    $_SESSION['message'] = "Se elimino el rol";
-    $_SESSION['color'] = "danger";
-
-}else{}
-header("location:../vista/formRol.php ");
-}
+   // Borrar rol                               D
+   public function eliminarRol($id){ 
+      $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
+      $stm = $this->db->prepare($sql1);
+      $res = $stm->execute();
+      if($res){
+         $sql2 = " DELETE FROM rol WHERE ID_rol_n = :ID_rol_n ";
+         $stm->bindValue(":ID_rol_n", $id, PDO::PARAM_INT );
+         $stm = $this->db->prepare($sql2);
+         $res1 = $stm->execute(); 
+      }
+      if($res1){
+          $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
+          $stm = $this->db->prepare($sql3);
+          $res2 = $stm->execute();
+      }
+      if($res2){
+         return true;
+      }else{
+         return false;
+      }
+   }
 //======================================
 //======================================
 //CTELEFONO
-public function insertTelefonoUsuario(){
-   //include_once '../clases/class.conexion.php';
-   //$c = new Conexion;
-   $sql = "INSERT INTO telefono ( tel,CF_us)values('$this->tel', '$this->CF_us ')";
-   $stm = $this->db->prepare($sql);
-   $stm -> bindValue (":tel",$this->tel);
-   $stm -> bindValue (":CF_us",$this->CF_us);
-   $insert = $stm->execute();
-   //echo $sql;
-   //$insert = $c->query($sql);
-      
-  if($insert){   
-   $_SESSION['message'] =  'A registrado telefono para su cuenta, si desea ingresa otro telefono, favor digite';
-   $_SESSION['color'] = 'success'; 
-
-
-   }else{
-       $_SESSION['message'] =  'No registro telefono';
-       $_SESSION['color'] = 'danger'; 
-       }
-
-       header("location: ../vista/formTelefono.php ");
-}// fin de insert telefono usuario
+   public function insertTelefonoUsuario($a){
+      $sql = "INSERT INTO telefono ( tel,CF_us)values(:tel , :CF_us )";
+      $stm = $this->db->prepare($sql);
+      $stm -> bindValue (":tel",  $a[0], PDO::PARAM_INT );
+      $stm -> bindValue (":CF_us",$a[1], PDO::PARAM_STR );
+      $insert = $stm->execute();
+      if($insert){   
+         $_SESSION['message'] =  'A registrado telefono para su cuenta, si desea ingresa otro telefono, favor digite';
+         $_SESSION['color'] = 'success'; 
+         return true;
+       }else{
+         $_SESSION['message'] =  'No registro telefono';
+         $_SESSION['color'] = 'danger'; 
+         return false;
+      }
+   }// fin de insert telefono usuario
 
 // muestra los datos por id------------------------------------------------------------
-public function verTelefonosUsuarioPorID($id){
-//include_once '../clases/class.conexion.php';
-//$c = new Conexion;
-   $sql = "SELECT U.ID_us , U.nom1 , U.ape1 , R.nom_rol , T.tel
-       from rol R join rol_usuario R_U on R.ID_rol_n = R_U.FK_rol
-       join usuario U on R_U.FK_us = U.ID_us
-       join telefono T on  U.ID_us = T.CF_us
-       where CF_us = :id";
-       $consulta= $this->db->prepare($sql);
-       $consulta->bindValue(':id', $id);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result;
-//echo $sql;
-//$result= $c->query($sql);
-//return $result;
-}
-// Fin de mostrar datos por id
+   public function verTelefonosUsuarioPorID($id){
+      $sql = "SELECT U.ID_us , U.nom1 , U.ape1 , R.nom_rol , T.tel
+         from rol R join rol_usuario R_U on R.ID_rol_n = R_U.FK_rol
+         join usuario U on R_U.FK_us = U.ID_us
+         join telefono T on  U.ID_us = T.CF_us
+         where CF_us = :id";
+      $consulta= $this->db->prepare($sql);
+      $consulta->bindValue(':id', $id);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
+   }
+   // Fin de mostrar datos por id
 //-----------------------------------------------------------------------------------------
 
 
 // muestra los datos por id------------------------------------------------------------
 public function verTelefonosUsuario(){
-   //include_once 'class.conexion.php';
-   //$c = new Conexion;
    $sql = "SELECT U.ID_us , U.nom1 , U.ape1 , R.nom_rol , T.tel
    from rol R join rol_usuario R_U on R.ID_rol_n = R_U.FK_rol
    join usuario U on R_U.FK_us = U.ID_us
@@ -1585,181 +1458,180 @@ public function verTelefonosUsuario(){
    $result = $consulta->execute();
    $result = $consulta->fetchAll();
    return $result;
-   //echo $sql;
-   //$result= $c->query($sql);
-   //return $result;
-   }
+}
    // Fin de mostrar datos por id
    //------------------------------------------------------------------------------------------
 
 
 // muestra los datos por rol------------------------------------------------------------
-public function verTelefonosUsuarioRol($rol){
-   //include_once '../clases/class.conexion.php';
-   //$c = new Conexion;
-   $sql = "SELECT U.ID_us , U.nom1 , U.ape1 , R.nom_rol , T.tel
-           from rol R join rol_usuario R_U on R.ID_rol_n = R_U.FK_rol
-           join usuario U on R_U.FK_us = U.ID_us
-           join telefono T on  U.ID_us = T.CF_us
-           where R_U.FK_rol = :rol";
-
-   $consulta= $this->db->prepare($sql);
-   $consulta -> bindValue (":rol",$rol);
-   $result = $consulta->execute();
-   $result = $consulta->fetchAll();
-   return $result;
-   //echo $sql;
-   //$result= $c->query($sql);
-   //return $result;
+   public function verTelefonosUsuarioRol($rol){
+      $sql = "SELECT U.ID_us , U.nom1 , U.ape1 , R.nom_rol , T.tel
+         from rol R join rol_usuario R_U on R.ID_rol_n = R_U.FK_rol
+         join usuario U on R_U.FK_us = U.ID_us
+         join telefono T on  U.ID_us = T.CF_us
+         where R_U.FK_rol = :rol";
+      $consulta= $this->db->prepare($sql);
+      $consulta -> bindValue (":rol",$rol);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
    }
    // Fin de mostrar telefono rol
    //------------------------------------------------------------------------------------------
 
 // muestra telefonos de empresa------------------------------------------------------------
 public function verTelefonosEmpresa(){
-   //include_once '../clases/class.conexion.php';
-   //$c = new Conexion;
    $sql = "SELECT E_P.ID_rut , E_P.nom_empresa , T.tel
-   from empresa_provedor  E_P join telefono T on E_P.ID_rut = T.CF_rut;";
+   from empresa_provedor  E_P 
+   join telefono T on E_P.ID_rut = T.CF_rut;";
    $consulta= $this->db->prepare($sql);
    $result = $consulta->execute();
    $result = $consulta->fetchAll();
    return $result;
-   //echo $sql;
-   //$result= $c->query($sql);
-   //return $result;
-   }
+}
    // Fin de ver telefonos empresas
    //------------------------------------------------------------------------------------------
  
-   public function verTelefonos(){
-   $us = false; $em = false;
-
-   //--- EVENTOS DE FORMULARIO----------------------------------------------------------------------
-
+   
    // Filtro por id
-   if ((isset($_GET['accion'])) &&  ($_GET['accion'] == 'bId')) {
-       if ($_GET['documento'] > 0) {
-           $us = True; $em = false;
-           $id = $_GET['documento'];
-           $objModTel = new ControllerDocForm();
-           $datos = $objModTel->verTelefonosUsuarioPorID($id);
-           //$datos = $telefono->selectIdUsuario($id);
-           $_SESSION['message'] = "Filtro por id";
-           $_SESSION['color'] = "info";
-       } else {
-           $_SESSION['message'] = "No ha digitado el ID del usuario";
-           $_SESSION['color'] = "danger";
-       } // fin de consulta por id
-   } // fin de isset accion
+ 
 
-
-
-   // Filtro por entidad
-   if ((isset($_POST['accion'])) &&  ($_POST['accion'] == 'entidad')) {
-       $us = true; $em = false;
-       if ((isset($_POST['entidad']))) {
-           if ($_POST['entidad'] == "a") {
-               $entidad = 1;
-               $objModTel = new ControllerDocForm();
-               $datos = $objModTel->verTelefonosUsuario();
-               $_SESSION['message'] = "Filtro por telefono de usuario";
-               $_SESSION['color'] = "info";
-           } else {
-               $us = false; $em = true;
-               $entidad = 0;
-               $objModTel = new ControllerDocForm();
-               $datos = $objModTel->verTelefonosEmpresa();
-               $_SESSION['message'] = "Filtro por telefono de empresa";
-               $_SESSION['color'] = "info";
-           }
-       } // fin consulta por entidad
-   } // fin isset accion
-
-
-   // Filtro por rol de usuario
-   if (isset($_POST['consultaRol'])) {
-       $us = True; $em = false;
-       $rol = $_POST['rol'];
-       $objModTel = new ControllerDocForm();
-       $datos= $objModTel->verTelefonosUsuarioRol($rol);
-   } // fin de isset consulta rol
-
-
-   //if (isset($_SESSION['message'])) {  */ 
- }
-
-
- public function eliminarTelefono($idg){
-  
-   $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
-   $consulta2 = $this->db->prepare($sql1);
-        $rest1 =  $consulta2->execute();   
-   if ($rest1) {
-      $sql2 = "DELETE FROM telefono WHERE CF_us =:CF_us ";   
-      $consulta3 = $this->db->prepare($sql2);
-      $consulta3->bindValue(":CF_us",$idg);
-       $res2 = $consulta3->execute();  
-   }   
-   if ($res2) {
-      $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
-      $consulta4 = $this->db->prepare($sql3);
-       $res3 = $consulta4->execute();
+   public function eliminarTelefono($idg){
+      $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
+      $consulta2 = $this->db->prepare($sql1);
+           $rest1 =  $consulta2->execute();   
+      if ($rest1) {
+         $sql2 = "DELETE FROM telefono WHERE CF_us =:CF_us ";   
+         $consulta3 = $this->db->prepare($sql2);
+         $consulta3->bindValue(":CF_us",$idg, PDO::PARAM_STR);
+          $res2 = $consulta3->execute();  
+      }   
+      if ($res2) {
+         $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
+         $consulta4 = $this->db->prepare($sql3);
+         $res3 = $consulta4->execute();
+      }
+      if ($res3) {
+         $_SESSION['message'] = $_SESSION['usuario']['nom1'] . 'Elimino telefono';
+         $_SESSION['color'] = 'success';
+         return true;
+      } else {
+         $_SESSION['message'] = 'No elimino telefono';
+         $_SESSION['color'] = 'danger';
+         return false;
+      }
    }
-   if ($res3) {
-       
 
-      $_SESSION['message'] = $_SESSION['usuario']['nom1'] . 'Elimino telefono';
-      $_SESSION['color'] = 'success';
-      return true;
-   } else {
-
-      $_SESSION['message'] = 'No elimino telefono';
-      $_SESSION['color'] = 'danger';
-      return false;
+   //CTIENDA
+   public function listaProductos(){
+      $sql = "SELECT * from productos";
+      $consulta= $this->db->prepare($sql);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
+      foreach ($result as $row) {
+          $lista[]=$row;
+      }
+      return $lista;
    }
-}
-
-//CTIENDA
-public function listaProductos(){
-   include_once   '../controlador/controladorsession.php';
-   //$cnx=new Conexion;
-   $sql = "SELECT * from productos";
-   $consulta= $this->db->prepare($sql);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result;
-   //$result= $cnx->query($sql);
-
-
-   // $result->fetch_array();
-  //  while( $row = $result)
-
-
-   foreach ($result as $row) {
-       $lista[]=$row;
-   }
-   return $lista;
-}
 //===================================================
+//==================================================
+//CNOTIFICACION
 
+    //Insertar notificacion--------------------------------------------------------------
+   public function insertNotific($a) {
+      $sql = "INSERT into notificacion( estado, descript, FK_rol , FK_not ) 
+      VALUES (? , ? , ? , ?)";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $a[1], PDO::PARAM_INT );
+      $stm->bindValue( 2, $a[2], PDO::PARAM_STR );
+      $stm->bindValue( 3, $a[3], PDO::PARAM_STR );
+      $stm->bindValue( 4, $a[4], PDO::PARAM_INT );
+      $bool = $stm->execute();
+      if($bool){
+         return true;
+      }else{
+          return $a;
+      }
+   }
+    // fin de insert notificacion----------------------------------------------------
 
+    // Notificacion leida-----------------------------------------------------------------
+   public function notificacionLeida($id) {
+      $sql = "UPDATE notificacion SET estado = ?
+      WHERE ID_not = '1'";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue( 4, $id, PDO::PARAM_INT );
+      $bool = $stm->execute();
+      if($bool){
+         return true;
+      }else{
+         return false;
+      }
+   } // Fin de leer notificacion----------------------------------------------------
 
+    // Ver notificacion------------------------------------------------------------------
+   public function verNotificacion($id_rol){
+      $sql = "SELECT N.ID_not , N.estado , N.descript , 
+      N.FK_rol , N.FK_not ,  t.nom_tipo
+      FROM notificacion N join tipo_not T ON N.FK_not = T.ID_tipo_not
+      join rol R ON N.FK_rol = ID_rol_n
+      WHERE R.ID_rol_n = ? and  N.estado = '0'";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id_rol, PDO::PARAM_INT );
+      $result = $stm->execute();
+      return $result;
+   } // fin de ver notificaiones por rol------------------------------------------------
 
+    // Conteo de mensajes------------------------------------------------------------------
+   public function conteoNotificaciones($id_rol) {
+      $sql = "SELECT N.ID_not , N.estado , N.descript , N.FK_rol , N.FK_not ,  t.nom_tipo
+      FROM notificacion N 
+      JOIN tipo_not T ON N.FK_not = T.ID_tipo_not
+      JOIN rol R ON N.FK_rol = ID_rol_n
+      WHERE R.ID_rol_n = ? and  N.estado = '0'";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id_rol, PDO::PARAM_INT );
+      $result = $stm->execute();
+      $count = count($result);
+      return $count;
+   } // fin de conteo de notificaciones------------------------------------------------
 
+    // Notificacion de nueva cuenta a admin--------------------------------------------
+   public function notInsertUsuarioAdmin($a){
+      $sql =  "INSERT INTO notificacion( estado, descript, FK_rol , FK_not ) 
+      VALUES ( ?, ?, ?, ?)";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $a[0], PDO::PARAM_STR );
+      $stm->bindValue( 2, $a[1], PDO::PARAM_STR );
+      $stm->bindValue( 3, $a[2], PDO::PARAM_INT );
+      $stm->bindValue( 4, $a[3], PDO::PARAM_INT );
+      $result = $stm->execute();
+      return $result;
+   } // fin de notificacion admin------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
+   // Eliminar notificaciones de usuario ----------------------------------------------
+   public function deleteNotificacionAdmin($ID_not){
+      $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
+      $stm = $this->db->prepare($sql1);
+      $res = $stm->execute();
+      if ($res) {
+         $sql2 = "DELETE from sicloud.notificacion where ID_not = ? ";
+         $stm->bindValue( 1, $ID_not , PDO::PARAM_INT );
+         $stm = $this->db->prepare($sql2);
+         $res1 = $stm->execute();
+      } // fin de if $res
+      if ($res1) {
+         $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
+         $stm = $this->db->prepare($sql3);
+         $res2 = $stm->execute();
+         if ($res2) {
+            return true;
+         } else {
+            return false;
+         } // fin de if de message
+      } // fin de if $res2¡
+   } // fin de metodo eliminar notificaciones-----------------------------------------------------------
 
 
 } //Fin Clase Usuario

@@ -101,7 +101,6 @@ if(isset($_GET['apicall'])){
          }
       break;        
       case 'actualizarUsuario';
-      //   $db = new ControllerDoc();
          $array =
          [  
          $_POST['ID_us'], 
@@ -117,12 +116,18 @@ if(isset($_GET['apicall'])){
          ];
          $bool =   $db->actualizarDatosUsuario($_GET['id'], $array );
          if( $bool ){
-           $response['error'] = false;
-           $response['message'] = 'Actualizo usuario';
+           $response['error']    = false;
+           $response['message']  = 'Actualizo usuario';
+           $_SESSION['message']  = "Actualizo usuario";
+           $_SESSION['color']    = "success";
          }else{
-           $response['error'] = true;
-           $response['message'] = 'No elimino usuario';
+           $response['error']   = true;
+           $response['message'] = 'No actualizo usuario';
+           $_SESSION['message']  = "Error no actualizo usuario";
+           $_SESSION['color']    = "danger";
          }
+
+         header( 'location:  ../vista/CU009-controlUsuarios.php?documento='.$_GET['id'].'&accion=bId');
       break;
       case 'loginusuario':
          isTheseParametersAvailable( ['nDoc', 'pass', 'tDoc'] );
@@ -413,8 +418,55 @@ if(isset($_GET['apicall'])){
          }
       header( 'location:  ../vista/formMedida.php');
       break;
+      case 'actualizarDatosPers':
+         $a = [
+            $_GET['id'],
+            $_POST['nom1'],
+            $_POST['nom2'],
+            $_POST['ape1'],
+            $_POST['ape2'],
+            $_POST['fecha'],
+            $_POST['correo']
+         ];
+  
+          $r = $db->insertUpdateUsuarioCliente($a);
+          if($r){
+            $response['error']      = false;
+            $response['menssage']   = 'Actualizo datos';
+            $response['contenido']  = $r;
+            $_SESSION['message']    = 'Actualizo datos';
+            $_SESSION['color']      = 'success';
+         }else{
+            $response['error']      =  true;
+            $response['message']    = 'Error, Al actulizar datos'; 
+            $response['contenido']  = $r;
+            $_SESSION['message']    = 'Error, Al actulizar datos';
+            $_SESSION['color']      = 'danger';
+         }
+      header( 'location:  ../vista/misdatos.php');
+      break;
+      case 'cambioContrasena':
+         $a = [
+            $_POST['id'],
+            $_POST['passA'],
+            $_POST['passN'],
+            $_POST['passN2']
+         ];
+          $r = $db->validaContraseña($a);
+          if($r){
+            $response['error']      = false;
+            $response['menssage']   = 'Cambio contraseña de manera exitosa';
+            $response['contenido']  = $r;
+         }else{
+            $response['error']      =  true;
+            $response['message']    = 'Error, al cambio contraseña'; 
+         }
+      header( 'location:  ../vista/cambioContraseña.php');
+      break;
 
 
+
+      
 
 
 

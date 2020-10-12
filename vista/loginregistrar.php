@@ -57,6 +57,26 @@ rutFromIni();
                             <input type="submit" name="btnLogin" value="Enviar" class="forms_buttons-action">
                         </div>
                     </form>
+
+
+    <div class="my-2">
+    <?php if (isset($_SESSION['message'])) { ?>
+                <!-- alerta boostrap -->
+                <div class="alert alert-<?php echo $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
+                    <?php
+                    echo  $_SESSION['message']  ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <?php
+                setMessage();
+                //session_unset();
+            } ?>
+    </div>
+
+
+                    
                 </div>
                 <div class="user_forms-signup">
                     <img width="250px"src="fonts/registrarh.PNG">
