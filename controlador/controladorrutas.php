@@ -53,6 +53,16 @@ if (  !isset($cons)  ){
       include_once '/plantillas/nav/navgeneralvideo.php';
    }
 
+   function rutIniFromCorreoContrseña(){
+      include_once '../../../vista/plantillas/plantilla.php';
+      include_once '../../../controlador/controladorsession.php';
+   }
+
+   function rutIniFromFinCorreoContraseña(){
+      include_once '../../../vista/plantillas/cuerpo/finhtml.php';
+
+   }
+
 
    function rutIniFromIndexRaiz(){
       include_once 'vista/plantillas/plantilla.php';

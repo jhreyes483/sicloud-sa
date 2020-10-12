@@ -175,6 +175,27 @@ class SQL extends Conexion{
   }
   //-------------------------------------------------------------------------
 
+   public function validarCredecilesCorrreo($a){
+      $sql = 'SELECT * FROM usuario 
+      WHERE FK_tipo_doc = :FK_tipo_doc
+      AND ID_us   =  :ID_us
+      AND correo = :correo';
+      $c = $this->db->prepare($sql);
+      $c->bindValue( ':FK_tipo_doc', $a[0], PDO::PARAM_STR  );
+      $c->bindValue( ':ID_us',       $a[1], PDO::PARAM_STR  );
+      $c->bindValue( ':correo',      $a[2], PDO::PARAM_STR  );
+      $c->execute();
+      $r = $c->fetchAll();
+      if($r){
+         return $r;
+      }else{
+         return false;
+      }
+   }
+     
+
+  
+
    //-------------------------------------------------------------------------------------------------------
    //METODO DELETE USUARIO PDO MVC-------------------------(FALTA METODO API)-------------------------------
    public function eliminarUsuario($id_get){       

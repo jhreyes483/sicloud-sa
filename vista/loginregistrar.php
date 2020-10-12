@@ -53,7 +53,7 @@ rutFromIni();
                             </div>
                         </fieldset>
                         <div class="forms_buttons">
-                            <a class="forms_buttons-forgot" href="forgot_password/dist/index.html">Olvidó la contraseña?</a>
+                            <a class="forms_buttons-forgot" href="forgot_password/dist/index.php">Olvidó la contraseña?</a>
                             <input type="submit" name="btnLogin" value="Enviar" class="forms_buttons-action">
                         </div>
                     </form>

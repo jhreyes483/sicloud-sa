@@ -463,6 +463,27 @@ if(isset($_GET['apicall'])){
          }
       header( 'location:  ../vista/cambioContraseña.php');
       break;
+         case 'cambioContrasenaCorreo':
+         $a = [
+            $_POST['tipo_doc'],
+            $_POST['documento'],
+            $_POST['email'],
+            $_POST['fActual'],
+            $_POST['fCaduc'],
+            $_POST['token']
+         ];
+          $r = $db->validarCredecilesCorrreo($a);
+          if($r){
+            $response['error']      = false;
+            $response['menssage']   = 'Cambio contraseña de manera exitosa';
+            $response['contenido']  = $r;
+         }else{
+            $response['error']      =  true;
+            $response['message']    = 'Error, al cambio contraseña'; 
+         }
+      header( 'location:  ../vista/forgot_password/dist/index.php');
+      break;
+
 
 
 

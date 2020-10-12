@@ -199,7 +199,7 @@ class ControllerDoc
     }
     // U004-crearproductos.php
     public function insertarProducto($a)
-    {
+{
        $bool = $this->objModUs->insertarProducto($a);  
     if($bool ) {
        //foreach($a as $i => $d){
@@ -393,7 +393,31 @@ class ControllerDoc
                 $_SESSION['message'] = "Contraseña incorrecta";
                 $_SESSION['color'] = "danger";
             }
+    }
+    public function validarCredecilesCorrreo($a){
         
+         $r = $this->objModUs->validarCredecilesCorrreo($a);
+         if($a[5] == 'sicloud'){
+            if($r){
+               $contraseña = 'jav';
+               $contenido ='Restablecer contraseña<br>    usuario ;'.$r[0][0].'<br>'.'contraseña '.$contraseña.'<br>'.'Link: http://localhost/sicloud-sa/vista/forgot_password/dist/index.php';
+               // datos correo
+               $correo = $r[0][8];
+               $asunto = 'Restablecer contraseña';
+                mail($correo, $asunto, $contenido );
+                $_SESSION['message']     = "Se envio mensaje al correo";
+                $_SESSION['color']       = "success";
+              ///  echo $correo; echo $contenido; die();
+            }else{
+                $_SESSION['message']     = "Datos incorrectos o usuario no registrado";
+                $_SESSION['color']       = "danger";
+              // echo 'no encontro datos'; die();
+            }
+        }else{
+            $_SESSION['message']     = "No ingreso correctamente";
+            $_SESSION['color']       = "success";
+            //echo 'no ingreso correctamente'; die();
+        }
 
     }
    
