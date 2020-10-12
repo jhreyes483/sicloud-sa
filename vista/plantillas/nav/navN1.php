@@ -1,18 +1,12 @@
 <?php
 
-
-
 include_once '../controlador/controladorsession.php';
 include_once '../controlador/controlador.php';
-//nclude_once '../session/sessionIni.php'
-//include_once 'clases/class.notificacion.php';
-//include_once 'session/sessiones.php';
-//include_once 'notificacion/notificacionN1.php';
-//include_once 'clases/class.producto.php';
-
-
-
-
+include_once '../vista/notificacion/notificacionN1.php';
+$objCon= new ControllerDoc();
+if (isset($_SESSION['usuario'])) {
+  $countNotificacion =  count($_SESSION['notic']);  
+}
 ?>
 
 
@@ -49,13 +43,6 @@ include_once '../controlador/controlador.php';
       <li class="nav-item dropdown active">
 
 
-
-
-
-
-
-
-
         <!-- icono de notificacion mensaje -->
 
         <a class="nav-link mx-3" href="#" id="messagesDropdown" role="button" aria-expanded="false">
@@ -78,27 +65,21 @@ include_once '../controlador/controlador.php';
         if (  empty($_SESSION['CARRITO'] )){  echo 0; }else{  echo count($_SESSION['CARRITO']); } 
          ?></span>
 <!-- ---------------------------------------------------------------------------------------- -->
-
-
-
         <!-- icono de notificacion campana -->
-
         <a class="" id="messagesDropdown" data-toggle="modal" data-target="#exampleModal" role="button" aria-expanded="true">
-
           <i class="fas fa-bell fa-fw" style="color :#ffff;"></i>
           <!-- Counter - Messages -->
-          <?php if (isset($_SESSION['usuario'])) {
-           // $c = Notificacion::conteoNotificaciones($_SESSION['usuario']['ID_rol_n'])       ?>
-            <span class="badge badge-danger badge-counter"><?php  } ?></span>
-        </a>
-
-
-
-
+            <span class="badge badge-danger badge-counter"><?php 
+       if( isset($countNotificacion)  && $countNotificacion >0 ){ echo $countNotificacion; }else{ echo 0; }?></span></span>
+       </a>
         <span class="sr-only">(current)</span>
         </a>
       <li class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+<!-- ---------------------------------------------------------------------------------------- -->
+
+
+
 
           <strong><?php if (isset($_SESSION['usuario'])) {
                     echo  $_SESSION['usuario']['nom1'];   ?></strong>

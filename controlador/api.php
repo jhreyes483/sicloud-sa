@@ -101,6 +101,7 @@ if(isset($_GET['apicall'])){
          }
       break;        
       case 'actualizarUsuario';
+   
          $array =
          [  
          $_POST['ID_us'], 
@@ -112,9 +113,10 @@ if(isset($_GET['apicall'])){
          $_POST['pass' ],
          $_POST['foto' ],    
          $_POST['correo'],
-         $_POST['FK_tipo_doc'], 
+         $_POST['FK_tipo_doc'],
+         $_POST['FK_rol']
          ];
-         $bool =   $db->actualizarDatosUsuario($_GET['id'], $array );
+         $bool1 =   $db->actualizarDatosUsuario($_GET['id'], $array );
          if( $bool ){
            $response['error']    = false;
            $response['message']  = 'Actualizo usuario';
@@ -477,7 +479,7 @@ if(isset($_GET['apicall'])){
             $response['error']      = false;
             $response['menssage']   = 'Cambio contraseña de manera exitosa';
             $response['contenido']  = $r;
-            header( 'location:  ../vista/cambioContraseña.php');
+
          }else{
             $response['error']      =  true;
             $response['message']    = 'Error, al cambio contraseña'; 

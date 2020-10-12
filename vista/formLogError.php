@@ -1,19 +1,6 @@
 <?php
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
-/*
-include_once '../modelo/class.factura.php'; 
-include_once '../modelo/class.error.php';
-include_once 'plantillas/plantilla.php';
-
-
-
-include_once 'plantillas/cuerpo/inihtmlN2.php';
-include_once 'plantillas/nav/navN2.php';
-
-include_once '../controlador/controlador.php';
-include_once '../controlador/controladorsession.php';
-*/
 cardtitulo("Log error");
 ?>
 
@@ -32,9 +19,6 @@ cardtitulo("Log error");
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
-
-
             <?php setMessage();
             } ?>
     </div>
@@ -44,7 +28,7 @@ cardtitulo("Log error");
         <!-- inicia segunda divicion -->
 <div class="container">
     <div class="row">
-        <div class="col-md-5 p-2 mx-auto">
+        <div class="col-md-10 p-2 mx-auto">
             <table class=" table table-bordered  table-striped bg-white table-sm text-center">
                 <thead>
 
@@ -69,9 +53,6 @@ cardtitulo("Log error");
                     <td><?php  echo $row['descrip_error'] ?></td>
                     <td><?php  echo $row['fecha'] ?></td>
                     <td><?php  echo $row['hora'] ?></td>
-
-
-                    <!-- formEdicion.php?accion=editarMedia&&id=<?php// echo $row['ID_medida'] ?> -->
                     <td>
                         <a href="../controlador/controlador.php?accion=eliminarError&&id=<?php echo $row['ID_error'] ?>" class="btn btn-circle btn-danger"><i class="far fa-trash-alt"></i></a>
 
@@ -86,7 +67,7 @@ cardtitulo("Log error");
         ?>
             </table>
 
-
+</div></div>
         </div><!-- fin de response table -->
     </div><!-- fin de row -->
 </div><!-- Fin container -->

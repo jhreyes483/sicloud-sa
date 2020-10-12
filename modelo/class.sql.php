@@ -978,6 +978,7 @@ public function horaActual(){
 //------------------------------------------
 //insertar modificacion 
 public function insertModificacion($a){
+
    $sql = "INSERT INTO modific(descrip , fecha , hora ,
    FK_us , FK_doc , FK_modific) 
    VALUE ( :descrip , :fecha , :hora , :FK_us , :FK_doc , :FK_modific )";
@@ -989,6 +990,7 @@ public function insertModificacion($a){
    $stm->bindValue(":FK_doc",    $a[4], PDO::PARAM_STR);
    $stm->bindValue(":FK_modific",$a[5], PDO::PARAM_STR);
    $insert = $stm->execute();
+    // $this->ver($insert, 1);
    if ($insert) {
       return true;
    } else {
@@ -1396,11 +1398,14 @@ public function insertPuntos( $a ){
    }// fin de ver rol por ID
 
    // Actualizar datos                       U
-   public function insertUpdateRol($a){ 
-      $sql = "UPDATE rol SET nom_rol = :nom_rol  WHERE ID_rol_n = :ID_rol_n";
+   public function insertUpdateRol( $a){ 
+
+      //$this->ver($a , 1);
+
+      $sql = "UPDATE rol_usuario SET FK_rol= :FK_rol  WHERE FK_us = :FK_us";
       $stm = $this->db->prepare($sql);
-      $stm->bindValue(":nom_rol", $a[0], PDO::PARAM_STR );
-      $stm->bindValue(":ID_rol_n",$a[1], PDO::PARAM_STR );
+      $stm->bindValue(":FK_rol", $a[10], PDO::PARAM_INT );
+      $stm->bindValue(":FK_us", $a[0],   PDO::PARAM_STR );
       $ri = $stm->execute();
       if($ri){ 
          return true;
@@ -1605,21 +1610,24 @@ public function verTelefonosEmpresa(){
    } // fin de ver notificaiones por rol------------------------------------------------
 
     // Conteo de mensajes------------------------------------------------------------------
-   public function conteoNotificaciones($id_rol) {
-      $sql = "SELECT N.ID_not , N.estado , N.descript , N.FK_rol , N.FK_not ,  t.nom_tipo
-      FROM notificacion N 
-      JOIN tipo_not T ON N.FK_not = T.ID_tipo_not
-      JOIN rol R ON N.FK_rol = ID_rol_n
+   public function verNotificaciones($id_rol) {
+      //$this->ver($id_rol, 1);
+      $sql = "SELECT N.ID_not , N.estado , N.descript , N.FK_rol , N.FK_not,
+      T.nom_tipo
+            FROM notificacion N 
+            JOIN tipo_not T ON N.FK_not = T.ID_tipo_not
+            JOIN rol R ON N.FK_rol = ID_rol_n
       WHERE R.ID_rol_n = ? and  N.estado = '0'";
       $stm = $this->db->prepare($sql);
       $stm->bindValue( 1, $id_rol, PDO::PARAM_INT );
-      $result = $stm->execute();
-      $count = count($result);
-      return $count;
+      $stm->execute();
+      $r = $stm->fetchAll();
+      return $r;
    } // fin de conteo de notificaciones------------------------------------------------
 
     // Notificacion de nueva cuenta a admin--------------------------------------------
    public function notInsertUsuarioAdmin($a){
+    //  $this->ver($a, 1);
       $sql =  "INSERT INTO notificacion( estado, descript, FK_rol , FK_not ) 
       VALUES ( ?, ?, ?, ?)";
       $stm = $this->db->prepare($sql);

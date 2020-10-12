@@ -1,8 +1,10 @@
 <?php
-//include_once '../../session/sessiones.php';
-//include_once '../../notificacion/notificacionN3.php';
-//include_once '../../clases/class.notificacion.php';
+
 include_once '../../../controlador/controladorsession.php';
+include_once '../../../vista/notificacion/notificacionN3.php';
+if (isset($_SESSION['usuario'])) {
+  $countNotificacion =  count($_SESSION['notic']);  
+}
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top navbar-expand-lg  fixed-top sticky-top">
@@ -68,22 +70,17 @@ include_once '../../../controlador/controladorsession.php';
           <span class="badge badge-danger badge-counter"><?php echo $numeroProductos  ?></span>
         <?php   } ?>
 <!-- ---------------------------------------------------------------------------------------- -->
-
-
-
         <!-- icono de notificacion campana -->
-
         <a class="" id="messagesDropdown" data-toggle="modal" data-target="#exampleModal" role="button" aria-expanded="true">
-
           <i class="fas fa-bell fa-fw" style="color :#ffff;"></i>
           <!-- Counter - Messages -->
-          <?php if (isset($_SESSION['usuario'])) {
-         //   $c = Notificacion::conteoNotificaciones($_SESSION['usuario']['ID_rol_n'])       ?>
-            <span class="badge badge-danger badge-counter"><?php // echo $c;
-                                                          } ?></span>
+            <span class="badge badge-danger badge-counter"><?php 
+       if( isset($countNotificacion)  && $countNotificacion >0 ){ echo $countNotificacion; }else{ echo 0; }?></span></span>
+       </a>
+        <span class="sr-only">(current)</span>
         </a>
-
-        <!-- ----------------------------------------------------------------------------------- -->
+      <li class="nav-item dropdown no-arrow">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
 
 
 

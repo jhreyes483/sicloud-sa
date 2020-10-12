@@ -28,6 +28,7 @@ class ControllerDoc
         
         $objSession = new Session();
         $_SESSION['usuario']  = $USER;
+        $_SESSION['notic']    =  $this->verNotificaciones(  $_SESSION['usuario']['ID_rol_n']  );
         $objSession->verificarAcceso();
             return  $USER ;
         }else{
@@ -84,7 +85,26 @@ class ControllerDoc
                 copy($ruta, $destino);
                 $bool2 =  $this->objModUs->inserTfotoUs(  $foto1 ,  $ID_us );
                 if( $bool2 ){
-                   return true;
+                    $est = 0;
+                    $descrip = $datosController[0][0];
+                    $FK_rol = 1;
+                    $FK_not = 1;
+                    $an =[ 
+                        $est,
+                        $descrip,
+                        $FK_not,
+                        $FK_rol
+                    ];
+                    $bool3 = $this->objModUs->notInsertUsuarioAdmin($an);
+                    if($bool3){
+                        return true;
+                    }else{
+                        return false;
+                    }
+
+
+
+                  // return true;
                 }else{
                 $_SESSION['message'] = "Error el nombre de la foto ya existe";
                 $_SESSION['color']   = "danger";
@@ -114,9 +134,45 @@ class ControllerDoc
     {
         return  $this->objModUs->eliminarUsuario($id_get);
     }
-    public function actualizarDatosUsuario($id, $array)
-    {
-        return $this->objModUs->actualizarDatosUsuario($id, $array);
+    public function actualizarDatosUsuario($id, $array){
+        $r1 = $this->objModUs->actualizarDatosUsuario($id, $array);
+   
+        if ($r1) {
+           
+            //METODO DE INSERSION ROL_USUARIO UPDATE
+            $r2 = $this->objModUs->insertUpdateRol( $array);
+            if($r2){
+                $_SESSION['message'] = 'Actualizo rol';
+                $_SESSION['danger']  = 'Error al actualizar rol';
+
+                $fecha  = date('Y-m-d');
+                $descrip = "Usario modificado ID " . $array[0];
+                $FK_modific = "4";
+                $hora = '00:00:00';
+                $tDoc_us_session = $_SESSION['usuario'] ['ID_acronimo'] ;
+                $ID_us_session = $_SESSION['usuario']['ID_us'];
+               
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+                $r4 = $this->objModUs->insertModificacion($arm);
+                if($r4){
+                    return true;
+                }else{
+                    return false;    
+                }
+            }
+        }else{
+            $_SESSION['message'] = 'Error al actualizar usuario';
+            $_SESSION['danger']  = 'Error al actualizar usuario';
+            header( 'location:  ../vista/CU009-controlUsuarios.php?documento='.$_GET['id'].'&accion=bId');
+            die();
+        }
     }
 
     //Metodos de entidad usuario form CU009-controlusuarios.php
@@ -420,15 +476,8 @@ class ControllerDoc
                 $USER = $this->objModUs->loginUsuarioModel($ar);
                 $_SESSION['usuario'] = $USER;
                 $this->ver( $USER );
-               
                 header( 'location:  ../vista/cambioContraseña.php');
                  die();
-              
-
-
-
-
-              ///  echo $correo; echo $contenido; die();
             }else{
                 $_SESSION['message']     = "Datos incorrectos o usuario no registrado";
                 $_SESSION['color']       = "danger";
@@ -441,7 +490,12 @@ class ControllerDoc
         }
 
     }
-   
+
+    // notificaciones nav
+    public function verNotificaciones($id_rol){
+        return  $this->objModUs->verNotificaciones($id_rol);
+    } 
+
     public function ver($dato, $sale=0, $float= false, $email=''){
         echo '<div style="background-color:#fbb; border:1px solid maroon;  margin:auto 5px; text-align:left;'. ($float? ' float:left;':'').' padding:7px; border-radius:7px; margin-top:10px">';
         if(is_array($dato) || is_object($dato) ){
