@@ -477,11 +477,13 @@ if(isset($_GET['apicall'])){
             $response['error']      = false;
             $response['menssage']   = 'Cambio contraseña de manera exitosa';
             $response['contenido']  = $r;
+            header( 'location:  ../vista/cambioContraseña.php');
          }else{
             $response['error']      =  true;
             $response['message']    = 'Error, al cambio contraseña'; 
+            header( 'location:  ../vista/forgot_password/dist/index.php');
          }
-      header( 'location:  ../vista/forgot_password/dist/index.php');
+
       break;
 
 

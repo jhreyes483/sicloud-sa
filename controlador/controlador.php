@@ -406,7 +406,28 @@ class ControllerDoc
                $asunto = 'Restablecer contraseña';
                 mail($correo, $asunto, $contenido );
                 $_SESSION['message']     = "Se envio mensaje al correo";
-                $_SESSION['color']       = "success";
+                $_SESSION['color']       = "success";  
+              
+                 $id =   $r[0][0];
+                $pass =  $r[0][6];
+                $t_doc = $r[0][9];
+                $ar[] =   [
+                    $id,
+                    $pass,
+                    $t_doc
+                ];
+              
+                $USER = $this->objModUs->loginUsuarioModel($ar);
+                $_SESSION['usuario'] = $USER;
+                $this->ver( $USER );
+               
+                header( 'location:  ../vista/cambioContraseña.php');
+                 die();
+              
+
+
+
+
               ///  echo $correo; echo $contenido; die();
             }else{
                 $_SESSION['message']     = "Datos incorrectos o usuario no registrado";
