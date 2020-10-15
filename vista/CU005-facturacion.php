@@ -1,4 +1,5 @@
 <?php
+
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
 
