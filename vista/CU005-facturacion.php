@@ -1,6 +1,6 @@
 <?php
-
-
+include_once '../controlador/controladorrutas.php';
+rutFromIni();
 
 //comprobacion de rol
 $in = false;
