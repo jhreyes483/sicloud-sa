@@ -1097,7 +1097,8 @@ public function insertModificacion($a){
    public function verPromociones(){
       $sql = "SELECT P.ID_prod , P.img , P.nom_prod , P.val_prod , 
       P.stok_prod , P.estado_prod , C.nom_categoria , M.nom_medida
-      from producto P join categoria C on C.ID_categoria = P.CF_categoria
+      from producto P 
+      join categoria C on C.ID_categoria = P.CF_categoria
       join tipo_medida M on P.CF_tipo_medida = M.ID_medida 
       where estado_prod = 'Promoción'
       order by P.nom_prod asc ";
@@ -1279,10 +1280,10 @@ public function insertModificacion($a){
       LIKE '%$buscar%' or nom_prod  
       LIKE '%$buscar%') 
       order by nom_prod";
-       $consulta = $this->db->prepare($sql);
-       $result = $consulta->execute();
-       $result = $consulta->fetchAll();
-       return $result;
+      $consulta = $this->db->prepare($sql);
+      $result = $consulta->execute();
+      $result = $consulta->fetchAll();
+      return $result;
    }
 
    public function inserTfotoUs( $foto,  $id_us){
@@ -1339,15 +1340,14 @@ public function insertModificacion($a){
 //===================================================
 //CPUNTOS
 public function insertPuntos( $a ){
-  $sql = "INSERT INTO puntos ( puntos , fecha , FK_us , FK_tipo_doc)
-  VALUE(  :puntos , :fecha , :FK_us , :FK_tipo_doc)";
-  $stm = $this->db->prepare($sql);
-  $stm->bindValue(":puntos",      $a[0] );
-  $stm->bindValue(":fecha",       $a[1] );
-  $stm->bindValue(":FK_us",       $a[2] );
-  $stm->bindValue(":FK_tipo_doc", $a[3] );
-  $stm->execute();
-  
+   $sql = "INSERT INTO puntos ( puntos , fecha , FK_us , FK_tipo_doc)
+   VALUE(  :puntos , :fecha , :FK_us , :FK_tipo_doc)";
+   $stm = $this->db->prepare($sql);
+   $stm->bindValue(":puntos",      $a[0] );
+   $stm->bindValue(":fecha",       $a[1] );
+   $stm->bindValue(":FK_us",       $a[2] );
+   $stm->bindValue(":FK_tipo_doc", $a[3] );
+   $stm->execute();
 }// fin de insert punto
 //=============================================
 //============================================
@@ -1401,9 +1401,6 @@ public function insertPuntos( $a ){
 
    // Actualizar datos                       U
    public function insertUpdateRol( $a){ 
-
-      //$this->ver($a , 1);
-
       $sql = "UPDATE rol_usuario SET FK_rol= :FK_rol  WHERE FK_us = :FK_us";
       $stm = $this->db->prepare($sql);
       $stm->bindValue(":FK_rol", $a[10], PDO::PARAM_INT );
@@ -1429,9 +1426,9 @@ public function insertPuntos( $a ){
          $res1 = $stm->execute(); 
       }
       if($res1){
-          $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
-          $stm = $this->db->prepare($sql3);
-          $res2 = $stm->execute();
+         $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
+         $stm = $this->db->prepare($sql3);
+         $res2 = $stm->execute();
       }
       if($res2){
          return true;
@@ -1532,7 +1529,7 @@ public function verTelefonosEmpresa(){
          $sql2 = "DELETE FROM telefono WHERE CF_us =:CF_us ";   
          $consulta3 = $this->db->prepare($sql2);
          $consulta3->bindValue(":CF_us",$idg, PDO::PARAM_STR);
-          $res2 = $consulta3->execute();  
+         $res2 = $consulta3->execute();  
       }   
       if ($res2) {
          $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
@@ -1558,7 +1555,7 @@ public function verTelefonosEmpresa(){
       $result = $consulta->fetchAll();
       return $result;
       foreach ($result as $row) {
-          $lista[]=$row;
+         $lista[]=$row;
       }
       return $lista;
    }
@@ -1616,9 +1613,9 @@ public function verTelefonosEmpresa(){
       //$this->ver($id_rol, 1);
       $sql = "SELECT N.ID_not , N.estado , N.descript , N.FK_rol , N.FK_not,
       T.nom_tipo
-            FROM notificacion N 
-            JOIN tipo_not T ON N.FK_not = T.ID_tipo_not
-            JOIN rol R ON N.FK_rol = ID_rol_n
+         FROM notificacion N 
+         JOIN tipo_not T ON N.FK_not = T.ID_tipo_not
+         JOIN rol R ON N.FK_rol = ID_rol_n
       WHERE R.ID_rol_n = ? and  N.estado = '0'";
       $stm = $this->db->prepare($sql);
       $stm->bindValue( 1, $id_rol, PDO::PARAM_INT );

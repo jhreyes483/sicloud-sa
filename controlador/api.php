@@ -158,11 +158,16 @@ if(isset($_GET['apicall'])){
          if(!$result){
             $response['error']      = true;
             $response['menssage']   = 'No activo cuenta';
+            $_SESSION['message']    = 'No activo cuenta';
+            $_SESSION['color']      = 'danger';
          }else{
             $response['error']      = false;
             $response['message']    = 'Activo cuenta'; 
             $response['contenido']  = $result;
+            $_SESSION['message']    = 'Activo cuenta';
+            $_SESSION['color']      = 'success';
          }
+         header( 'location:  ../vista/CU009-controlUsuarios.php');
       break;
       case 'desactivarUsuario':
        //  $db = new ControllerDoc();
@@ -171,11 +176,16 @@ if(isset($_GET['apicall'])){
             $response['error']      = true;
             $response['menssage']   = 'Error, no desactivo cuenta';
             $response['contenido']  = $result;
+            $_SESSION['message']    =  'No desactivo cuenta';
+            $_SESSION['color']      =  'danger';
             
          }else{
             $response['error']      = false;
             $response['message']    = 'Desactivo cuenta'; 
             $response['contenido']  = $result;
+            $_SESSION['message']    =  'Desactivo cuenta';
+            $_SESSION['color']      =  'success';
+            header( 'location:  ../vista/CU009-controlUsuarios.php');
          }
       break;
       // insertar producto modulo - CU004-crearproductos.php
