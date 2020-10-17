@@ -28,24 +28,29 @@ class Session{
             case 1:
                header('location: ../vista/rol/admin/iniAdmin.php');
                $_SESSION['message'] = ' Bienvenido: Administradors';
+               $_SESSION['color']   = 'success';
             break;
             case 2:
                header("location: ../vista/rol/bodega/iniBodega.php");
                $_SESSION['message'] = ' Bienvenido: Inventario';
+               $_SESSION['color']   = 'success';
             break;
             case 3:
                echo '<h1> Esta en el caso 3 de session </h1>';
                header("location: ../vista/rol/supervisor/iniSupervisor.php");
                $_SESSION['message'] = ' Bienvenido: Supervisor';
+               $_SESSION['color']   = 'success';
               
             break;
             case 4:
                header("location: ../vista/rol/comercial/iniComercial.php");
                $_SESSION['message'] = ' Bienvenido: Inventario';
+               $_SESSION['color']   = 'success';
             break;
             case 5:
                header("location: ../vista/rol/proveedor/iniProveedor.php");
-               $_SESSION['message'] = " Bienvenido: Proveedor ";
+               $_SESSION['message'] = 'Bienvenido: Proveedor';
+               $_SESSION['color']   = 'success';
             break;
             case 6:
              include_once './controladorrutas.php';
@@ -53,11 +58,13 @@ class Session{
              $objCon=  new  ControllerDoc();
              $datos =  $objCon->verPuntosYusuario( $_SESSION['usuario']['ID_us']);
              $_SESSION['usuario'] = $datos;
-             $_SESSION['message'] = " Bienvenido: Cliente";
+             $_SESSION['message'] = 'Bienvenido: Cliente';
+             $_SESSION['color']   = 'success';
                header("location: ../vista/rol/cliente/iniCliente.php");
             break; 
             default:
-               $_SESSION['message'] = "Usuario no registrado";
+               $_SESSION['message'] = 'Usuario no registrado';
+               $_SESSION['color']   = 'danger';
                header("location: ../vista/index.php");
                echo '<script>alert("Usuario no registrado")</script>';
             break;

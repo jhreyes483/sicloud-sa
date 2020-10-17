@@ -55,7 +55,8 @@ class ControllerDoc
         $FK_rol,
         $fechaC,
         $estado,
-        $ruta
+        $ruta,
+        $tel
     ) 
     {
         $datosController[] = [
@@ -72,7 +73,8 @@ class ControllerDoc
             10        =>  $FK_rol,
             11        =>  $fechaC,
             12        =>  $estado,
-            13        =>  $ruta
+            13        =>  $ruta,
+            14        =>  $tel
         ];
          $bool0 = $this->objModUs->InsertUsuario($datosController, 'usuario');
         if($bool0){
@@ -84,7 +86,25 @@ class ControllerDoc
                 $destino = '../vista/fonts/us/'.$foto1;
                 copy($ruta, $destino);
                 $bool2 =  $this->objModUs->inserTfotoUs(  $foto1 ,  $ID_us );
-                if( $bool2 ){
+                if($bool2){
+                    $puntos = 2;
+                    $fecha  = date('Y-m-d'); 
+                    $aP = [
+                        $puntos,
+                        $fecha,
+                        $ID_us,
+                        $FK_tipo_doc
+                    ];
+                    $bool3   = $this->objModUs->insertPuntos($aP);
+                }
+                    if($bool3){
+                        $aT= [
+                            $tel,
+                            $ID_us
+                        ];
+                       $boolF = $this->objModUs->insertTelefonoUsuario($aT);
+                    }
+                if( $boolF ){
                     $est = 0;
                     $descrip = $datosController[0][0];
                     $FK_rol = 1;
@@ -517,7 +537,10 @@ class ControllerDoc
     public function verNotificaciones($id_rol){
         return  $this->objModUs->verNotificaciones($id_rol);
     } 
-
+    // notificacion leida
+    public function notificacionLeida($a){
+        return $this->objModUs->notificacionLeida($a);
+    }
     public function ver($dato, $sale=0, $float= false, $email=''){
         echo '<div style="background-color:#fbb; border:1px solid maroon;  margin:auto 5px; text-align:left;'. ($float? ' float:left;':'').' padding:7px; border-radius:7px; margin-top:10px">';
         if(is_array($dato) || is_object($dato) ){

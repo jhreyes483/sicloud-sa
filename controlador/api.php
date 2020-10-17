@@ -56,7 +56,8 @@ if(isset($_GET['apicall'])){
          $_POST['FK_rol'],
          date('Y-m-d'),
          0,
-         $_FILES['foto']['tmp_name']
+         $_FILES['foto']['tmp_name'],
+         $_POST['tel']
       );  
       if($result){
          //esto significa que no hay ningun error
@@ -480,7 +481,7 @@ if(isset($_GET['apicall'])){
          }
       header( 'location:  ../vista/cambioContraseña.php');
       break;
-         case 'cambioContrasenaCorreo':
+      case 'cambioContrasenaCorreo':
          $a = [
             $_POST['tipo_doc'],
             $_POST['documento'],
@@ -500,7 +501,18 @@ if(isset($_GET['apicall'])){
             $response['message']    = 'Error, al cambio contraseña'; 
             header( 'location:  ../vista/forgot_password/dist/index.php');
          }
+      break;
+      case 'notificLeida':
+          $r = $db->notificacionLeida($_GET['idn']);
+          if($r){
+            $response['error']      = false;
+            $response['menssage']   = 'Update exitoso exitosa';
 
+
+         }else{
+            $response['error']      =  true;
+            $response['message']    = 'Error, aupdate'; 
+         }
       break;
 
 

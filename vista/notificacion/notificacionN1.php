@@ -1,6 +1,6 @@
 <?php
 if( !isset( $_SESSION['usuario'] )  ){
- @session_start();
+  @session_start();
 }
 
 ?>
@@ -28,8 +28,30 @@ if( !isset( $_SESSION['usuario'] )  ){
               ?>
             <tr>
               <td>
-              <?php if(   $row['FK_not'] == 1 && $row['descript'] !=0    ){ $m = " Id usuario: ";}else{ $m ="" ;}  ?>
-              <a class="btn btn-success btn-circle" href=""><i class="fas fa-bell fa-fw"></i><a href="CU009-controlUsuarios.php?documento=<?php echo $row['descript'] ?>&accion=bId"><?php echo "  " .$row['nom_tipo'].$m.$row['descript'] ?></a></a>
+<?php if( $row['FK_not'] == 1 && $row['descript'] !=0 ){ 
+  $m = " Id usuario: ";
+}else{ 
+  $m ="";
+}  
+?>
+
+<a class="btn btn-success btn-circle btn-small" href="../controlador/api.php?apicall=notificLeida&&idn=<?= $row[0] ?>">
+  <i class="fas fa-bell fa-fw"></i>
+</a>
+
+<!-- 
+  Activar en caso de crear metodo de eliminacion de notificaciones
+<a class="btn btn-danger btn-circle btn-small" href="../../../controlador/api.php?apicall=<?= $row[0] ?>">
+  <i class="far fa-trash-alt"></i>
+</a>
+ -->
+
+<a href="CU009-controlUsuarios.php?documento=<?= $row['descript'] ?>&accion=bId">
+  <?= "  " .$row['nom_tipo'].$m.$row['descript'] ?>
+</a>
+
+
+
               </td>
             </tr>
         <?php  }

@@ -135,17 +135,16 @@ public function loginUsuarioModel($datosModel){
    $consulta = $this->db->prepare($sql);
    foreach($datosModel as $i =>  $d ){
      // $pass_cifrado = password_hash($d[1], PASSWORD_DEFAULT);
-       ;
       $consulta->bindValue( ':ID_us',       $d[0] , PDO::PARAM_STR );
-    //  $consulta->bindValue( ':pass',        $d[1] , PDO::PARAM_STR );
-      $consulta->bindValue( ':ID_acronimo', $d[2], PDO::PARAM_STR  );
+   // $consulta->bindValue( ':pass',        $d[1] , PDO::PARAM_STR );
+      $consulta->bindValue(':ID_acronimo',  $d[2], PDO::PARAM_STR  );
       $pass = $d[1];
    }
   // echo $pass; die();
 
    $consulta->execute();
    $USER = $consulta->fetch(PDO::FETCH_ASSOC);
-   if( $consulta->rowCount() > 0  &&   password_verify($pass, $USER['pass'])){ 
+   if(($consulta->rowCount() > 0) && (password_verify($pass, $USER['pass']))){ 
       return $USER;
    }else{
       return false;
@@ -1357,14 +1356,21 @@ public function insertModificacion($a){
 //===================================================
 //CPUNTOS
 public function insertPuntos( $a ){
+  // $this->ver($a , 1); die();
    $sql = "INSERT INTO puntos ( puntos , fecha , FK_us , FK_tipo_doc)
    VALUE(  :puntos , :fecha , :FK_us , :FK_tipo_doc)";
    $stm = $this->db->prepare($sql);
-   $stm->bindValue(":puntos",      $a[0] );
-   $stm->bindValue(":fecha",       $a[1] );
-   $stm->bindValue(":FK_us",       $a[2] );
-   $stm->bindValue(":FK_tipo_doc", $a[3] );
-   $stm->execute();
+   $stm->bindValue(":puntos",      $a[0], PDO::PARAM_INT );
+   $stm->bindValue(":fecha",       $a[1], PDO::PARAM_STR );
+   $stm->bindValue(":FK_us",       $a[2], PDO::PARAM_STR );
+   $stm->bindValue(":FK_tipo_doc", $a[3], PDO::PARAM_STR );
+   $r = $stm->execute();
+   if($r){
+      return true;
+   }else{
+      return false;
+   }
+
 }// fin de insert punto
 //=============================================
 //============================================
@@ -1460,12 +1466,12 @@ public function insertPuntos( $a ){
    public function insertTelefonoUsuario($a){
       $sql = "INSERT INTO telefono ( tel,CF_us)values(:tel , :CF_us )";
       $stm = $this->db->prepare($sql);
-      $stm -> bindValue (":tel",  $a[0], PDO::PARAM_INT );
+      $stm -> bindValue (":tel",  $a[0], PDO::PARAM_STR  );
       $stm -> bindValue (":CF_us",$a[1], PDO::PARAM_STR );
       $insert = $stm->execute();
       if($insert){   
          $_SESSION['message'] =  'A registrado telefono para su cuenta, si desea ingresa otro telefono, favor digite';
-         $_SESSION['color'] = 'success'; 
+         $_SESSION['color']   = 'success'; 
          return true;
        }else{
          $_SESSION['message'] =  'No registro telefono';
@@ -1601,10 +1607,10 @@ public function verTelefonosEmpresa(){
 
     // Notificacion leida-----------------------------------------------------------------
    public function notificacionLeida($id) {
-      $sql = "UPDATE notificacion SET estado = ?
-      WHERE ID_not = '1'";
+      $sql = "UPDATE notificacion SET estado = 1
+      WHERE ID_not = ?";
       $stm = $this->db->prepare($sql);
-      $stm->bindValue( 4, $id, PDO::PARAM_INT );
+      $stm->bindValue( 1, $id, PDO::PARAM_INT );
       $bool = $stm->execute();
       if($bool){
          return true;

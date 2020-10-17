@@ -1,6 +1,6 @@
 <?php
     class Conexion{
-/*
+
         static function conexionPDO(){
             $DB_HOST = 'localhost';
             $DB_USER = 'root';
@@ -16,7 +16,7 @@
             return $db;
         }
 
- */
+ /*
 
     static function conexionPDO(){
         $DB_HOST = 'bzsvpsfy9oknkorinigg-mysql.services.clever-cloud.com';
@@ -32,6 +32,7 @@
         return $db;
     }
 
+    */
 }
 
 
