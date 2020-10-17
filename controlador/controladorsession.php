@@ -1,6 +1,7 @@
 <?php
 define("KEY", "sicloud");
 define("COD", "AES-128-ECB");
+$obj =new Session();
 
 class Session{
    public $obj;
@@ -71,7 +72,7 @@ class Session{
          header("location: ../vista/cuentaInactiva.php");
       }
    }
-   
+
    public function validarSesion(){
       if(!isset($_SESSION['usuario'])){
             echo "<script>alert('credenciales incorrectas');</script>"; echo "<script>window.location.replace('../vista/index.php');</script>" ;
@@ -85,6 +86,7 @@ class Session{
 
 $obj->inicioSesion();
 //$obj->validarSesion();
+
 if(isset($_GET['cerrar']) ){
 
    $obj->cerrarSesion();
