@@ -38,17 +38,19 @@ class SQL extends Conexion{
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       $insertar = $this->db->prepare($sql);
       foreach( $a as $i => $d   ){
+      $pass_cifrado = password_hash($d[6], PASSWORD_DEFAULT);
       $insertar->bindValue(1, $d[0] );
       $insertar->bindValue(2, $d[1] );
       $insertar->bindValue(3, $d[2] );
       $insertar->bindValue(4, $d[3] );
       $insertar->bindValue(5, $d[4] );
       $insertar->bindValue(6, $d[5] );
-      $insertar->bindValue(7, $d[6] );
+      $insertar->bindValue(7, $pass_cifrado );
       $insertar->bindValue(8, $d[7] );
       $insertar->bindValue(9, $d[8] );
       $insertar->bindValue(10, $d[9] );
       }
+     // echo $pass_cifrado; die();
       $bool =    $insertar->execute();
       if($bool){
          return true;
@@ -86,6 +88,8 @@ class SQL extends Conexion{
    } // Fin de select usuario
    //-------------------------------------------------------------------------------------------------------
    //METODO LOGIN USUARIO PDO MVC--------------------------------------------------------------------------
+  
+  /*
    public function loginUsuarioModel($datosModel){
    $sql ="SELECT U.* , TD.ID_acronimo , 
    RU.estado , 
@@ -100,6 +104,8 @@ class SQL extends Conexion{
    //AND identificacion = :identificacion";
    $consulta = $this->db->prepare($sql);
    foreach($datosModel as $i =>  $d ){
+     // $pass_cifrado = password_hash($d[1], PASSWORD_DEFAULT);
+       ;
       $consulta->bindValue( ':ID_us',       $d[0] , PDO::PARAM_STR );
       $consulta->bindValue( ':pass',        $d[1] , PDO::PARAM_STR );
       $consulta->bindValue( ':ID_acronimo', $d[2], PDO::PARAM_STR  );
@@ -112,31 +118,42 @@ class SQL extends Conexion{
       return false;
    }
 
+   }
+*/
 
 
-/*
-  // $array = $consulta->fetchAll();
-      if( $consulta->rowCount() > 0 ){ 
-         $USER = $consulta->fetch(PDO::FETCH_ASSOC);
-         if( !isset( $_SESSION['usuario']) ){
-            session_start(); 
-            $_SESSION['usuario']  = $USER;
-         }   
-         echo '<pre>'; print_r( $_SESSION['usuario'] );  echo '</pre>';
-      //   echo '<br> hola'.$_SESSION['usuario']['nom1'];
-      $_SESSION['message'] = "Login extoso";
-      $_SESSION['color'] = "success";
-      $objConSes= new Session(); 
-      $objConSes->verificarAcceso();
+public function loginUsuarioModel($datosModel){
+   $sql ="SELECT U.* , TD.ID_acronimo , 
+   RU.estado , 
+   R.ID_rol_n , R.nom_rol 
+   FROM tipo_doc TD 
+   JOIN usuario U ON TD.ID_acronimo = U.FK_tipo_doc 
+   JOIN rol_usuario RU ON U.ID_us = RU.FK_us 
+   JOIN rol R ON FK_rol = R.ID_rol_n  
+   WHERE U.ID_us       =  :ID_us  
+   AND TD.ID_acronimo  =  :ID_acronimo";
+   $consulta = $this->db->prepare($sql);
+   foreach($datosModel as $i =>  $d ){
+     // $pass_cifrado = password_hash($d[1], PASSWORD_DEFAULT);
+       ;
+      $consulta->bindValue( ':ID_us',       $d[0] , PDO::PARAM_STR );
+    //  $consulta->bindValue( ':pass',        $d[1] , PDO::PARAM_STR );
+      $consulta->bindValue( ':ID_acronimo', $d[2], PDO::PARAM_STR  );
+      $pass = $d[1];
+   }
+  // echo $pass; die();
 
-         return  $USER ;
-      }else{
-        // return false;
-      }
-
-      */
+   $consulta->execute();
+   $USER = $consulta->fetch(PDO::FETCH_ASSOC);
+   if( $consulta->rowCount() > 0  &&   password_verify($pass, $USER['pass'])){ 
+      return $USER;
+   }else{
+      return false;
+   }
  
    }
+
+
 
 
       //Cambio contraseña por usuario
@@ -1366,7 +1383,8 @@ public function insertPuntos( $a ){
       $stm->bindValue( 2 ,$d[0] , PDO::PARAM_STR );
       $stm->bindValue( 3 ,$d[9] , PDO::PARAM_STR  );
       $stm->bindValue( 4 ,$d[11] , PDO::PARAM_STR );
-      $stm->bindValue( 5 ,$d[12] ,  PDO::PARAM_STR );
+     // $stm->bindValue( 5 ,$d[12] ,  PDO::PARAM_STR );
+     $stm->bindValue( 5 , 1 ,  PDO::PARAM_STR );
       }
       $bool = $stm->execute();
       if($bool){
