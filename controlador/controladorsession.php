@@ -1,6 +1,4 @@
 <?php
-
-
 define("KEY", "sicloud");
 define("COD", "AES-128-ECB");
 
@@ -40,7 +38,6 @@ class Session{
                header("location: ../vista/rol/supervisor/iniSupervisor.php");
                $_SESSION['message'] = ' Bienvenido: Supervisor';
                $_SESSION['color']   = 'success';
-              
             break;
             case 4:
                header("location: ../vista/rol/comercial/iniComercial.php");
@@ -63,6 +60,7 @@ class Session{
                header("location: ../vista/rol/cliente/iniCliente.php");
             break; 
             default:
+            die();
                $_SESSION['message'] = 'Usuario no registrado';
                $_SESSION['color']   = 'danger';
                header("location: ../vista/index.php");
@@ -73,7 +71,7 @@ class Session{
          header("location: ../vista/cuentaInactiva.php");
       }
    }
-
+   
    public function validarSesion(){
       if(!isset($_SESSION['usuario'])){
             echo "<script>alert('credenciales incorrectas');</script>"; echo "<script>window.location.replace('../vista/index.php');</script>" ;
@@ -85,11 +83,8 @@ class Session{
    }
 }
 
-$obj = new Session();
 $obj->inicioSesion();
-
 //$obj->validarSesion();
-
 if(isset($_GET['cerrar']) ){
 
    $obj->cerrarSesion();

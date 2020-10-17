@@ -501,18 +501,23 @@ if(isset($_GET['apicall'])){
             header( 'location:  ../vista/forgot_password/dist/index.php');
          }
       break;
-      case 'notificLeida':
-          $r = $db->notificacionLeida($_GET['idn']);
-          if($r){
-            $response['error']      = false;
-            $response['menssage']   = 'Update exitoso exitosa';
-
-
-         }else{
-            $response['error']      =  true;
-            $response['message']    = 'Error, aupdate'; 
-         }
+      case 'inicionRol':
+          include_once '../controlador/controladorsession.php';
+          $objSession = new Session();
+          $objSession->verificarAcceso();
       break;
+      case 'notificLeida':
+         $r = $db->notificacionLeida($_GET['idn']);
+         if($r){
+           $response['error']      = false;
+           $response['menssage']   = 'Update exitoso exitosa';
+        }else{
+           $response['error']      =  true;
+           $response['message']    = 'Error, aupdate'; 
+        }
+     break;
+
+
 
 
 
