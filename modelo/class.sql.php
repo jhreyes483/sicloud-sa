@@ -1383,8 +1383,8 @@ public function insertPuntos( $a ){
       $stm->bindValue( 2 ,$d[0] , PDO::PARAM_STR );
       $stm->bindValue( 3 ,$d[9] , PDO::PARAM_STR  );
       $stm->bindValue( 4 ,$d[11] , PDO::PARAM_STR );
-     // $stm->bindValue( 5 ,$d[12] ,  PDO::PARAM_STR );
-     $stm->bindValue( 5 , 1 ,  PDO::PARAM_STR );
+      $stm->bindValue( 5 ,$d[12] ,  PDO::PARAM_STR );
+      //$stm->bindValue( 5 , 1 ,  PDO::PARAM_STR );
       }
       $bool = $stm->execute();
       if($bool){
