@@ -25,7 +25,7 @@ foreach( $datosUsusario as $row ){
     $ape1          = $row['ape1'];
     $ape2          = $row['ape2'];
     $fecha         = $row['fecha'];
-    $pass          = $row['pass'];
+  //  $pass          = $row['pass'];
     $foto          = $row['foto'];
     $correo        = $row['correo'];
     $FK_tipo_doc   = $row['FK_tipo_doc'];
@@ -119,7 +119,7 @@ endif;
                                 </div>
                                
                                 <h5>Numero de identificacion: </h5>
-                                <?php echo "Id anterior".$id;  ?>
+                                <?= "Id anterior".$id;  ?>
                                 <input class="form-control" type="number" name="ID_us" value="<?=  $ID_us  ?>" required autofocus maxlength="11">
                             
                     </div><br>
@@ -152,7 +152,9 @@ endif;
                 <h5>Fecha de nacimiento: </h5>
                 <input class="form-control" type="date" name="fecha" value="<?= $fecha ?>"><br>
                 <h5>Digite su contraseña: </h5>
-                <input class="form-control" type="password" name="pass" value="<?= $pass ?>" required autofocus maxlength="25"><br>
+             <!-- 
+                  <input class="form-control" type="password" name="pass" value=" required autofocus maxlength="25"><br>
+             -->  
 
                 <h5> Foto </h5>
                 <input class="form-control" type="text" name="foto" value="<?= $foto ?>" required autofocus maxlength="25"><br>

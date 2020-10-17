@@ -154,7 +154,7 @@ public function loginUsuarioModel($datosModel){
 
 
 
-
+/*
       //Cambio contraseña por usuario
       public function validarPass($id, $pass){
          $sql = "SELECT * FROM usuario 
@@ -172,6 +172,24 @@ public function loginUsuarioModel($datosModel){
             return false;
          }
       }
+      */
+
+
+            //Cambio contraseña por usuario
+            public function validarPass($id, $pass){
+               $sql = "SELECT * FROM usuario 
+                  WHERE ID_us = :ID_us ";
+               $c =$this->db->prepare($sql);
+               $c->bindValue(':ID_us', $id, PDO::PARAM_STR );
+               $c->execute();
+               $USER = $c->fetch(PDO::FETCH_ASSOC);
+               if( ($c->rowCount() > 0) &&  password_verify($pass, $USER['pass'])){
+                  return  true;
+               }else{
+                  return false;
+               }
+            }
+
 
       // Cambiar contraseña
       //Cambio de contraseña
@@ -180,8 +198,9 @@ public function loginUsuarioModel($datosModel){
       SET pass = :pass 
       WHERE ID_us = :ID_us ";
      $c =$this->db->prepare($sql);
+     $pass_cifrado = password_hash($contraseñaNueva , PASSWORD_DEFAULT );
      $c->bindValue( ':ID_us', $id,            PDO::PARAM_STR  );
-     $c->bindValue( ':pass', $contraseñaNueva, PDO::PARAM_STR  );
+     $c->bindValue( ':pass', $pass_cifrado,   PDO::PARAM_STR  );
      $r = $c->execute();
      if($r){
         return true;
@@ -243,10 +262,10 @@ public function loginUsuarioModel($datosModel){
    //METODO UPDATE USUARIO PDO MVC-------------------------(FALTA METODO API)-------------------------------
    public function actualizarDatosUsuario($id, $a){ 
       ///echo '<pre>'; print_r($a); echo '</pre>';  echo '<pre>'; print_r($id); echo '</pre>';    die();
-      $sql = "UPDATE usuario SET ID_us = ?, nom1 = ?, nom2 = ?, ape1 = ?, ape2 = ?, fecha = ?, pass = ?, foto = ?, correo = ?, FK_tipo_doc = ?
+      $sql = "UPDATE usuario SET ID_us = ?, nom1 = ?, nom2 = ?, ape1 = ?, ape2 = ?, fecha = ?, foto = ?, correo = ?, FK_tipo_doc = ?
       WHERE ID_us = ?";
       $insertar = $this->db->prepare($sql);
-      $bool = $insertar->execute([$a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6], $a[7], $a[8], $a[9], $id]);       
+      $bool = $insertar->execute([$a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[7], $a[8], $a[9], $id]);       
       $bool =  $insertar->execute();
       if($bool){
          return true;
@@ -1668,7 +1687,7 @@ public function verTelefonosEmpresa(){
       $stm = $this->db->prepare($sql1);
       $res = $stm->execute();
       if ($res) {
-         $sql2 = "DELETE from sicloud.notificacion where ID_not = ? ";
+         $sql2 = "DELETE from notificacion where ID_not = ? ";
          $stm->bindValue( 1, $ID_not , PDO::PARAM_INT );
          $stm = $this->db->prepare($sql2);
          $res1 = $stm->execute();

@@ -107,7 +107,6 @@ if(isset($_GET['apicall'])){
        echo "<script>window.location.replace('../vista/TablaUsuario.php')</script>"; 
       break;        
       case 'actualizarUsuario';
-   
          $array =
          [  
          $_POST['ID_us'], 
@@ -116,7 +115,7 @@ if(isset($_GET['apicall'])){
          $_POST['ape1'],
          $_POST['ape2'],
          $_POST['fecha'],    
-         $_POST['pass' ],
+         '',
          $_POST['foto' ],    
          $_POST['correo'],
          $_POST['FK_tipo_doc'],
