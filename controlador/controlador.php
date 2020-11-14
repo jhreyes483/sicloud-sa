@@ -206,6 +206,7 @@ class ControllerDoc
                     $FK_modific
                 ];
                 $r4 = $this->objModUs->insertModificacion($arm);
+                die($r4);
                 if($r4){
                     return true;
                 }else{
