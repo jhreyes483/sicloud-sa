@@ -3,6 +3,9 @@
 //session_destroy();
 include_once '../modelo/class.sql.php';
 include_once 'controladorsession.php';
+date_default_timezone_set("America/Bogota");
+$hora  = date("h:i:sa");
+
 
 class ControllerDoc
 {
@@ -109,13 +112,13 @@ class ControllerDoc
                     $descrip = $datosController[0][0];
                     $FK_rol = 1;
                     $FK_not = 1;
-                    $an =[ 
+                    $aN =[ 
                         $est,
                         $descrip,
                         $FK_not,
                         $FK_rol
                     ];
-                    $bool3 = $this->objModUs->notInsertUsuarioAdmin($an);
+                    $bool3 = $this->objModUs->notInsertUsuarioAdmin($aN);
                     if($bool3){
                         return true;
                     }else{
@@ -156,7 +159,7 @@ class ControllerDoc
             $fecha  = date('Y-m-d');
             $descrip = "Usario eliminado ID " .$id_get;
             $FK_modific = "2";
-            $hora = '00:00:00';
+          //  $hora;
             $tDoc_us_session = $_SESSION['usuario'] ['ID_acronimo'] ;
             $ID_us_session = $_SESSION['usuario']['ID_us'];
             $arm=[
@@ -190,7 +193,7 @@ class ControllerDoc
                 $fecha  = date('Y-m-d');
                 $descrip = "Usario modificado ID " . $array[0];
                 $FK_modific = "4";
-                $hora = '00:00:00';
+              //  $hora = '00:00:00';
                 $tDoc_us_session = $_SESSION['usuario'] ['ID_acronimo'] ;
                 $ID_us_session = $_SESSION['usuario']['ID_us'];
                

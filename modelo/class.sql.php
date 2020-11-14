@@ -262,7 +262,8 @@ public function loginUsuarioModel($datosModel){
    //METODO UPDATE USUARIO PDO MVC-------------------------(FALTA METODO API)-------------------------------
    public function actualizarDatosUsuario($id, $a){ 
       ///echo '<pre>'; print_r($a); echo '</pre>';  echo '<pre>'; print_r($id); echo '</pre>';    die();
-      $sql = "UPDATE usuario SET ID_us = ?, nom1 = ?, nom2 = ?, ape1 = ?, ape2 = ?, fecha = ?, foto = ?, correo = ?, FK_tipo_doc = ?
+      $sql = "UPDATE usuario SET ID_us = ?, nom1 = ?, nom2 = ?, ape1 = ?, ape2 = ?, 
+      fecha = ?, foto = ?, correo = ?, FK_tipo_doc = ?
       WHERE ID_us = ?";
       $insertar = $this->db->prepare($sql);
       $bool = $insertar->execute([$a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[7], $a[8], $a[9], $id]);       
@@ -875,7 +876,8 @@ public function eliminarErrorLog($id)
       return $result;
    }
    public function verFactura($id){
-      $sql = "SELECT   U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , TD.nom_doc , U.ID_us
+      $sql = "SELECT   U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , 
+      D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , TD.nom_doc , U.ID_us
          FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
          JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
          JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
@@ -890,7 +892,9 @@ public function eliminarErrorLog($id)
       return $result;
    }
    public function verFactural($id){
-      $sql = "SELECT  U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , Pr.nom_prod
+      $sql = "SELECT  U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , 
+      F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , 
+      Pr.val_prod , Pr.nom_prod
          from factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
          join det_factura DF on F.ID_factura = DF.FK_det_factura
          join producto Pr on Pr.ID_prod = DF.FK_det_prod
@@ -1145,7 +1149,8 @@ public function insertModificacion($a){
 
    //query ver productos                                       
    public function verProductosId($id){
-      $sql = "SELECT P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , C.nom_categoria, T_M.nom_medida
+      $sql = "SELECT P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , 
+      C.nom_categoria, T_M.nom_medida
          from producto P 
          join categoria C on P.CF_categoria = C.ID_categoria 
          join tipo_medida T_M on P.CF_tipo_medida = T_M.ID_medida 
