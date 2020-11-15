@@ -30,7 +30,6 @@ if ($in == false) {
   include_once '../../plantillas/nav/navN3.php';
 
   if (isset($_SESSION['usuario'])) {
-    print_r($_SESSION['usuario']);
     $usuario = $_SESSION['usuario'];
     echo  "Hola: " . $_SESSION['usuario']['ape1'];
     setMessage();
@@ -49,12 +48,7 @@ if ($in == false) {
       </button>
     </div>
 
-    <h5 class="mx-auto text-center text-success "><?php if (isset($_SESSION['usuario'])) {
-                                                    echo "Hola: " . $_SESSION['usuario']['nom1']; ?>
 
-        <img src="/jpg;base64," <?php echo base64_encode($_SESSION['usuario']['foto']); ?> />
-      <?php
-                                                  } ?></h5>
   <?php $_SESSION['message'] == false;
   } ?>
 
