@@ -2,7 +2,7 @@
 
 
 include_once '../controlador/controladorrutas.php';
-include_once '../controlador/carrito.php';
+include_once '../controlador/ControladorCarrito.php';
 rutFromIni();
 $objMod = new ControllerDoc();
 $num = 0;

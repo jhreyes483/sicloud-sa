@@ -38,9 +38,9 @@ $objCon = new ControllerDoc();
     cardtitulo("Ingreso de producto-Bodega");
 //=======================================================================
 // Resepcion de datos
-        $id = $_GET['p'];
+         if(isset($_GET['p'])) $id = $_GET['p'];
         $formulario = true;
-        echo $id;
+      //  echo $id;
 //========================================================================
 // Captura de datos
 $id1    = 2041172460;
@@ -58,7 +58,6 @@ foreach($datos as $row ){
   } 
 
 ?>
-
 
     <?php
     if (isset($_SESSION['message'])) {

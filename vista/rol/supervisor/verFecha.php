@@ -5,22 +5,7 @@
 include_once '../../plantillas/plantilla.php';
 include_once '../../plantillas/cuerpo/inihtmlN3.php';
 include_once '../../plantillas/nav/navN3.php';
-
-/*
-include_once '../../../modelo/class.categoria.php';
-include_once '../../../modelo/class.producto.php';
-include_once '../../../modelo/class.conexion.php';
-include_once '../../../modelo/class.factura.php';
-
-*/
 include_once '../../../controlador/ControladorSession.php';
-
-
-/*
-
-include_once '../../session/sessiones.php';
-include_once '../../session/valsession.php';
-*/
 
 cardtitulo("Vista de Informes de ventas");
 

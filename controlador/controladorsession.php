@@ -6,6 +6,11 @@ $obj =new Session();
 class Session{
    public $obj;
 
+
+   static function ningunDato(){
+      return new self ();
+   }
+
    public function inicioSesion(){
       if(!isset($_SESSION['usuario']) ){
          session_start();

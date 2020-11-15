@@ -1,6 +1,7 @@
 <?php
 
 require_once '../controlador/controlador.php';
+require_once '../controlador/controladorsession.php';
 //rutApi();
 $db = new ControllerDoc();
 //session_destroy();
@@ -61,48 +62,34 @@ if(isset($_GET['apicall'])){
       );  
       if($result){
          //esto significa que no hay ningun error
-         $response['error'] = false;
-         $response['message'] = 'Usuario agregado correctamente';
-         $_SESSION['message'] = "Registro Usuario de manera exitosa";
-         $_SESSION['color']   = "success";
-         /*
-         $response['contenido'] = $db->readUsuariosController(
-            $_POST['ID_us'], 
-            $_POST['nom1'],
-            $_POST['nom2'],
-            $_POST['ape1'],
-            $_POST['ape2'],
-            $_POST['fecha'],    
-            $_POST['pass'] 
-         );  
-        */ 
-      }else{
-         $response['error']   = true;
-         $response['message'] = 'ocurrio un error, intenta nuevamente';
-         $_SESSION['message'] = "Error al registrar usuario";
-         $_SESSION['color']   = "danger";
+         $response['error']    = false;
+         $_SESSION['message']  = $response['message'] = 'Usuario agregado correctamente';
+         $_SESSION['color']    = "success";
+      }else{ 
+         $response['error']    = true;
+         $_SESSION['message']  = $response['message'] = 'ocurrio un error, intenta nuevamente';
+         $_SESSION['color']    = "danger";
       }
       header( 'location:  ../index.php');
       break;
       case 'readusuario';
          //$db = new ControllerDoc();
-         $response['error'] = false;
-         $response['message'] = 'Solicitud completada correctamente';
+         $response['error']     = false;
+         $response['message']   = 'Solicitud completada correctamente';
          $response['contenido'] = $db->readUsuariosController();
       break;
       case 'elimianarUsuario';
         // $db = new ControllerDoc();
-         $bool =   $db->eliminarUsuario($_GET['id'] );
+         $bool =   $db->eliminarUsuario( $_GET['id'] );
          if( $bool ){
-            $response['error'] = true;
-            $response['message'] = 'No elimino usuario';
-            $_SESSION['message'] = '';
-            $_SESSION['color'] =   'success';
+            $response['error']   =  false;
+            $response['message'] =  $_SESSION['message'] = 'Elimino usuario de manera exitosa';
+            $_SESSION['color']   = 'success';
          }else{
-            $response['error'] = false;
-            $response['message'] = 'Elimino usuario';
-            $_SESSION['message'] = 'Error, no elimino usuario  ';
-            $_SESSION['color'] =   'danger';
+            $response['error']    =  true;
+            $response['message']  = $_SESSION['message'] ='No elimino usuario';
+            $_SESSION['color']    = 'danger';
+
          }
        echo "<script>window.location.replace('../vista/TablaUsuario.php')</script>"; 
       break;        
@@ -124,13 +111,11 @@ if(isset($_GET['apicall'])){
          $bool1 =   $db->actualizarDatosUsuario($_GET['id'], $array );
          if( $bool ){
            $response['error']    = false;
-           $response['message']  = 'Actualizo usuario';
-           $_SESSION['message']  = "Actualizo usuario";
+           $response['message']  = $_SESSION['message']  = "Actualizo usuario";
            $_SESSION['color']    = "success";
          }else{
-           $response['error']   = true;
-           $response['message'] = 'No actualizo usuario';
-           $_SESSION['message']  = "Error no actualizo usuario";
+           $response['error']    = true;
+           $response['message']  = $_SESSION['message']  = "Error no actualizo usuario"; 
            $_SESSION['color']    = "danger";
          }
 
@@ -144,11 +129,13 @@ if(isset($_GET['apicall'])){
             $_POST['pass'],
             $_POST['tDoc']);
          if(!$result){
-            $response['error']      = true;
-            $response['menssage']   = 'credenciales no validas';
+            $response['error']     = true;
+            $response['menssage']  = $_SESSION['message'] = 'Credenciales no validas';
+            $_SESSION['color']     = "danger";
          }else{
             $response['error']      = false;
-            $response['message']    = 'Bienvenido'; 
+            $response['message']    = $_SESSION['message'] = 'Bienvenido'; 
+            $_SESSION['color']      = "success";
             $response['contenido']  = $result;
          }
       break;
@@ -157,14 +144,13 @@ if(isset($_GET['apicall'])){
          $result = $db->activarCuenta($_GET['id'] );
          if(!$result){
             $response['error']      = true;
-            $response['menssage']   = 'No activo cuenta';
-            $_SESSION['message']    = 'No activo cuenta';
+            $response['menssage']   = $_SESSION['message']    = 'No activo cuenta';
             $_SESSION['color']      = 'danger';
          }else{
             $response['error']      = false;
-            $response['message']    = 'Activo cuenta'; 
+            $response['message']    = $_SESSION['message']    = 'Activo cuenta';
             $response['contenido']  = $result;
-            $_SESSION['message']    = 'Activo cuenta';
+
             $_SESSION['color']      = 'success';
          }
          header( 'location:  ../vista/CU009-controlUsuarios.php');
@@ -174,16 +160,14 @@ if(isset($_GET['apicall'])){
          $result = $db->desactivarCuenta($_GET['id'] );
          if(!$result){
             $response['error']      = true;
-            $response['menssage']   = 'Error, no desactivo cuenta';
+            $response['menssage']   = $_SESSION['message'] = 'No desactivo cuenta';
             $response['contenido']  = $result;
-            $_SESSION['message']    =  'No desactivo cuenta';
             $_SESSION['color']      =  'danger';
             
          }else{
             $response['error']      = false;
-            $response['message']    = 'Desactivo cuenta'; 
+            $response['message']    = $_SESSION['message'] = 'Desactivo cuenta';
             $response['contenido']  = $result;
-            $_SESSION['message']    =  'Desactivo cuenta';
             $_SESSION['color']      =  'success';
             header( 'location:  ../vista/CU009-controlUsuarios.php');
          }
@@ -206,41 +190,46 @@ if(isset($_GET['apicall'])){
          $result = $db->insertarProducto( $a );
          if(!$result){
             $response['error']      = true;
-            $response['menssage']   = 'no inserto producto';
+            $response['menssage']   = $_SESSION['message'] = 'No inserto producto';
             $response['contenido']  = $result;
+            $_SESSION['color']      = 'Danger';
             
          }else{
             $response['error']      = false;
-            $response['message']    = 'Inserto producto'; 
+            $response['message']    = $_SESSION['message'] = 'Inserto producto'; 
             $response['contenido']  = $result;
+            $_SESSION['color']      = 'success';
          }
          header( 'location:  ../vista/CU004-crearProductos.php');
       break;
       
       case 'eliminarTelefono':
          $r= $db->eliminarTelefono($_GET['id']);
-         if(!$r){
+         if($r){
             $response['error']      = true;
-            $response['menssage']   = 'No elimino telefono';
+            $response['menssage']   = $_SESSION['message'] = 'No elimino telefono';
             $response['contenido']  = $r;
+            $_SESSION['color']      = 'Danger';
             
          }else{
             $response['error']      = false;
-            $response['message']    = 'Elimino telefono'; 
+            $response['message']    = $_SESSION['message'] ='Elimino telefono'; 
             $response['contenido']  = $r;
+            $_SESSION['color']      = 'success';
          }
       break;
       case 'EliminarProducto':
-        // echo 'estoy en eliminar producto '.$_GET['id']; die('Fin');
          $r= $db->EliminarProducto($_GET['id']);
          if(!$r){
             $response['error']      = true;
-            $response['menssage']   = 'No elimino producto';
+            $response['menssage']   = $_SESSION['message'] = 'No elimino producto';
             $response['contenido']  = $r;
+            $_SESSION['color']      = 'Danger';
          }else{
             $response['error']      = false;
-            $response['message']    = 'Elimino producto'; 
+            $response['message']    = $_SESSION['message'] = 'Elimino producto'; 
             $response['contenido']  = $r;
+            $_SESSION['color']      = 'success';
          }
       break;
       case 'insertcategoria':
@@ -250,14 +239,11 @@ if(isset($_GET['apicall'])){
           $r = $db->insertCategoria($a);
           if(!$r){
             $response['error']      = true;
-            $response['menssage']   = 'No inserto categora';
-            $response['contenido']  = $r;
-            $_SESSION['message']    = "Error no creo categoria";
-            $_SESSION['color']      = "danger";
-            
+            $response['menssage']   =  $_SESSION['message'] = "Error no creo categoria";
+            $response['contenido']  = $r;    
          }else{
             $response['error']      = false;
-            $response['message']    = 'Inserto categoria'; 
+            $response['message']    = $_SESSION['message'] = 'Inserto categoria'; 
             $response['contenido']  = $r;
             $_SESSION['message']    = "Inserto categoria";
             $_SESSION['color']      = "success";
@@ -271,16 +257,14 @@ if(isset($_GET['apicall'])){
           $r = $db->eliminarCategoria($a);
           if(!$r){
             $response['error']      = true;
-            $response['menssage']   = 'No elimino';
+            $response['menssage']   = $_SESSION['message']  = "Error no creo categoria";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Error no creo categoria";
             $_SESSION['color']      = "danger";
             
          }else{
             $response['error']      = false;
-            $response['message']    = 'Elimino categoria'; 
+            $response['message']    = $_SESSION['message']    = "Elimino categoria"; 
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Elimino categoria";
             $_SESSION['color']      = "success";
          }
       header( 'location:  ../vista/formCategoria.php');
@@ -291,18 +275,15 @@ if(isset($_GET['apicall'])){
             $_GET['id']
          ];
           $r = $db->eliminarEmpresa($a);
-          
           if($r){
             $response['error']      = true;
-            $response['menssage']   = 'No elimino';
+            $response['menssage']   = $_SESSION['message'] = "Elimino empresa";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Elimino empresa";
             $_SESSION['color']      = "success";
          }else{
             $response['error']      = false;
-            $response['message']    = 'Error no elimino empresa'; 
+            $response['message']    = $_SESSION['message'] = "Error no elimino empresa";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Error no elimino empresa";
             $_SESSION['color']      = "danger";
          }
       header( 'location:  ../vista/formEmpresa.php');
@@ -315,15 +296,13 @@ if(isset($_GET['apicall'])){
           $r = $db->actualizarDatosCategoria($a);
           if($r){
             $response['error']      = true;
-            $response['menssage']   = 'Error, no Actualizo empresa';
+            $response['menssage']   = $_SESSION['message'] = "Error, no Actualizo empresa";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Error, no Actualizo empresa";
             $_SESSION['color']      = "danger";
          }else{
             $response['error']      = false;
-            $response['message']    = 'Actualizo empresa'; 
+            $response['message']    = $_SESSION['message'] = "Actualizo empresa";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Actualizo empresa";
             $_SESSION['color']      = "success";
          }
       header( 'location:  ../vista/formCategoria.php');
@@ -336,15 +315,13 @@ if(isset($_GET['apicall'])){
           $r = $db->actualizarDatosEmpresa($a);
           if($r){
             $response['error']      = true;
-            $response['menssage']   = 'Error, no actualizo empresa';
+            $response['menssage']   = $_SESSION['message'] = "Error, no actualizo empresa";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Error, no actualizo empresa";
             $_SESSION['color']      = "danger";
          }else{
             $response['error']      = false;
-            $response['message']    = 'Actualizo empresa'; 
+            $response['message']    = $_SESSION['message']    = "Actualizo empresa";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Actualizo empresa";
             $_SESSION['color']      = "success";
          }
       header( 'location:  ../vista/formEmpresa.php');
@@ -357,15 +334,14 @@ if(isset($_GET['apicall'])){
           $r = $db->insertEmpresa($a);
           if($r == false){
             $response['error']      = true;
-            $response['menssage']   = 'Error, no creo empresa';
+            $response['menssage']   = $_SESSION['message'] = 'Error, no creo empresa';
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Error, no no creo empresa";
             $_SESSION['color']      = "danger";
          }else{
             $response['error']      = false;
-            $response['message']    = 'Creo empresa'; 
+            $response['message']    = $_SESSION['message']  = "Creo empresa";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Creo empresa";
+
             $_SESSION['color']      = "success";
          }
       header( 'location:  ../vista/formEmpresa.php');
@@ -378,15 +354,14 @@ if(isset($_GET['apicall'])){
           $r = $db->insertMedia($a);
           if($r){
             $response['error']      = false;
-            $response['menssage']   = 'Creo unidad medida';
+            $response['menssage']   = $_SESSION['message']  = 'Creo unidad medida';
             $response['contenido']  = $r;
-            $_SESSION['message']    = 'Creo unidad medida';
             $_SESSION['color']      = 'success';
          }else{
             $response['error']      =  true;
-            $response['message']    = 'Error, no creo unidad de medida'; 
+            $response['message']    = $_SESSION['message']  = "Error, no creo unidad de medida";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Error, no creo unidad de medida";
+            
             $_SESSION['color']      = 'danger';
          }
       header( 'location:  ../vista/formMedida.php');
@@ -399,15 +374,13 @@ if(isset($_GET['apicall'])){
           $r = $db->eliminarDatosMedia($a);
           if($r){
             $response['error']      = false;
-            $response['menssage']   = 'Elimino medida';
+            $response['menssage']   = $_SESSION['message'] = 'Elimino medida';
             $response['contenido']  = $r;
-            $_SESSION['message']    = 'Elimino medida';
             $_SESSION['color']      = 'success';
          }else{
             $response['error']      =  true;
-            $response['message']    = 'Error, no creo unidad de medida'; 
+            $response['message']    = $_SESSION['message'] = "Error, no creo unidad de medida";
             $response['contenido']  = $r;
-            $_SESSION['message']    = "Error, no creo unidad de medida";
             $_SESSION['color']      = 'danger';
          }
       header( 'location:  ../vista/formMedida.php');
@@ -422,15 +395,13 @@ if(isset($_GET['apicall'])){
           $r = $db->actualizarDatosMedida($a);
           if($r){
             $response['error']      = false;
-            $response['menssage']   = 'Actualizar medida';
+            $response['menssage']   = $_SESSION['message'] = 'Actualizar medida';
             $response['contenido']  = $r;
-            $_SESSION['message']    = 'Actualizar medida';
             $_SESSION['color']      = 'success';
          }else{
             $response['error']      =  true;
-            $response['message']    = 'Error, Al actulizar medida'; 
+            $response['message']    = $_SESSION['message'] = 'Error, Al actulizar medida';
             $response['contenido']  = $r;
-            $_SESSION['message']    = 'Error, Al actulizar medida';
             $_SESSION['color']      = 'danger';
          }
       header( 'location:  ../vista/formMedida.php');
@@ -449,15 +420,13 @@ if(isset($_GET['apicall'])){
           $r = $db->insertUpdateUsuarioCliente($a);
           if($r){
             $response['error']      = false;
-            $response['menssage']   = 'Actualizo datos';
+            $response['menssage']   = $_SESSION['message'] = 'Actualizo datos';
             $response['contenido']  = $r;
-            $_SESSION['message']    = 'Actualizo datos';
             $_SESSION['color']      = 'success';
          }else{
             $response['error']      =  true;
-            $response['message']    = 'Error, Al actulizar datos'; 
+            $response['message']    = $_SESSION['message']  = 'Error, Al actulizar datos';
             $response['contenido']  = $r;
-            $_SESSION['message']    = 'Error, Al actulizar datos';
             $_SESSION['color']      = 'danger';
          }
       header( 'location:  ../vista/misdatos.php');
@@ -472,11 +441,13 @@ if(isset($_GET['apicall'])){
           $r = $db->validaContraseña($a);
           if($r){
             $response['error']      = false;
-            $response['menssage']   = 'Cambio contraseña de manera exitosa';
+            $response['menssage']   = $_SESSION['message'] ='Cambio contraseña de manera exitosa';
             $response['contenido']  = $r;
+            $_SESSION['color']      = 'success';
          }else{
             $response['error']      =  true;
-            $response['message']    = 'Error, al cambio contraseña'; 
+            $response['message']    = $_SESSION['message'] = 'Error, al cambio contraseña'; 
+            $_SESSION['color']      = 'danger';
          }
       header( 'location:  ../vista/cambioContraseña.php');
       break;
@@ -492,13 +463,15 @@ if(isset($_GET['apicall'])){
           $r = $db->validarCredecilesCorrreo($a);
           if($r){
             $response['error']      = false;
-            $response['menssage']   = 'Cambio contraseña de manera exitosa';
+            $response['menssage']   = $_SESSION['message'] = 'Cambio contraseña de manera exitosa';
             $response['contenido']  = $r;
+            $_SESSION['color']      = 'success';
 
          }else{
             $response['error']      =  true;
-            $response['message']    = 'Error, al cambio contraseña'; 
+            $response['message']    = $_SESSION['message'] = 'Error, al cambio contraseña'; 
             header( 'location:  ../vista/forgot_password/dist/index.php');
+            $_SESSION['color']      = 'danger';
          }
       break;
       case 'inicionRol':
@@ -510,10 +483,12 @@ if(isset($_GET['apicall'])){
          $r = $db->notificacionLeida($_GET['idn']);
          if($r){
            $response['error']      = false;
-           $response['menssage']   = 'Update exitoso exitosa';
+           $response['menssage']   = $_SESSION['message'] = 'Update exitoso exitosa';
+           $_SESSION['color']      = 'success';
         }else{
            $response['error']      =  true;
-           $response['message']    = 'Error, aupdate'; 
+           $response['message']    = $_SESSION['message'] = 'Error, aupdate'; 
+           $_SESSION['color']      = 'danger';
         }
      break;
 
