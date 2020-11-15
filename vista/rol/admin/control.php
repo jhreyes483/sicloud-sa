@@ -29,11 +29,6 @@ if ($in == false) {
   include_once '../../plantillas/cuerpo/inihtmlN3.php';
   include_once '../../plantillas/nav/navN3.php';
 
-  if (isset($_SESSION['usuario'])) {
-    $usuario = $_SESSION['usuario'];
-    echo  "Hola: " . $_SESSION['usuario']['ape1'];
-    setMessage();
-  }
   cardtitulo("Controlador de sistema");
 ?>
 
