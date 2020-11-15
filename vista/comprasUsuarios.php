@@ -1,17 +1,7 @@
 <?php
 
-
-/*
-include_once 'plantillas/plantilla.php';
-include_once 'plantillas/cuerpo/inihtmlN2.php';
-include_once 'plantillas/nav/navN2.php';
-include_once '../modelo/class.factura.php'; // Se requiere para los datos de la tabla
-include_once '../controlador/controlador.php';
-//$us = Factura::ningunDato();
-*/
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
-
 
 $objModFact = new ControllerDoc();
 ?>

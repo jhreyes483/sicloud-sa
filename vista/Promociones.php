@@ -4,11 +4,7 @@ include_once '../controlador/controladorrutas.php';
 rutFromIni();
 $objModProd = new ControllerDoc();
 $datos = $objModProd->verPromociones();
-
-
-
-            // $objModProd->ver($datos);
-         
+      
 cardtitulo('Promociones');
 
 ?>

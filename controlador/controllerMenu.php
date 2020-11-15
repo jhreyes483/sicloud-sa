@@ -1,15 +1,120 @@
 <?php
+include_once 'controlador.php';
 
-include_once '../controlador/controladorsession.php';
-include_once '../controlador/controlador.php';
-include_once '../vista/notificacion/notificacionN1.php';
-$objCon     = new ControllerDoc();
-$objSession = new Session();
-$uN = $objSession->desencriptaSesion();
-if (isset($_SESSION['usuario'])) {
-  $countNotificacion =  count($_SESSION['notic']);  
+
+$arrMenu['A'][1]          = ['INICIO','rol/admin/iniAdmin.php'];
+$arrMenu['A'][2]          = ['FERRETERIA', ];
+$arrMenu['A'][2][1]       = ['QUIENES SOMOS', 'vista/CU000-quienessomos.php'];
+$arrMenu['A'][2][2]       = ['MISION Y VISION', '/vista/CU000-misionyvision.php'];
+$arrMenu['A'][3]          = ['CATALOGO', 'vista/CU000-quienessomos.php'];
+$arrMenu['A'][4]          = ['PROMOCIONES', 'Promociones.php'];
+$arrMenu['A'][5]          = ['CONTACTO', 'CU000-contact.php'];
+//$arrMenu['A'][2]
+
+class ControllerMenu{
+public $aMenu , $aP, $aUserDB;
+private $db;
+
+public function __construct(){
+    $this->aUserDB = [
+        'edgar',
+        '2',
+        '79445674',
+        '01,02,0201,0202,03,04,05',
+        '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0',
+        'A',
+        '',
+        '1'
+       ];
+
+    $this->aP= [];
+    $this->aMenu['A'][1]      = ['INICIO','../controlador/api.php?apicall=inicionRol'];
+    $this->aMenu['A'][2]      = ['FERRETERIA', ];
+    $this->aMenu['A'][2][1]   = ['QUIENES SOMOS', 'vista/CU000-quienessomos.php'];
+    $this->aMenu['A'][2][2]   = ['MISION Y VISION', '/vista/CU000-misionyvision.php'];
+    $this->aMenu['A'][3]      = ['CATALOGO', 'vista/CU000-quienessomos.php'];
+    $this->aMenu['A'][4]      = ['PROMOCIONES', 'Promociones.php'];
+    $this->aMenu['A'][5]      = ['CONTACTO', 'CU000-contact.php'];
+    $this->db                 = SQL::ningunDato();
 }
+
+public function generaMenu(){
+    $aMenu   = $this->aMenu;
+    $sPdb    = $this->aUserDB[3];
+    $m       = $this->aUserDB[5];
+
+    $aPdb = explode( ',' ,$sPdb);
+    $aP = [];
+foreach($aPdb as $d ){
+
+    $c = strlen($d);
+    //echo '<br>'.$c.'->'.$d.'<br>';
+    switch ($c) {
+        case 2:
+            $v1 = abs($d);
+             $aP[$v1] = [$this->aMenu[$m][$v1][0] , $this->aMenu[$m][$v1][1] ];
+  
+            break;
+        case 4:
+            echo '<br>'.$d;
+            $sP =  str_split($d, 2);
+            $v1 =  abs($sP[0]); 
+            $v2 =  abs($sP[1]);
+            $aP[$v1][$v2]  =  [ $this->aMenu[$m][$v1][$v2][0] , $this->aMenu[$m][$v1][$v2][1] ];
+            break;
+        case 6:
+            $sP =  str_split($d, 2);
+            $v1 =  abs($sP[0]); 
+            $v2 =  abs($sP[1]);
+            $v2 =  abs($sP[2]);
+            $aP[$v1][$v2][$v3]  =  [ $this->aMenu[$m][$v1][$v2][$v3][0] , $this->aMenu[$m][$v1][$v2][$v3][1] ];
+            break;
+    }
+  
+}
+
+return $aP;
+}
+
+
+}
+
+$obj = new ControllerMenu();
+ $aP = $obj->generaMenu();
+ ControllerDoc::ver($aP);
 ?>
+
+
+<?php
+echo '<nav class="navbar-fixed-top navbar navbar-expand-lg navbar-dark bg-dark navbar navbar-expand-lg  sticky-top">
+<a class="navbar-brand ml-4" href="#">
+  <img src="fonts/logoportal.png" width="250" height="65" alt="">
+</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <ul class="navbar-nav mr-auto mx-auto">';
+
+  foreach($aP as $d){
+
+    if( !is_array($d[0])){ 
+        //ControllerDoc::ver($d[0]);
+       $url = ( !is_array($d[1]))? $d[1] : '';
+        echo '<li class="nav-item active">';
+        echo ' <a class="nav-link lead px-4 my-3 " href="'.$url.'">'.$d[0].'<span class="sr-only">(current)</span></a>';
+        echo '</li>';
+
+
+
+
+
+
+  }
+
+?>
+
 
 
 <nav class="navbar-fixed-top navbar navbar-expand-lg navbar-dark bg-dark navbar navbar-expand-lg  sticky-top">
@@ -45,6 +150,8 @@ if (isset($_SESSION['usuario'])) {
       <li class="nav-item dropdown active">
 
 
+
+
         <!-- icono de notificacion mensaje -->
 
         <a class="nav-link mx-3" href="#" id="messagesDropdown" role="button" aria-expanded="false">
@@ -53,26 +160,25 @@ if (isset($_SESSION['usuario'])) {
 
         </a>
 
-
         <?php
-     ?>
-        <!-- icono de carrito -->
+       
+
+        ?>
+
+                <!-- icono de carrito -->
         <a href="mostrarCarrito.php"> 
         <svg  width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-cart3 " fill="white" xmlns="http://www.w3.org/2000/svg">
               <path style="color :#ffff;" fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
             </svg ></a>
 
             <!-- Icono de conteo productos carrito -->
-        <span class="badge badge-danger badge-counter"><?php
-        if (  empty($_SESSION['CARRITO'] )){  echo 0; }else{  echo count($_SESSION['CARRITO']); } 
-         ?></span>
+        <span class="badge badge-danger badge-counter">0</span>
 <!-- ---------------------------------------------------------------------------------------- -->
         <!-- icono de notificacion campana -->
         <a class="" id="messagesDropdown" data-toggle="modal" data-target="#exampleModal" role="button" aria-expanded="true">
           <i class="fas fa-bell fa-fw" style="color :#ffff;"></i>
           <!-- Counter - Messages -->
-            <span class="badge badge-danger badge-counter"><?php 
-       if( isset($countNotificacion)  && $countNotificacion >0 ){ echo $countNotificacion; }else{ echo 0; }?></span></span>
+            <span class="badge badge-danger badge-counter">9</span></span>
        </a>
         <span class="sr-only">(current)</span>
         </a>
@@ -83,30 +189,17 @@ if (isset($_SESSION['usuario'])) {
 
 
 
-          <strong><?php if (isset($_SESSION['usuario'])) {
-                    echo  $uN['usuario']['nom1'];   ?></strong>
-          <img class="img-profile ml-3 rounded-circle" src="fonts/us/<?= $uN['usuario']['foto'];   ?>" height="65" width="70">
-        <?php  }
-       
-        
-        ?>
-       
+          <strong>Javier</strong>
+          <img class="img-profile ml-3 rounded-circle" src="fonts/us/jav.png" height="65" width="70">
+               
 
         </a>
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
           <a class="dropdown-item" href="#">
-            <?php if (isset($_SESSION['usuario'])) {
-              echo "Hola " . $uN['usuario']['nom1'] . " " . $uN['usuario']['ape1'] . "<br>";
-            }   ?>
-            <?php if (isset($uN['usuario']['puntos'])) {
-              echo "Puntos " . $uN['usuario']['puntos'];
-            }  ?>
-            <div class="dropdown-divider"></div>
+            Hola Javier Reyes<br>                        <div class="dropdown-divider"></div>
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-            <em><strong><?php if (isset($_SESSION['usuario'])) {
-                          echo $uN['usuario']['nom_rol'];
-                        } ?></strong></em>
+            <em><strong>Administrador</strong></em>
           </a>
           <a class="dropdown-item" href="misdatos.php">
             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -125,12 +218,3 @@ if (isset($_SESSION['usuario'])) {
           </a>
         </div>
       </li>
-
-<?php 
-$uN = null;
-?>
-
-
-    </ul>
-  </div>
-</nav>

@@ -1,20 +1,7 @@
 <?php
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
-/*
-//include_once './plantillas'
-include_once './plantillas/plantilla.php';
-include_once '../modelo/class.conexion.php';
-include_once '../modelo/class.categoria.php';
-include_once '../modelo/class.producto.php';
-include_once '../modelo/class.medida.php';
-include_once '../modelo/class.proveedor.php';
-//palntilla
-include_once './plantillas/cuerpo/inihtmlN1.php';
-include_once './plantillas/nav/navN1.php';
-include_once '../controlador/controladorsession.php';
 
-*/
 cardtitulo("Editar producto");
 $objCon = new ControllerDoc();
 ?>

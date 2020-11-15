@@ -20,7 +20,6 @@ if (isset($_SESSION['message'])) {
     </button>
   </div>
 
- <h5 class = "mx-auto tex-cennter text-succes "><?php  if(isset($_SESSION['usuario'])){ echo "Hola: ".$_SESSION['usuario']['nom1']; } ?></h5>
 
 <?php $_SESSION['message'] == false; }
 cardAviso();

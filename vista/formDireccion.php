@@ -2,20 +2,8 @@
 
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
-/*
-include_once 'plantillas/plantilla.php';
-include_once 'plantillas/cuerpo/inihtmlN2.php';
-include_once 'plantillas/nav/navN2.php';
-include_once '../modelo/class.ciudad.php';
-include_once '../modelo/class.localidad.php';
-include_once '../controlador/controlador.php';
-*/
-
-
 cardtitulo("Direccion");
 ?>
-
-
 
 <div class="col-md-4 mx-auto">
 	<div class="row">

@@ -130,8 +130,8 @@ public function loginUsuarioModel($datosModel){
    JOIN usuario U ON TD.ID_acronimo = U.FK_tipo_doc 
    JOIN rol_usuario RU ON U.ID_us = RU.FK_us 
    JOIN rol R ON FK_rol = R.ID_rol_n  
-   WHERE U.ID_us       =  :ID_us  
-   AND TD.ID_acronimo  =  :ID_acronimo";
+   WHERE U.ID_us        = :ID_us  
+   AND TD.ID_acronimo   = :ID_acronimo";
    $consulta = $this->db->prepare($sql);
    foreach($datosModel as $i =>  $d ){
      // $pass_cifrado = password_hash($d[1], PASSWORD_DEFAULT);
@@ -175,39 +175,39 @@ public function loginUsuarioModel($datosModel){
       */
 
 
-            //Cambio contraseña por usuario
-            public function validarPass($id, $pass){
-               $sql = "SELECT * FROM usuario 
-                  WHERE ID_us = :ID_us ";
-               $c =$this->db->prepare($sql);
-               $c->bindValue(':ID_us', $id, PDO::PARAM_STR );
-               $c->execute();
-               $USER = $c->fetch(PDO::FETCH_ASSOC);
-               if( ($c->rowCount() > 0) &&  password_verify($pass, $USER['pass'])){
-                  return  true;
-               }else{
-                  return false;
-               }
-            }
+   //Cambio contraseña por usuario
+   public function validarPass($id, $pass){
+      $sql = "SELECT * FROM usuario 
+         WHERE ID_us = :ID_us ";
+      $c =$this->db->prepare($sql);
+      $c->bindValue(':ID_us', $id, PDO::PARAM_STR );
+      $c->execute();
+      $USER = $c->fetch(PDO::FETCH_ASSOC);
+      if( ($c->rowCount() > 0) &&  password_verify($pass, $USER['pass'])){
+         return  true;
+      }else{
+         return false;
+      }
+   }
 
 
       // Cambiar contraseña
       //Cambio de contraseña
-  public function cambioPass($id,  $contraseñaNueva){
-   $sql = "UPDATE usuario 
-      SET pass = :pass 
-      WHERE ID_us = :ID_us ";
-     $c =$this->db->prepare($sql);
-     $pass_cifrado = password_hash($contraseñaNueva , PASSWORD_DEFAULT );
-     $c->bindValue( ':ID_us', $id,            PDO::PARAM_STR  );
-     $c->bindValue( ':pass', $pass_cifrado,   PDO::PARAM_STR  );
-     $r = $c->execute();
-     if($r){
-        return true;
-     }else{
-        return false;
-     }
-  }
+   public function cambioPass($id,  $contraseñaNueva){
+    $sql = "UPDATE usuario 
+       SET pass = :pass 
+       WHERE ID_us = :ID_us ";
+      $c =$this->db->prepare($sql);
+      $pass_cifrado = password_hash($contraseñaNueva , PASSWORD_DEFAULT );
+      $c->bindValue( ':ID_us', $id,            PDO::PARAM_STR  );
+      $c->bindValue( ':pass', $pass_cifrado,   PDO::PARAM_STR  );
+      $r = $c->execute();
+      if($r){
+         return true;
+      }else{
+         return false;
+      }
+   }
   //-------------------------------------------------------------------------
 
    public function validarCredecilesCorrreo($a){
@@ -294,47 +294,48 @@ public function loginUsuarioModel($datosModel){
 
  */
 
-public function  selectUsuarioRol($id){
-    $sql = "SELECT distinct U.FK_tipo_doc, U.ID_us, U.nom1, U.nom2, U.ape1, U.ape2, U.pass, U.foto, U.correo, 
-    R.nom_rol,  R.nom_rol,
-    R_U.estado
-    FROM usuario U 
-    JOIN  rol_usuario R_U ON R_U.FK_us = U.ID_us
-    JOIN rol  R ON R_U.FK_rol = R.ID_rol_n 
-    WHERE R.ID_rol_n  = :id
-     ";
-    $c = $this->db->prepare($sql);
-    $c->bindValue(":id", $id);
-    $c->execute();
-    $r = $c->fetchAll();
-return $r;
-}
+   public function  selectUsuarioRol($id){
+       $sql = "SELECT distinct U.FK_tipo_doc, U.ID_us, U.nom1, U.nom2, 
+       U.ape1, U.ape2, U.pass, U.foto, U.correo, 
+       R.nom_rol,  R.nom_rol,
+       R_U.estado
+       FROM usuario U 
+       JOIN  rol_usuario R_U ON R_U.FK_us = U.ID_us
+       JOIN rol  R ON R_U.FK_rol = R.ID_rol_n 
+       WHERE R.ID_rol_n  = :id
+        ";
+       $c = $this->db->prepare($sql);
+       $c->bindValue(":id", $id);
+       $c->execute();
+       $r = $c->fetchAll();
+   return $r;
+   }
 
-      public function conteoUsuariosActivos(){
-         $sql = "SELECT count(*) AS usuariosActivos 
-            FROM usuario  U JOIN rol_usuario RU ON RU.FK_us = U.ID_us
-            WHERE RU.estado = 1";
-         $c= $this->db->prepare($sql);
-          $c->execute();
-         $r = $c->fetchAll();
-         foreach( $r as $d ){
-            $con =   $d[0];
-         }
-         return $con;
+   public function conteoUsuariosActivos(){
+      $sql = "SELECT count(*) AS usuariosActivos 
+         FROM usuario  U JOIN rol_usuario RU ON RU.FK_us = U.ID_us
+         WHERE RU.estado = 1";
+      $c= $this->db->prepare($sql);
+       $c->execute();
+      $r = $c->fetchAll();
+      foreach( $r as $d ){
+         $con =   $d[0];
       }
-      public function conteoUsuariosInactivos(){
-         $sql = "SELECT count(*) AS usuariosActivos 
-            FROM usuario  U 
-            JOIN rol_usuario RU ON RU.FK_us = U.ID_us
-            WHERE RU.estado = 0";
-         $c= $this->db->prepare($sql);
-         $c->execute();
-         $r = $c->fetchAll();
-        foreach($r as  $d){
-           $con= $d[0];
-        }
-         return $con;
-      }
+      return $con;
+   }
+   public function conteoUsuariosInactivos(){
+      $sql = "SELECT count(*) AS usuariosActivos 
+         FROM usuario  U 
+         JOIN rol_usuario RU ON RU.FK_us = U.ID_us
+         WHERE RU.estado = 0";
+      $c= $this->db->prepare($sql);
+      $c->execute();
+      $r = $c->fetchAll();
+     foreach($r as  $d){
+        $con= $d[0];
+     }
+      return $con;
+   }
 
         //busqueda por ID
   public function selectIdUsuario($id){
@@ -427,7 +428,6 @@ return $r;
 
    // Actualzacion de datos por rol usuario---------------------------------------------------------
   public function insertUpdateUsuarioCliente($a){
-   
    $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
    $consulta1 = $this->db->prepare($sql1);
         $res =  $consulta1->execute();   

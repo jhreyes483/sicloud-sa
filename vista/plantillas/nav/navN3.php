@@ -2,7 +2,9 @@
 
 include_once '../../../controlador/controladorsession.php';
 include_once '../../../vista/notificacion/notificacionN3.php';
+
 $objSession = new Session();
+$uN = $objSession->desencriptaSesion();
 if (isset($_SESSION['usuario'])) {
   $countNotificacion =  count($_SESSION['notic']);  
 }
@@ -39,14 +41,6 @@ if (isset($_SESSION['usuario'])) {
         <a class="nav-link lead pl-4 my-3" href="../../CU000-contact.php">CONTACTO<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item dropdown active">
-
-
-
-
-
-
-
-
 
         <!-- icono de notificacion mensaje -->
 
@@ -85,24 +79,24 @@ if (isset($_SESSION['usuario'])) {
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
 
           <strong><?php if (isset($_SESSION['usuario'])) {
-                    echo  $_SESSION['usuario']['nom1'];
+                    echo  $uN['usuario']['nom1'];
                     ?></strong>
-<img class="img-profile ml-3 rounded-circle" src="../../fonts/us/<?php echo $_SESSION['usuario']['foto'] ;   ?>" height="80" width="80">
+<img class="img-profile ml-3 rounded-circle" src="../../fonts/us/<?php echo $uN['usuario']['foto'] ;   ?>" height="80" width="80">
                     <?php   } ?>
         </a>
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
           <a class="dropdown-item" href="#">
             <?php if (isset($_SESSION['usuario'])) {
-              echo "Hola " . $_SESSION['usuario']['nom1'] . " " . $_SESSION['usuario']['ape1'] . "<br>";
+              echo "Hola " . $uN['usuario']['nom1'] . " " . $uN['usuario']['ape1'] . "<br>";
             }   ?>
             <?php if (isset($_SESSION['usuario']['puntos'])) {
-              echo "Puntos " . $_SESSION['usuario']['puntos'];
+              echo "Puntos " . $uN['usuario']['puntos'];
             }  ?>
             <div class="dropdown-divider"></div>
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
             <em><strong><?php if (isset($_SESSION['usuario'])) {
-                          echo $_SESSION['usuario']['nom_rol'];
+                          echo $uN['usuario']['nom_rol'];
                         } ?></strong></em>
           </a>
           <a class="dropdown-item" href="../../misdatos.php">

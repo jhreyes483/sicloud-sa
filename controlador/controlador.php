@@ -13,23 +13,24 @@ class ControllerDoc
     public $objModUs;
 
     public function __construct(){
-        $this->objModUs   =  SQL::ningunDato();
+        $this->objModUs   = SQL::ningunDato();
     }
     public function selectDocumento(){
         return $this->objModUs->verDocumeto();
     }
-
+    
     public function loginUsuarioController($ID_us,  $pass, $doc){
         $datosController[] = [$ID_us, $pass, $doc];
         $USER = $this->objModUs->loginUsuarioModel($datosController);
-        //$this->ver( $USER  );
         if( $USER ){ 
-        
         $objSession = new Session();
-        $_SESSION['usuario']  = $USER;
-        $_SESSION['notic']    =  $this->verNotificaciones(  $_SESSION['usuario']['ID_rol_n']  );
+        $_SESSION['usuario'] = $objSession->encriptaSesion($USER);
+      //  print_r($_SESSION['usuario']);
+        $id_rol               =  openssl_decrypt( $_SESSION['usuario']['ID_rol_n'], COD, KEY);
+        $_SESSION['notic']    =  $this->verNotificaciones(   $id_rol  );
+        $id_rol  = null;
         $objSession->verificarAcceso();
-            return  $USER ;
+        return  $USER ;
         }else{
             header("location: ../vista/loginregistrar.php");
             $_SESSION['message'] = 'Contraseña incorreta o usuario no registrado';
@@ -37,8 +38,6 @@ class ControllerDoc
         }
     }
         
-
-
 
     public function createUsuariosController(
         $ID_us,
@@ -143,7 +142,7 @@ class ControllerDoc
           */
     
     public function readUsuariosController(){
-        return $this->objModUs->readUsuarioModel('vendedor');
+        return $this->objModUs->readUsuarioModel();
     }
     public function readUsuarioModel(){
         return $this->objModUs->readUsuarioModel();
@@ -151,10 +150,10 @@ class ControllerDoc
     public function eliminarUsuario($id_get){
         $r1 = $this->objModUs->eliminarUsuario($id_get);
         if($r1){
-            $hora = date("h:i:sa");
-            $hora=  substr( $hora , 0, 8 );
-            $fecha  = date('Y-m-d');
-            $descrip = "Usario eliminado ID " .$id_get;
+            $hora       = date("h:i:sa");
+            $hora       = substr( $hora , 0, 8 );
+            $fecha      = date('Y-m-d');
+            $descrip    = "Usario eliminado ID " .$id_get;
             $FK_modific = "2";
           //  $hora;
             $tDoc_us_session = $_SESSION['usuario'] ['ID_acronimo'] ;
@@ -512,10 +511,11 @@ class ControllerDoc
                     $pass,
                     $t_doc
                 ];
+                die();
               
                 $USER = $this->objModUs->loginUsuarioModel($ar);
                 $_SESSION['usuario'] = $USER;
-                $this->ver( $USER );
+
                 header( 'location:  ../vista/cambioContraseña.php');
                  die();
             }else{
@@ -539,7 +539,7 @@ class ControllerDoc
     public function notificacionLeida($a){
         return $this->objModUs->notificacionLeida($a);
     }
-    public function ver($dato, $sale=0, $float= false, $email=''){
+    static function ver($dato, $sale=0, $float= false, $email=''){
         echo '<div style="background-color:#fbb; border:1px solid maroon;  margin:auto 5px; text-align:left;'. ($float? ' float:left;':'').' padding:7px; border-radius:7px; margin-top:10px">';
         if(is_array($dato) || is_object($dato) ){
             echo '<pre><br><b>&raquo;&raquo;&raquo; DEBUG</b><br>'; print_r($dato); echo '</pre>'; 

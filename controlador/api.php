@@ -517,19 +517,6 @@ if(isset($_GET['apicall'])){
         }
      break;
 
-
-
-
-
-
-      
-
-
-
-
-
-
-
       default:
       $response['error']      = true;
       $response['message']    = 'ingreso a api "no esta en ningun metodo"'; 

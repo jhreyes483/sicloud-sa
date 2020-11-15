@@ -1,11 +1,12 @@
 <?php
 include_once '../controlador/controladorrutas.php';
+//include_once '../controlador/controladorsession.php';
+if( !isset ($_SESSION['usuario'])  ) session_start(); 
 rutFromIni();
+
+$id =  openssl_decrypt( $_SESSION['usuario']['ID_us'], COD, KEY);
 cardtitulo('Mis datos');
 ?>
-
-
-
 <div class=" mx-auto col-md-5 mb-5">
     <div class="container">
         <div class="row">
@@ -18,7 +19,7 @@ cardtitulo('Mis datos');
                     <div class="row">
                         <div class=" shadow h-100 py-2 mb-4 card card-body">
                             <h5 class="text-center mx-auto">Contraseña anterior </h5>
-                            <input type="hidden" name="id" value="<?= $_SESSION['usuario']['ID_us'] ?>">
+                            <input type="hidden" name="id" value="<?= $id  ?>">
                             <div class="form-group"><input class="form-control" type="password" name="passA" value="" required autofocus maxlength="20"></div>
                             <h5 class="text-center mx-auto">Nueva contraseña </h5>
                             <div class="form-group"><input class="form-control" type="password" name="passN" value="" required autofocus maxlength="20"></div>
@@ -26,8 +27,6 @@ cardtitulo('Mis datos');
                             <div class="form-group"><input class="form-control" type="password" name="passN2" value="" required autofocus maxlength="20"></div>
                             <input type="hidden" name="accion" value="cambioContrasena">
                             <input type="submit" name="submit" class="btn btn-primary btn-block" value="cambiar">  
-
-
                             <?php
 
                     if (isset($_SESSION['message'])) {
@@ -41,8 +40,8 @@ cardtitulo('Mis datos');
         </button>
     </div>
 <?php
-                        setMessage();
-                    }
+setMessage();
+}
 ?>
                         </div>
                 </form>
@@ -53,12 +52,7 @@ cardtitulo('Mis datos');
 </div>
 <br>
 
-
-
-
-
 <?php
 rutFinFooterFrom();
 rutFromFin();
-
 ?>

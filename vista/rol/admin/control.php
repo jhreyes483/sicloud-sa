@@ -1,9 +1,12 @@
 <?php
 //  rol/admin/iniAdmin.php
 include_once '../../../controlador/controladorsession.php';
+$objSession =new Session();
+$u = $objSession->desencriptaSesion();
+
 //comprobacion de rol
 $in = false;
-switch ($_SESSION['usuario']['ID_rol_n']) {
+switch ($u['usuario']['ID_rol_n']) {
     case 1:
         $in = true;
     break;

@@ -3,10 +3,12 @@
 //  rol/admin/iniAdmin.php
 include_once '../../../controlador/controladorrutas.php';
 rutFromIniN3();
-//include_once '../../../controlador/controladorsession.php';
+$objSession =new Session();
+$u = $objSession->desencriptaSesion();
+
 //comprobacion de rol
 $in = false;
-switch ($_SESSION['usuario']['ID_rol_n']) {
+switch ($u['usuario']['ID_rol_n']) {
     case 1:
         $in = true;
     break;
@@ -24,12 +26,7 @@ if ($in == false) {
 } else {
 
     //--------------------------------------------------------------------------
-if(isset($_SESSION['usuario'])){
-    print_r($_SESSION['usuario']);
-    $usuario = $_SESSION['usuario'];
-    echo  "Hola: ".$_SESSION['usuario']['ape1'];
-    setMessage();
-}
+
 cardtitulo("Modulo Administrativo");
 
 if (isset($_SESSION['message'])) {
@@ -42,11 +39,7 @@ if (isset($_SESSION['message'])) {
     </button>
   </div>
 
- <h5 class = "mx-auto text-center text-success "><?php  if(isset($_SESSION['usuario'])){ echo "Hola: ".$_SESSION['usuario']['nom1']; ?>
-
-<img src="/jpg;base64," <?= base64_encode($_SESSION['usuario']['foto']); ?> />
-<?php
-} ?></h5>
+ <h5 class = "mx-auto text-center text-success "></h5>
 
 
 

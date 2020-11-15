@@ -1,25 +1,14 @@
 <?php
-/*
-include_once 'plantillas/plantilla.php';
-
-include_once 'plantillas/cuerpo/inihtmlN2.php';
-include_once 'plantillas/nav/navN2.php';
-include_once '../modelo/class.documento.php';
-include_once '../modelo/class.rol.php';
-include_once '../modelo/class.login.php';
-include_once '../modelo/class.usuario.php';
-include_once '../controlador/controladorsession.php';
-include_once '../controlador/controlador.php';
-*/
 
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
 
 cardtitulo('Mis datos');
-
-$objCon = new ControllerDoc();
+$objCon     = new ControllerDoc();
+$objSession = new Session();
+$s          = $objSession->desencriptaSesion();
 if (isset($_SESSION['usuario'])) {
-    $id = $_SESSION['usuario']['ID_us'];
+    $id = $s['usuario']['ID_us'];
 }
 ?>
 
@@ -76,9 +65,6 @@ if (isset($_SESSION['usuario'])) {
                 }
 
 ?>
-
-
-
 
 
 

@@ -63,7 +63,6 @@ if (  !isset($cons)  ){
 
    }
 
-
    function rutIniFromIndexRaiz(){
       include_once 'vista/plantillas/plantilla.php';
       include_once 'vista/plantillas/cuerpo/inihtmlN0.php';
