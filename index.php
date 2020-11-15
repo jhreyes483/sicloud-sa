@@ -2,11 +2,8 @@
 include_once 'controlador/controladorrutas.php';
 rutIniFromIndexRaiz();
 date_default_timezone_set("America/Bogota");
-$hora  = date("h:i:sa");
 
 ?>
-
-
 
 <article>
     <div class="container-jav">
@@ -27,11 +24,7 @@ $hora  = date("h:i:sa");
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
- <?php setMessage();
- 
- echo '<h1>'.$hora.'</h1>';
- die();
- ?>
+ <?php setMessage(); ?>
 
  
 <br>

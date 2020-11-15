@@ -4,26 +4,22 @@
 include_once '../modelo/class.sql.php';
 include_once 'controladorsession.php';
 date_default_timezone_set("America/Bogota");
-$hora  = date("h:i:sa");
+
+
 
 
 class ControllerDoc
 {
     public $objModUs;
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->objModUs   =  SQL::ningunDato();
-
-
     }
-    public function selectDocumento()
-    {
+    public function selectDocumento(){
         return $this->objModUs->verDocumeto();
     }
 
-    public function loginUsuarioController($ID_us,  $pass, $doc)
-    {
+    public function loginUsuarioController($ID_us,  $pass, $doc){
         $datosController[] = [$ID_us, $pass, $doc];
         $USER = $this->objModUs->loginUsuarioModel($datosController);
         //$this->ver( $USER  );
@@ -146,8 +142,7 @@ class ControllerDoc
 
           */
     
-    public function readUsuariosController()
-    {
+    public function readUsuariosController(){
         return $this->objModUs->readUsuarioModel('vendedor');
     }
     public function readUsuarioModel(){
@@ -156,6 +151,8 @@ class ControllerDoc
     public function eliminarUsuario($id_get){
         $r1 = $this->objModUs->eliminarUsuario($id_get);
         if($r1){
+            $hora = date("h:i:sa");
+            $hora=  substr( $hora , 0, 8 );
             $fecha  = date('Y-m-d');
             $descrip = "Usario eliminado ID " .$id_get;
             $FK_modific = "2";
@@ -176,20 +173,18 @@ class ControllerDoc
             }else{
                 return false;    
             }
-
         }
     }
     public function actualizarDatosUsuario($id, $array){
         $r1 = $this->objModUs->actualizarDatosUsuario($id, $array);
-   
         if ($r1) {
-           
             //METODO DE INSERSION ROL_USUARIO UPDATE
             $r2 = $this->objModUs->insertUpdateRol( $array);
             if($r2){
                 $_SESSION['message'] = 'Actualizo rol';
                 $_SESSION['danger']  = 'Error al actualizar rol';
-
+                $hora = date("h:i:sa");
+                $hora=  substr( $hora , 0, 8 );
                 $fecha  = date('Y-m-d');
                 $descrip = "Usario modificado ID " . $array[0];
                 $FK_modific = "4";
@@ -206,7 +201,6 @@ class ControllerDoc
                     $FK_modific
                 ];
                 $r4 = $this->objModUs->insertModificacion($arm);
-                die($r4);
                 if($r4){
                     return true;
                 }else{
