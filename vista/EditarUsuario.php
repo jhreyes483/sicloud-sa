@@ -1,6 +1,9 @@
 <?php
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
+$objSession = new Session;
+$us = $objSession->desencriptaSesion();
+
 
 
 
@@ -81,7 +84,7 @@ endforeach;
                                   <div class="col-md-6">
 
 <?php
-if ($_SESSION['usuario']['ID_rol_n'] == 1):
+if ($us['usuario']['ID_rol_n'] == 1):
 ?>
    <h5>Seleccione rol "Asignar rol"</h5>
                                  <div class="form-group">
