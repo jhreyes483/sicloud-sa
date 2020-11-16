@@ -31,6 +31,12 @@ if ($in == false) {
 
 
 ?>
+  <div >
+  <?php
+  cardtitulo("Modulo Proveedor");
+  ?>
+
+
 <div class="my-4">
 <?php
 
@@ -47,25 +53,10 @@ if (isset($_SESSION['message'])) {
     </button>
   </div>
 
- <h5 class = "mx-auto tex-cennter text-succes "><?php  if(isset($_SESSION['usuario'])){ echo "Hola: ".$_SESSION['usuario']['nom1']; } ?></h5>
+<?php 
+setMessage();
 
-<?php $_SESSION['message'] == false; } ?>
-
-
-
-<?php
-if(isset($_SESSION['usuario'])){
-   
-
-
-  }
-  ?>
-  <div class="my-4">
-  <?php
-  cardtitulo("Modulo Proveedor");
-  ?>
-
-
+} ?>
 
 
 <hr class="border ">
@@ -105,11 +96,6 @@ if(isset($_SESSION['usuario'])){
     <hr class="border ">
 
 
-
-
-
-
-
     <div class="card card-body  my-2">
     <div class="card card-body shadow">
               <h3 class="mx-auto">Consultas</h3><!-- incio de card consultas -->
@@ -127,41 +113,11 @@ if(isset($_SESSION['usuario'])){
                 </div><!-- fin de row -->
               </div><!-- fin de col-md-12 -->
               </div>
-            </div><!-- fin de card consulatas -->
-
-
-
-
-
-
-
-
-
-
-
-  <?php
-  if (isset($_SESSION['message'])) {
-  ?>
-    <!-- alerta boostrap -->
-    <div class=" col-md-4 text-center mx-auto alert alert-<?php echo $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
-      <?php echo  $_SESSION['message']  ?>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-  
-      
-    </div>
-  
-    
-  
-   <h5 class = "mx-auto tex-cennter text-succes "><?php  if(isset($_SESSION['usuario'])){ echo "Hola: ".$_SESSION['usuario']['nom1']; } ?></h5>
-  
-  <?php setMessage(); } ?>
-  
+            </div><!-- fin de card consulatas 
 
 
 <?php
-//}
+
 rutFromFinN3();
 }
 ?>

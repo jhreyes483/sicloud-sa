@@ -62,19 +62,8 @@
 
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
-    /*
-    include_once '../modelo/class.ciudad.php';
-    include_once '../modelo/class.localidad.php';
-    include_once '../modelo/class.barrio.php';
-    include_once '../controlador/controladorsession.php';
-    include_once 'plantillas/plantilla.php';
-    include_once '../modelo/class.notificacion.php';
-*/
 
     ?>
-
-
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-top navbar navbar-expand-lg fixed-top sticky-top">
         <a class="navbar-brand ml-4" href="#">
             <img src="fonts/logoportal.png" width="250" height="65" alt="">

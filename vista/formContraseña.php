@@ -68,9 +68,6 @@ cardtitulo('Mis datos');
 <br>
 
 
-
-
-
 <?php
 rutFinFooterFrom();
 rutFromFin();

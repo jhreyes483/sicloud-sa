@@ -44,7 +44,7 @@ if ($in == false) {
     </div>
 
 
-  <?php $_SESSION['message'] == false;
+  <?php setMessage();
   } ?>
 
   <div class="container-fluid">

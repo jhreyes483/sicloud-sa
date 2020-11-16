@@ -21,7 +21,8 @@ if (isset($_SESSION['message'])) {
   </div>
 
 
-<?php $_SESSION['message'] == false; }
+<?php setMessage();
+}
 cardAviso();
 ?>
 

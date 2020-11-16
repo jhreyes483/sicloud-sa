@@ -26,24 +26,26 @@ class Session{
 
 
    public function desencriptaSesion(){
-      $aV['usuario']['ID_us']         =  openssl_decrypt( $_SESSION['usuario']['ID_us'], COD, KEY); 
-      $aV['usuario']['nom1']          =  openssl_decrypt( $_SESSION['usuario']['nom1'], COD, KEY);
-      $aV['usuario']['nom2']          =  openssl_decrypt( $_SESSION['usuario']['nom2'], COD, KEY);
-      $aV['usuario']['ape1']          =  openssl_decrypt( $_SESSION['usuario']['ape1'], COD, KEY);
-      $aV['usuario']['ape2']          =  openssl_decrypt( $_SESSION['usuario']['ape2'], COD, KEY);
-      $aV['usuario']['fecha']         =  openssl_decrypt( $_SESSION['usuario']['fecha'], COD, KEY); 
-      $aV['usuario']['pass']          =  openssl_decrypt( $_SESSION['usuario']['pass'], COD, KEY);
-      $aV['usuario']['foto']          =  openssl_decrypt( $_SESSION['usuario']['foto'], COD, KEY);
-      $aV['usuario']['correo']        =  openssl_decrypt( $_SESSION['usuario']['correo'], COD, KEY); 
-      $aV['usuario']['FK_tipo_doc']   =  openssl_decrypt( $_SESSION['usuario']['FK_tipo_doc'], COD, KEY);  
-      $aV['usuario']['ID_acronimo']   =  openssl_decrypt( $_SESSION['usuario']['ID_acronimo'], COD, KEY);  
-      $aV['usuario']['estado']        =  openssl_decrypt( $_SESSION['usuario']['estado'], COD, KEY); 
-      $aV['usuario']['ID_rol_n']      =  openssl_decrypt( $_SESSION['usuario']['ID_rol_n'], COD, KEY); 
-      $aV['usuario']['nom_rol']       =  openssl_decrypt( $_SESSION['usuario']['nom_rol'], COD, KEY);
-      if(isset( $_SESSION['usuario']['puntos'] )){
-         $aV['usuario']['puntos']      =  openssl_encrypt( $USER['puntos'], COD, KEY); 
-      }
+      if( isset($_SESSION['usuario'])){
+         $aV['usuario']['ID_us']         =  openssl_decrypt( $_SESSION['usuario']['ID_us'], COD, KEY); 
+         $aV['usuario']['nom1']          =  openssl_decrypt( $_SESSION['usuario']['nom1'], COD, KEY);
+         $aV['usuario']['nom2']          =  openssl_decrypt( $_SESSION['usuario']['nom2'], COD, KEY);
+         $aV['usuario']['ape1']          =  openssl_decrypt( $_SESSION['usuario']['ape1'], COD, KEY);
+         $aV['usuario']['ape2']          =  openssl_decrypt( $_SESSION['usuario']['ape2'], COD, KEY);
+         $aV['usuario']['fecha']         =  openssl_decrypt( $_SESSION['usuario']['fecha'], COD, KEY); 
+         $aV['usuario']['pass']          =  openssl_decrypt( $_SESSION['usuario']['pass'], COD, KEY);
+         $aV['usuario']['foto']          =  openssl_decrypt( $_SESSION['usuario']['foto'], COD, KEY);
+         $aV['usuario']['correo']        =  openssl_decrypt( $_SESSION['usuario']['correo'], COD, KEY); 
+         $aV['usuario']['FK_tipo_doc']   =  openssl_decrypt( $_SESSION['usuario']['FK_tipo_doc'], COD, KEY);  
+         $aV['usuario']['ID_acronimo']   =  openssl_decrypt( $_SESSION['usuario']['ID_acronimo'], COD, KEY);  
+         $aV['usuario']['estado']        =  openssl_decrypt( $_SESSION['usuario']['estado'], COD, KEY); 
+         $aV['usuario']['ID_rol_n']      =  openssl_decrypt( $_SESSION['usuario']['ID_rol_n'], COD, KEY); 
+         $aV['usuario']['nom_rol']       =  openssl_decrypt( $_SESSION['usuario']['nom_rol'], COD, KEY);
+         if(isset( $_SESSION['usuario']['puntos'] )){
+            $aV['usuario']['puntos']      =  openssl_encrypt( $USER['puntos'], COD, KEY); 
+         }
       return $aV;
+      }
    }
 
 
@@ -52,32 +54,28 @@ class Session{
       //ROL
       //Administrador 
       if($aV['usuario']['estado'] == 1){
+         $_SESSION['message']= "Bienvenido";
          switch ($aV['usuario']['ID_rol_n']) {
             case 1:
                header('location: ../vista/rol/admin/iniAdmin.php');
-               $_SESSION['message'] = ' Bienvenido: Administrador';
                $_SESSION['color']   = 'success';
               
             break;
             case 2:
                header("location: ../vista/rol/bodega/iniBodega.php");
-               $_SESSION['message'] = ' Bienvenido: Inventario';
                $_SESSION['color']   = 'success';
             break;
             case 3:
                echo '<h1> Esta en el caso 3 de session </h1>';
                header("location: ../vista/rol/supervisor/iniSupervisor.php");
-               $_SESSION['message'] = ' Bienvenido: Supervisor';
                $_SESSION['color']   = 'success';
             break;
             case 4:
                header("location: ../vista/rol/comercial/iniComercial.php");
-               $_SESSION['message'] = ' Bienvenido: Inventario';
                $_SESSION['color']   = 'success';
             break;
             case 5:
                header("location: ../vista/rol/proveedor/iniProveedor.php");
-               $_SESSION['message'] = 'Bienvenido: Proveedor';
                $_SESSION['color']   = 'success';
             break;
             case 6:
@@ -88,7 +86,6 @@ class Session{
                $datos =  $objCon->verPuntosYusuario( $id );
              
                $_SESSION['usuario'] =  $this->encriptaSesion($datos);
-               $_SESSION['message'] = 'Bienvenido: Cliente';
                $_SESSION['color']   = 'success';
                header("location: ../vista/rol/cliente/iniCliente.php");
             break; 
@@ -134,14 +131,8 @@ class Session{
       if(isset( $USER['usuario']['puntos'] )){
          $_SESSION['usuario']['puntos']     =  openssl_encrypt( $USER['puntos'], COD, KEY); 
       }
-      
       return $_SESSION['usuario'];
    }
-
-   
-
-
-
 
 }
 

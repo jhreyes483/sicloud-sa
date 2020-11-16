@@ -309,7 +309,13 @@ if(isset($_GET['stockGeneral'])){
 
         
 <?php
-}// fin de permisos por rol         
+}// fin de permisos por rol  
+
+
+
 }
+rutFinFooterFrom();
+rutFromFin();
+
 
 ?>

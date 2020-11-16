@@ -134,7 +134,6 @@ if(isset($_GET['apicall'])){
             $_SESSION['color']     = "danger";
          }else{
             $response['error']      = false;
-            $response['message']    = $_SESSION['message'] = 'Bienvenido'; 
             $_SESSION['color']      = "success";
             $response['contenido']  = $result;
          }

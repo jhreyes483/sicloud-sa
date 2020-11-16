@@ -2,7 +2,7 @@
 <?php
 //session_destroy();
 include_once '../modelo/class.sql.php';
-include_once 'controladorsession.php';
+
 date_default_timezone_set("America/Bogota");
 
 
@@ -14,6 +14,7 @@ class ControllerDoc
 
 
     public function __construct(){
+        include_once 'controladorsession.php';
         $this->objModUs    = SQL::ningunDato();
         $this->objSession  = Session::ningunDato();
     }
@@ -26,7 +27,7 @@ class ControllerDoc
         $USER                     = $this->objModUs->loginUsuarioModel($datosController);
     
 
-        if( $USER ){ 
+        if( isset($USER) && ($USER) ){ 
             $_SESSION['usuario']  =  $this->objSession->encriptaSesion($USER);
             $this->session         = $this->objSession->desencriptaSesion();
             $id_rol               =  openssl_decrypt( $_SESSION['usuario']['ID_rol_n'], COD, KEY);

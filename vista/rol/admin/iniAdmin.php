@@ -2,6 +2,7 @@
 <?php 
 //  rol/admin/iniAdmin.php
 include_once '../../../controlador/controladorrutas.php';
+
 rutFromIniN3();
 $objSession =new Session();
 $u = $objSession->desencriptaSesion();
@@ -28,7 +29,7 @@ if ($in == false) {
     //--------------------------------------------------------------------------
 
 cardtitulo("Modulo Administrativo");
-
+$_SESSION['message'] = 'Bienvenido';
 if (isset($_SESSION['message'])) {
 ?>
   <!-- alerta boostrap -->
@@ -43,7 +44,9 @@ if (isset($_SESSION['message'])) {
 
 
 
-<?php $_SESSION['message'] == false; } ?>
+<?php setMessage();   
+}
+?>
 
 <div class="container-fluid">
     <div class="row">
