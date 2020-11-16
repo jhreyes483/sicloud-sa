@@ -18,6 +18,10 @@ date_default_timezone_set("America/Bogota");
 <hr class="border my-4" id="formlogin" />
 
         <!-- alerta boostrap -->
+<?php
+        if(isset($_SESSION['message'])){
+
+?>
         <div class="col-md-9 mx-auto  alert alert-<?= $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
                     <?=  $_SESSION['message']  ?>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -25,6 +29,9 @@ date_default_timezone_set("America/Bogota");
                     </button>
                 </div>
  <?php setMessage(); ?>
+ <?php
+}
+ ?>
 
  
 <br>

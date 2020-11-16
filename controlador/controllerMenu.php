@@ -166,7 +166,7 @@ $obj = new ControllerMenu();
  $aP  = $a[0];
  $aU  = $a[1];
 
-  
+
 echo '<nav class="navbar-fixed-top navbar navbar-expand-lg navbar-dark bg-dark navbar navbar-expand-lg  sticky-top">
 <a class="navbar-brand ml-4" href="#">
   <img src="fonts/logoportal.png" width="250" height="65" alt="">
@@ -280,7 +280,9 @@ echo '
 </li>
 </ul>
 </div>
-</nav>';
+</nav>
+</strong>';
+
 ?>
 
   
