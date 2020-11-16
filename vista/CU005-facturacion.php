@@ -98,7 +98,7 @@ if ($in == false) {
                 <div class="row">
                     <p>
                         <label for="">Vendedor</label><br>
-                        <?php echo $_SESSION['usuario']['nom1'] . " " . $_SESSION['usuario']['ape1']; ?>
+                        <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
                     </p>
 
                     <div class="ml-auto"><label for="">Accion</label><br><a href="#" class="btn btn-danger  ">Anular</a></div>
