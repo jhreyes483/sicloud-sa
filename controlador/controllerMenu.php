@@ -29,6 +29,7 @@ public function __construct(){
     $this->aMenu['A'][2][1]   =  ['Crear producto', 'CU004-crearProductos.php'];
     $this->aMenu['A'][2][2]   =  ['Solicitar producto', 'CU0015_16(administrador)-solicitud.php'];
     $this->aMenu['A'][2][3]   =  ['Inf Bodega', 'CU0012-informebodega.php'];
+    $this->aMenu['A'][2][4]   =  ['Catalogo', 'catalogo.php?ops=1'];
     $this->aMenu['A'][3]      =  ['ADMIN SISTEMA'];
     $this->aMenu['A'][3][1]   =  ['log errores', 'formLogError.php'];
     $this->aMenu['A'][3][2]   =  ['log actividades', 'formControl.php'];
@@ -224,11 +225,15 @@ echo'
               <path style="color :#ffff;" fill-rule="evenodd" d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
             </svg ></a>
 
-            <!-- Icono de conteo productos carrito -->
+            <!-- Icono de conteo productos carrito -->';
+          
+            if(  isset($_SESSION['CARRITO']) &&  $_SESSION['CARRITO'] > 0){
+            echo'
         <span class="badge badge-danger badge-counter">';
         if (  empty($_SESSION['CARRITO'] )){  echo 0; }else{  echo count($_SESSION['CARRITO']); } 
-        echo '</span>
-
+        echo '</span>';
+      }
+      echo'
         <!-- icono de notificacion campana -->
         <a class="" id="messagesDropdown" data-toggle="modal" data-target="#exampleModal" role="button" aria-expanded="true">
           <i class="fas fa-bell fa-fw" style="color :#ffff;"></i>
