@@ -156,6 +156,6 @@ include_once '../modelo/class.categoria.php';
     </div>
 
     <?php
-    include_once 'plantillas/cuerpo/footerN1.php';
-    include_once 'plantillas/cuerpo/finhtml.php';
+ rutFromFin();
+ rutFinFooterFrom();
     ?>

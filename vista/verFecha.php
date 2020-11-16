@@ -2,10 +2,9 @@
 
 <?php
 
-include_once '../../plantillas/plantilla.php';
-include_once '../../plantillas/cuerpo/inihtmlN3.php';
-include_once '../../plantillas/nav/navN3.php';
-include_once '../../../controlador/ControladorSession.php';
+include_once '../controlador/controladorrutas.php';
+rutFromIni();
+$obj= new ControllerDoc();
 
 cardtitulo("Vista de Informes de ventas");
 
@@ -37,15 +36,12 @@ if (isset($_SESSION['message'])) {
             <input type="date" name="Fecha" class="form-control">
             <input type="hidden" name="accion" value = 'verFecha'>
             <br> <input class="btn btn-primary btn-block my-2" type="submit" name="consulta" value="consulta">
-
     </div>
 </div>    
  </form>
 
         <div class="col-md-4 p-2 mx-auto my-4 ">
             <table class="table table-bordered  table-striped bg-white table-sm mx-auto   text-center">
-
-
                 <?php
 
 
@@ -72,8 +68,8 @@ if(isset($_POST['accion'])){
                 //echo $f;
 
 
-                 $datos = Factura::verFecha($f);
-                while ($row = $datos->fetch_array()) {
+                 $datos = $obj->verFecha($f);
+                foreach ($datos as $row ) {
                 ?>
 
 
@@ -86,7 +82,7 @@ if(isset($_POST['accion'])){
                     </tbody>
 
 
-                <?php   } //while
+                <?php   } 
                 ?>
 
             </table>
@@ -98,30 +94,19 @@ if(isset($_POST['accion'])){
 
 
         </div>
+        </div>
+        </div>
+        </div>
         <!-- fin producto-------------------------------------------------------------------------------- -->
 
 
-        <?php
-
-
-
-        ?>
-
-
-
- 
-
-        <?php
-
-
-
-
-        ?>
+    
 
         <?php
         }// fin de isset consulta
 
-        include_once '../../plantillas/cuerpo/finhtml.php';
+        rutFromFin();
+
         ?>
 
 

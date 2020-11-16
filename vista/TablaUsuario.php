@@ -133,6 +133,6 @@ if (isset($_SESSION['message'])) {  ?>
 
 
 <?php 
-include_once 'plantillas/cuerpo/footerN1.php'; 
-include_once 'plantillas/cuerpo/finhtml.php';
+rutFromFin();
+rutFinFooterFrom();
 ?>

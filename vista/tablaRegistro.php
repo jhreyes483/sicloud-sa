@@ -70,5 +70,6 @@ if ($in == false) {
 
 <?php
 } // fin de validar permisos
-include_once 'plantillas/cuerpo/finhtml.php';
+rutFromFin();
+rutFinFooterFrom();
 ?>

@@ -32,6 +32,20 @@ class SQL extends Conexion{
       return $r;
    }
 
+
+
+   public function consultaRangoInforme(){
+      $sql ='SELECT cantidad, sum(f.total) as total, day(f.fecha) as dia
+      from det_factura detf
+      join factura f on f.ID_factura = detf.FK_det_factura
+      group by dia'; 
+      $c = $this->db->prepare($sql);
+    //  $c->bindValue(':id', $id);
+      $c->execute();
+      $c->execute();
+      $result = $c->fetchAll();
+      return $result;  
+   }
    // METODO INSERT USUARIO PDO MVC ---------------------------------------------------------------------
    public function InsertUsuario($a){ 
       $sql = "INSERT INTO usuario (ID_us, nom1, nom2, ape1, ape2, fecha, pass, foto, correo, FK_tipo_doc)
@@ -837,7 +851,7 @@ public function eliminarErrorLog($id)
         order by fecha asc";
       $stm = $this->db->prepare($sql);
       $stm->execute();
-      $result = $stm->fetchAll(); 
+      $result = $stm->fetchAll();
       return $result;
    }
    public function verMes(){
@@ -1429,6 +1443,18 @@ public function insertPuntos( $a ){
 //=======================================
 //CROL
 
+   public function rolMenu($id_rol){
+      $sql = 'SELECT acronimo, nom_rol, permisos , token
+      FROM `rol` 
+      WHERE `ID_rol_n` LIKE :acronimo';
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue(":acronimo", $id_rol,   PDO::PARAM_STR );    
+      $stm->execute();
+      $result = $stm->fetchAll();
+      return $result;
+   }
+
+
    // metodo ver roles                            R
    public function verRol(){
       $sql = "SELECT * FROM rol";
@@ -1437,6 +1463,8 @@ public function insertPuntos( $a ){
       $result = $consulta->fetchAll();
       return $result;
    }// fin de lectura rol
+
+   
 
    // metodo ver rol por id                   R
    public function verRolId($id){
@@ -1457,9 +1485,7 @@ public function insertPuntos( $a ){
       if($ri){ 
          return true;
       }
-      if($ri){
-         return true;
-      }
+
    }// fin de insert update rol       
 
    // Borrar rol                               D

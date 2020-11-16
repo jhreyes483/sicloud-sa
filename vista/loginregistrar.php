@@ -94,7 +94,7 @@ rutFromIniLogin();
     <!-- partial -->
     <script src="estilos/js/script.js"></script>
 
-</body>
-
-
-</html>
+<?php
+rutFromFin();
+rutFinFooterFrom();
+?>

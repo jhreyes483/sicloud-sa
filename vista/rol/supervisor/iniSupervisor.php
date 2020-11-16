@@ -96,10 +96,10 @@ if ($in == false) {
                 <!-- sesion de prodcutos -->
                 <div class="row">
                   <div class="col-md-4 mx-auto ">
-                    <a class="btn btn-primary mx-auto btn-block" href="verFecha.php">Informe de ventas</a>
+                    <a class="btn btn-primary mx-auto btn-block" href="../../verFecha.php">Informe de ventas</a>
                   </div><!-- fin de col de 4 1 -->
                   <div class="col-md-4 mx-auto ">
-                    <a class="btn btn-primary mx-auto btn-block" href="verRango.php">Informe por rango de fechas</a>
+                    <a class="btn btn-primary mx-auto btn-block" href="../../verRango.php">Informe por rango de fechas</a>
 
                   </div><!-- fin de col de 4 2 -->
                 

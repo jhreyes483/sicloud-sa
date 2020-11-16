@@ -368,13 +368,13 @@ class ControllerDoc
         return $this->objModUs->verIntervaloFecha($f1, $f2);
     }
     public function verDia(){
-        return $this->objModus->verDia();
+        return $this->objModUs->verDia();
     }
     public function verSemana(){
-        return $this->verSemana();
+        return $this->objModUs->verSemana();
     }
     public function verMes(){
-        return $this->verMes();
+        return $this->objModUs->verMes();
     }
 
     //modificaion db
@@ -477,6 +477,14 @@ class ControllerDoc
     public function insertUpdateUsuarioCliente($a){
         return $this->objModUs->insertUpdateUsuarioCliente($a);
     }
+    public function verFecha($f){
+        return $this->objModUs->verFecha($f);
+    }
+    public function RangoInforme(){
+        return $this->objModUs->consultaRangoInforme();
+    }
+
+
     public function validaContraseña($a){
         $passAterior =  $this->objModUs->validarPass( $a[0], $a[1] );
          // validacion de contraseña en base de datos
@@ -730,7 +738,7 @@ switch ($op){
 //-------------------------------------------------------------
 // $objCon = new ControllerDoc();
 // // $d = $objCon->verRol();
-// echo '<pre>';  print_r($d); echo '</pre>'; die();   
+
 
 */
 

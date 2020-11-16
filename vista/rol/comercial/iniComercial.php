@@ -101,7 +101,7 @@ if ($in == false) {
                 <div class="card card-body shadow p-3 mb-5 bg-white rounded text-center lead">
                     <h5 class="my-4">PRODUCTOS</h5>
                     <div class="row mx-3">
-                        <a class="btn btn-primary btn-block text-decoration-none " href="../../metodos/get.php?ops=1">Catalogo de productos</a>
+                        <a class="btn btn-primary btn-block text-decoration-none " href="../../catalogo.php?ops=1">Catalogo de productos</a>
                     </div>
                 </div>
 

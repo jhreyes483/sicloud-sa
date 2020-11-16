@@ -70,6 +70,18 @@ if (  !isset($cons)  ){
       include_once 'controlador/controladorsession.php';
    }
 
+   function rutIniFromIndexNav1(){
+      include_once '../controlador/controlador.php'; 
+      include_once '../controlador/controladorsession.php';
+      include_once 'plantillas/plantilla.php';
+      include_once 'plantillas/cuerpo/inihtmlN1.php';
+      include_once 'plantillas/nav/navgeneral.php';
+      //include_once 'plantillas/nav/navN1.php';
+
+   }
+
+
+
    function rutFinFooterFromRaiz(){
       include_once 'vista/plantillas/cuerpo/footerN0.php';
       include_once 'vista/plantillas/cuerpo/finhtml.php';

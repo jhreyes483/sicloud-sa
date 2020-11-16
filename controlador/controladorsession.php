@@ -42,7 +42,7 @@ class Session{
          $aV['usuario']['ID_rol_n']      =  openssl_decrypt( $_SESSION['usuario']['ID_rol_n'], COD, KEY); 
          $aV['usuario']['nom_rol']       =  openssl_decrypt( $_SESSION['usuario']['nom_rol'], COD, KEY);
          if(isset( $_SESSION['usuario']['puntos'] )){
-            $aV['usuario']['puntos']      =  openssl_encrypt( $USER['puntos'], COD, KEY); 
+            $aV['usuario']['puntos']      =  openssl_encrypt( $_SESSION['usuario']['puntos'], COD, KEY); 
          }
       return $aV;
       }

@@ -172,9 +172,11 @@ if ($in == false) {
   </div>
 </div>
 <?php
-rutFinFooterFrom();
-rutFromFin();
+
 }
  } ;// fin de validacion permisos de ingreso
+
+
+rutFromFin();
 ?>
 
