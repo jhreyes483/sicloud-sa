@@ -2,7 +2,10 @@
 include_once '../controlador/ControladorCarrito.php';
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
-
+if( !isset( $_SESSION['usuario'])){
+    $_SESSION['message'] = 'Favor registrarse o iniciar sesion para realizar compra';
+    $_SESSION['color'] = 'danger';
+}
 
 ?>
 

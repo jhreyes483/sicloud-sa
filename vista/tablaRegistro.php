@@ -1,7 +1,7 @@
 <?php
 
-include_once '../controlador/controladorsession.php';
-include_once '../controlador/controlador.php';
+include_once '../controlador/controladorrutas.php';
+rutFromIni();
 $objSession =new Session();
 $u = $objSession->desencriptaSesion();
 
@@ -70,6 +70,6 @@ if ($in == false) {
 
 <?php
 } // fin de validar permisos
-rutFromFin();
 rutFinFooterFrom();
+rutFromFin();
 ?>
