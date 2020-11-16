@@ -1,6 +1,8 @@
 <?php
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
+$objSession = new Session();
+$s = $objSession->desencriptaSesion();
 cardtitulo('Edicion producto')
 ?>
         <table class="table table text-center table-striped  table-bordered bg-white table-sm col-md-8 col-sm-4 col-xs-12 mx-auto">
@@ -20,8 +22,6 @@ cardtitulo('Edicion producto')
             $objP= new ControllerDoc();
             $datos = $objP->verProductos();
             foreach($datos as $i => $row){
-            //while ($row = $datos->fetch_array()) {
-
             ?>
                 <tbody>
                     <tr>
@@ -34,7 +34,11 @@ cardtitulo('Edicion producto')
                         <td><?php echo $row['nom_medida'] ?></td>
                         <td>
                             <a class="btn-circle btn btn-dark mx-auto  " href="editarProducto.php?id=<?= $row['ID_prod'] ?>"><i class="fas fa-marker"></i></a>
+                            <?php  if($s['usuario']['ID_rol_n'] == 1) { ?>
                             <a class="btn-circle btn btn-danger mx-auto  " href="../controlador/api.php?apicall=EliminarProducto&&id=<?= $row['ID_prod'] ?>"><i class="far fa-trash-alt"></i></a>
+                            <?php
+                            }
+                            ?>
                         </td>
                     </tr>
                 </tbody>

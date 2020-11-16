@@ -306,7 +306,10 @@ if(isset($_GET['stockGeneral'])){
         </div>
     </div>
 </div>
-
+</div>
+</div>
+</div>
+</div>
         
 <?php
 }// fin de permisos por rol  
@@ -314,7 +317,7 @@ if(isset($_GET['stockGeneral'])){
 
 
 }
-rutFinFooterFrom();
+
 rutFromFin();
 
 

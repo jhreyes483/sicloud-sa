@@ -14,17 +14,20 @@ switch ($u['usuario']['ID_rol_n']) {
     case 2:
         $in = true;
     break;
+    case 4:
+        $in = true;
+    break;
     case 0:
         $in = true;
     break;
     default:
         echo "<script>alert('No tiene permiso para ingresar a este modulo');</script>";
-        echo "<script>window.location.replace('index.php');</script>";
+        echo "<script>window.location.replace('../index.php');</script>";
     break;
 }
 if ($in == false) {
     echo "<script>alert('No tiene permiso para ingresar a este modulo');</script>";
-    echo "<script>window.location.replace('index.php');</script>";
+    echo "<script>window.location.replace('../index.php');</script>";
 } else {
     include_once 'plantillas/plantilla.php';
     include_once 'plantillas/cuerpo/inihtmlN1.php';
