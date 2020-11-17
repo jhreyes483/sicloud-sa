@@ -30,13 +30,16 @@ public function __construct(){
     $this->aMenu['A'][1][3]      = ['Facturacion', 'CU005-facturacion.php'];
     $this->aMenu['A'][1][4]      = ['Inf Ventas', 'CU005-facturacion.php'];
     $this->aMenu['A'][2]         = ['PRODUCTOS'];
-    $this->aMenu['A'][2][1]      = ['Crear producto', 'CU004-crearProductos.php'];
-    $this->aMenu['A'][2][2]      = ['Solicitar producto', 'CU0015_16(administrador)-solicitud.php'];
-    $this->aMenu['A'][2][3]      = ['Inf Bodega', 'CU0012-informebodega.php'];
-    $this->aMenu['A'][2][4]      = ['Catalogo', 'catalogo.php?ops=1'];
-    $this->aMenu['A'][2][5]      = [ 'Categorias', 'tablaCategoria.php'];
-    $this->aMenu['A'][2][6]      = [ 'Cantidad', 'tablaRegistro.php'];
-    $this->aMenu['A'][2][7]      = [ 'Stock','CU0014-alertas.php?stockGeneral'];
+    $this->aMenu['A'][2][1]      = ['Catalogo', 'catalogo.php?ops=1'] ;
+    $this->aMenu['A'][2][2]      = ['Crear producto', 'CU004-crearProductos.php'];
+    $this->aMenu['A'][2][3]      = ['Ingresar producto', 'CU003-ingresoProducto.php'];
+    $this->aMenu['A'][2][4]      = ['Editar producto', 'edicionProductoTabla.php'];
+    $this->aMenu['A'][2][5]      = ['Solicitar producto', 'CU0015_16(administrador)-solicitud.php'];
+    $this->aMenu['A'][2][6]      = ['Sistema de alertas', 'tablaRegistro.php'];
+    $this->aMenu['A'][2][7]      = ['Stock','CU0014-alertas.php?stockGeneral'];
+    $this->aMenu['A'][2][8]      = ['Cantidad', 'tablaRegistro.php'];
+    $this->aMenu['A'][2][9]      = ['Categoria', 'tablaCategoria.php'];;
+    $this->aMenu['A'][2][10]     = ['Inf Bodega', 'CU0012-informebodega.php'];
     $this->aMenu['A'][3]         = ['ADMIN SISTEMA'];
     $this->aMenu['A'][3][1]      = ['log errores', 'formLogError.php'];
     $this->aMenu['A'][3][2]      = ['log actividades', 'formControl.php'];
@@ -55,10 +58,11 @@ public function __construct(){
     $this->aMenu['B'][2]         = [ 'PROMOCIONES','Promociones.php'];
     $this->aMenu['B'][3]         = [ 'PRODUCTOS'];
     $this->aMenu['B'][3][1]      = [ 'CATALOGO','catalogo.php?ops=1'];
-    $this->aMenu['B'][3][2]      = [ 'CATEGORIAS', 'tablaCategoria.php'];
-    $this->aMenu['B'][3][3]      = [ 'CANTIDAD', 'tablaRegistro.php'];
-    $this->aMenu['B'][3][4]      = [ 'SISTEMA ALERTAS', 'tablaRegistro.php'];
-    $this->aMenu['B'][3][5]      = [ 'STOCK','CU0014-alertas.php?stockGeneral'];
+    $this->aMenu['B'][3][2]      = [ 'INF BODEGA','CU0012-informebodega.php'];
+    $this->aMenu['B'][3][3]      = [ 'CATEGORIAS', 'tablaCategoria.php'];
+    $this->aMenu['B'][3][4]      = [ 'CANTIDAD', 'tablaRegistro.php'];
+    $this->aMenu['B'][3][5]      = [ 'SISTEMA ALERTAS', 'tablaRegistro.php'];
+    $this->aMenu['B'][3][6]      = [ 'STOCK','CU0014-alertas.php?stockGeneral'];
     $this->aMenu['B'][4]         = [ 'PROCESOS', 'tablaRegistro.php'];
     $this->aMenu['B'][4][1]      = [ 'CREAR PRODUCTO', 'CU004-crearProductos.php'];
     $this->aMenu['B'][4][2]      = [ 'INGRESO PRODUCTO', 'CU003-ingresoProducto.php'];
@@ -92,7 +96,7 @@ public function __construct(){
     $this->aMenu['V'][4][1]      = [ 'CUENTAS','CU009-controlUsuarios.php'];
     $this->aMenu['V'][4][2]      = [ 'PUNTOS','CU006-acomulaciondepuntos.php'];
     $this->aMenu['V'][4][3]      = [ 'FACTURACION','CU005-facturacion.php'];
-    $this->aMenu['V'][5]          =[ 'INICIO','../controlador/api.php?apicall=inicionRol'];
+    $this->aMenu['V'][5]         = [ 'INICIO','../controlador/api.php?apicall=inicionRol'];
 
 
     $this->aMenu['P'][1]         = [ 'CONSTITUCION'];
