@@ -24,7 +24,7 @@ public function __construct(){
 
 
     $this->aP= [];
-    $this->aMenu['A'][1]         = ['USIARIOS'];
+    $this->aMenu['A'][1]         = ['USUARIOS'];
     $this->aMenu['A'][1][1]      = ['Admin Solisitud', 'CU009-controlUsuarios.php'];
     $this->aMenu['A'][1][2]      = ['Acumulación de puntos', 'CU006-acomulaciondepuntos.php'];
     $this->aMenu['A'][1][3]      = ['Facturacion', 'CU005-facturacion.php'];
@@ -43,6 +43,7 @@ public function __construct(){
     $this->aMenu['A'][3]         = ['ADMIN SISTEMA'];
     $this->aMenu['A'][3][1]      = ['log errores', 'formLogError.php'];
     $this->aMenu['A'][3][2]      = ['log actividades', 'formControl.php'];
+    $this->aMenu['A'][3][3]      = ['log notificaciones', 'formNotificacion.php'];
     $this->aMenu['A'][4]         = ['EDICION'];
     $this->aMenu['A'][4][1]      = ['Categorias', 'formCategoria.php'];
     $this->aMenu['A'][4][2]      = ['Empresas', 'formEmpresa.php'];
@@ -181,6 +182,7 @@ $obj = new ControllerMenu();
  $aU  = $a[1];
 
 
+
 echo '<nav class="navbar-fixed-top navbar navbar-expand-lg navbar-dark bg-dark navbar navbar-expand-lg  sticky-top">
 <a class="navbar-brand ml-4" href="#">
   <img src="fonts/logoportal.png" width="250" height="65" alt="">
@@ -246,6 +248,8 @@ echo'
         if (  empty($_SESSION['CARRITO'] )){  echo 0; }else{  echo count($_SESSION['CARRITO']); } 
         echo '</span>';
       }
+
+      if( isset($_SESSION['usuario']) ){
       echo'
         <!-- icono de notificacion campana -->
         <a class="" id="messagesDropdown" data-toggle="modal" data-target="#exampleModal" role="button" aria-expanded="true">
@@ -254,7 +258,8 @@ echo'
             <span class="badge badge-danger badge-counter">';
             if( isset($countNotificacion)  && $countNotificacion >0 ){ echo $countNotificacion; }else{ echo 0; }
             echo '</span></span>
-       </a>
+       </a>';
+echo'
         <span class="sr-only">(current)</span>
         </a>
   <li class="nav-item dropdown no-arrow">
@@ -299,7 +304,10 @@ echo '
           <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 "></i>
           Salir
       </a>
-  </div>
+  </div>';
+}
+echo '
+
 </li>';
 
 

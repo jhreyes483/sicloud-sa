@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: bzsvpsfy9oknkorinigg-mysql.services.clever-cloud.com:3306
--- Generation Time: Oct 18, 2020 at 12:51 PM
+-- Generation Time: Nov 17, 2020 at 04:22 AM
 -- Server version: 8.0.15-5
 -- PHP Version: 7.2.34
 
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `bzsvpsfy9oknkorinigg`
 --
-CREATE DATABASE IF NOT EXISTS `bzsvpsfy9oknkorinigg` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `bzsvpsfy9oknkorinigg`;
 
 -- --------------------------------------------------------
 
@@ -106,6 +104,8 @@ INSERT INTO `ciudad` (`ID_ciudad`, `nom_ciudad`) VALUES
 CREATE TABLE `det_factura` (
   `FK_det_factura` int(11) NOT NULL,
   `FK_det_prod` varchar(40) NOT NULL,
+  `precio_unt` int(30) NOT NULL,
+  `estado` varchar(20) NOT NULL,
   `cantidad` int(11) NOT NULL,
   `CF_us` varchar(25) NOT NULL,
   `CF_tipo_doc` varchar(5) NOT NULL
@@ -115,25 +115,34 @@ CREATE TABLE `det_factura` (
 -- Dumping data for table `det_factura`
 --
 
-INSERT INTO `det_factura` (`FK_det_factura`, `FK_det_prod`, `cantidad`, `CF_us`, `CF_tipo_doc`) VALUES
-(1, '353740283X', 2, '1636012383599', 'CE'),
-(2, '176974732X', 6, '1695062224499', 'CE'),
-(3, '430911542X', 9, '1662041247199', 'CC'),
-(4, '9774391012', 12, '1660062872399', 'CC'),
-(5, '8585851732', 3, '1668040515399', 'CC'),
-(6, '0529063441', 6, '1662101568299', 'CC'),
-(7, '5574468565', 8, '1694050100899', 'CC'),
-(8, '6638029436', 3, '1628012272099', 'CC'),
-(9, '2041172460', 2, '1608051762299', 'CC'),
-(10, '4884032810', 15, '1670072699699', 'CC'),
-(11, '7880000739', 12, '1676090228999', 'CC'),
-(12, '1557972591', 16, '1623083099799', 'CC'),
-(13, '6691851129', 2, '1687060309399', 'CC'),
-(14, '509004757X', 2, '1654011145999', 'CC'),
-(15, '5789389872', 2, '1692090422599', 'CC'),
-(16, '6254386003', 2, '1624060419399', 'CC'),
-(17, '9808953743', 2, '1651011048199', 'CC'),
-(18, '3483863125', 2, '1680091992499', 'CC');
+INSERT INTO `det_factura` (`FK_det_factura`, `FK_det_prod`, `precio_unt`, `estado`, `cantidad`, `CF_us`, `CF_tipo_doc`) VALUES
+(1, '353740283X', 0, '0', 2, '1636012383599', 'CE'),
+(2, '176974732X', 0, '', 6, '1695062224499', 'CE'),
+(3, '430911542X', 0, '', 9, '1662041247199', 'CC'),
+(4, '9774391012', 0, '', 12, '1660062872399', 'CC'),
+(5, '8585851732', 0, '', 3, '1668040515399', 'CC'),
+(6, '0529063441', 0, '', 6, '1662101568299', 'CC'),
+(7, '5574468565', 0, '', 8, '1694050100899', 'CC'),
+(8, '6638029436', 0, '', 3, '1628012272099', 'CC'),
+(9, '2041172460', 0, '', 2, '1608051762299', 'CC'),
+(10, '4884032810', 0, '', 15, '1670072699699', 'CC'),
+(11, '7880000739', 0, '', 12, '1676090228999', 'CC'),
+(12, '1557972591', 0, '', 16, '1623083099799', 'CC'),
+(13, '6691851129', 0, '', 2, '1687060309399', 'CC'),
+(14, '509004757X', 0, '', 2, '1654011145999', 'CC'),
+(15, '5789389872', 0, '', 2, '1692090422599', 'CC'),
+(16, '6254386003', 0, '', 2, '1624060419399', 'CC'),
+(17, '9808953743', 0, '', 2, '1651011048199', 'CC'),
+(18, '3483863125', 0, '', 2, '1680091992499', 'CC'),
+(23, '23dsf', 25000, 'vendido', 1, '1', 'CC'),
+(23, '430911542X', 659000, 'vendido', 1, '1', 'CC'),
+(23, '4884032810', 49950, 'vendido', 1, '1', 'CC'),
+(23, '543543', 25000, 'vendido', 1, '1', 'CC'),
+(24, '23dsf', 25000, 'vendido', 1, '1', 'CC'),
+(24, '430911542X', 659000, 'vendido', 1, '1', 'CC'),
+(24, '4884032810', 49950, 'vendido', 1, '1', 'CC'),
+(25, '430911542X', 659000, 'vendido', 1, '1', 'CC'),
+(26, '430911542X', 659000, 'vendido', 1, '1', 'CC');
 
 -- --------------------------------------------------------
 
@@ -263,36 +272,44 @@ CREATE TABLE `factura` (
   `ID_factura` int(11) NOT NULL,
   `total` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `sub_total` int(11) NOT NULL,
-  `iva` int(11) NOT NULL,
-  `FK_c_tipo_pago` int(11) NOT NULL
+  `status` varchar(100) DEFAULT NULL,
+  `iva` int(11) DEFAULT NULL,
+  `FK_c_tipo_pago` int(11) NOT NULL,
+  `claveTransaccion` varchar(200) DEFAULT NULL,
+  `PaypalDatos` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `factura`
 --
 
-INSERT INTO `factura` (`ID_factura`, `total`, `fecha`, `sub_total`, `iva`, `FK_c_tipo_pago`) VALUES
-(1, 2700, '2018-12-04', 8, 8, 1),
-(2, 9800, '2018-12-23', 6, 4, 1),
-(3, 3250, '2019-08-16', 5, 4, 1),
-(4, 8380, '2019-08-17', 5, 5, 1),
-(5, 4710, '2019-07-19', 5, 1, 1),
-(6, 6010, '2019-02-02', 3, 5, 2),
-(7, 3700, '2019-09-28', 1, 3, 2),
-(8, 3030, '2019-02-16', 10, 4, 3),
-(9, 6400, '2018-12-30', 4, 9, 3),
-(10, 9140, '2019-10-18', 9, 8, 4),
-(11, 9000, '2018-12-20', 6, 7, 1),
-(12, 5080, '2019-05-13', 4, 6, 1),
-(13, 1200, '2019-10-19', 5, 9, 1),
-(14, 7000, '2019-10-12', 4, 9, 1),
-(15, 1670, '2019-01-08', 7, 0, 1),
-(16, 5780, '2019-09-23', 5, 4, 1),
-(17, 8590, '2019-06-23', 7, 7, 3),
-(18, 1840, '2019-02-03', 3, 10, 1),
-(19, 6970, '2019-01-19', 6, 2, 1),
-(20, 3600, '2019-07-05', 1, 8, 1);
+INSERT INTO `factura` (`ID_factura`, `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`, `claveTransaccion`, `PaypalDatos`) VALUES
+(1, 2700, '2018-12-04', NULL, 8, 1, NULL, NULL),
+(2, 9800, '2018-12-23', NULL, 4, 1, NULL, NULL),
+(3, 3250, '2019-08-16', NULL, 4, 1, NULL, NULL),
+(4, 8380, '2019-08-17', NULL, 5, 1, NULL, NULL),
+(5, 4710, '2019-07-19', NULL, 1, 1, NULL, NULL),
+(6, 6010, '2019-02-02', NULL, 5, 2, NULL, NULL),
+(7, 3700, '2019-09-28', NULL, 3, 2, NULL, NULL),
+(8, 3030, '2019-02-16', NULL, 4, 3, NULL, NULL),
+(9, 6400, '2018-12-30', NULL, 9, 3, NULL, NULL),
+(10, 9140, '2019-10-18', NULL, 8, 4, NULL, NULL),
+(11, 9000, '2018-12-20', NULL, 7, 1, NULL, NULL),
+(12, 5080, '2019-05-13', NULL, 6, 1, NULL, NULL),
+(13, 1200, '2019-10-19', NULL, 9, 1, NULL, NULL),
+(14, 7000, '2019-10-12', NULL, 9, 1, NULL, NULL),
+(15, 1670, '2019-01-08', NULL, 0, 1, NULL, NULL),
+(16, 5780, '2019-09-23', NULL, 4, 1, NULL, NULL),
+(17, 8590, '2019-06-23', NULL, 7, 3, NULL, NULL),
+(18, 1840, '2019-02-03', NULL, 10, 1, NULL, NULL),
+(19, 6970, '2019-01-19', NULL, 2, 1, NULL, NULL),
+(20, 3600, '2019-07-05', NULL, 8, 1, NULL, NULL),
+(21, 758950, '2020-10-18', 'pendiente', 7, 5, 'fl8bit8uaqr732n3u66blh5a6c', 'genericaPrueba'),
+(22, 758950, '2020-10-18', 'pendiente', 144200, 5, 'fl8bit8uaqr732n3u66blh5a6c', 'genericaPrueba'),
+(23, 758950, '2020-10-18', 'pendiente', 144200, 5, 'fl8bit8uaqr732n3u66blh5a6c', 'genericaPrueba'),
+(24, 733950, '2020-10-18', 'pendiente', 139450, 5, 'fl8bit8uaqr732n3u66blh5a6c', 'genericaPrueba'),
+(25, 659000, '2020-10-18', 'pendiente', 125210, 5, 'fl8bit8uaqr732n3u66blh5a6c', 'genericaPrueba'),
+(26, 659000, '2020-10-18', 'pendiente', 125210, 5, 'fl8bit8uaqr732n3u66blh5a6c', 'genericaPrueba');
 
 -- --------------------------------------------------------
 
@@ -394,9 +411,15 @@ CREATE TABLE `modific` (
 --
 
 INSERT INTO `modific` (`ID_modifc`, `descrip`, `fecha`, `hora`, `FK_us`, `FK_doc`, `FK_modific`) VALUES
-(25, 'Usario modificado ID 1668040515399', '2020-10-17', '00:00:00', '1', 'CC', 4),
-(26, 'Usario modificado ID 1694050100899', '2020-10-18', '00:00:00', '1', 'CC', 4),
-(27, 'Usario modificado ID 1694050100899', '2020-10-17', '00:00:00', '1', 'CC', 4);
+(31, 'Usario modificado ID 1662041247199', '2020-11-15', '04:25:24', '1', 'CC', 4),
+(32, 'Usario modificado ID 1234', '2020-11-15', '06:01:40', '1', 'CC', 4),
+(33, 'Usario modificado ID 111', '2020-11-15', '06:04:48', '1', 'CC', 4),
+(34, 'Usario modificado ID 111', '2020-11-15', '06:09:00', '1', 'CC', 4),
+(35, 'Usario modificado ID 1651011048199', '2020-11-15', '06:22:00', '1', 'CC', 4),
+(36, 'Usario modificado ID 1624060419399', '2020-11-15', '07:21:11', '1', 'CC', 4),
+(37, 'Usario modificado ID 2', '2020-11-16', '10:00:20', '2', 'CC', 4),
+(38, 'Usario eliminado ID 1676090228999', '2020-11-16', '10:50:30', '1', 'CC', 2),
+(39, 'Usario modificado ID 111', '2020-11-16', '11:06:27', '1', 'CC', 4);
 
 -- --------------------------------------------------------
 
@@ -417,9 +440,8 @@ CREATE TABLE `notificacion` (
 --
 
 INSERT INTO `notificacion` (`ID_not`, `estado`, `descript`, `FK_rol`, `FK_not`) VALUES
-(1, '0', NULL, 1, 1),
 (2, '0', NULL, 1, 8),
-(3, '0', NULL, 1, 9),
+(3, '1', NULL, 1, 9),
 (4, '0', NULL, 2, 3),
 (5, '0', NULL, 2, 3),
 (6, '0', NULL, 6, 10),
@@ -431,13 +453,16 @@ INSERT INTO `notificacion` (`ID_not`, `estado`, `descript`, `FK_rol`, `FK_not`) 
 (12, '0', NULL, 5, 11),
 (15, '0', '1033710734', 1, 1),
 (18, '1', '1', 1, 1),
-(19, '0', '2', 1, 1),
-(23, '0', '3', 1, 1),
+(19, '1', '2', 1, 1),
+(23, '1', '3', 1, 1),
 (24, '0', '4', 1, 1),
 (25, '0', '5', 1, 1),
 (26, '0', '4', 1, 1),
-(27, '0', '5', 1, 1),
-(28, '0', '6', 1, 1);
+(27, '1', '5', 1, 1),
+(28, '1', '6', 1, 1),
+(29, '0', '1234', 1, 1),
+(30, '0', '111', 1, 1),
+(31, '1', '5', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -555,7 +580,10 @@ INSERT INTO `puntos` (`Id_puntos`, `puntos`, `fecha`, `FK_us`, `FK_tipo_doc`) VA
 (22, 2, '2020-10-17', '3', 'CC'),
 (25, 2, '2020-10-17', '4', 'CC'),
 (26, 2, '2020-10-17', '5', 'CC'),
-(27, 2, '2020-10-17', '6', 'CC');
+(27, 2, '2020-10-17', '6', 'CC'),
+(28, 2, '2020-11-15', '1234', 'CC'),
+(29, 2, '2020-11-15', '111', 'CC'),
+(30, 2, '2020-11-16', '5', 'CC');
 
 -- --------------------------------------------------------
 
@@ -566,6 +594,9 @@ INSERT INTO `puntos` (`Id_puntos`, `puntos`, `fecha`, `FK_us`, `FK_tipo_doc`) VA
 CREATE TABLE `rol` (
   `ID_rol_n` int(11) NOT NULL,
   `nom_rol` varchar(25) NOT NULL,
+  `acronimo` varchar(5) NOT NULL,
+  `permisos` varchar(300) NOT NULL,
+  `token` varchar(300) NOT NULL,
   `FK_not` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -573,13 +604,13 @@ CREATE TABLE `rol` (
 -- Dumping data for table `rol`
 --
 
-INSERT INTO `rol` (`ID_rol_n`, `nom_rol`, `FK_not`) VALUES
-(1, 'Administrador', NULL),
-(2, 'Bodega', NULL),
-(3, 'Supervisor', NULL),
-(4, 'Ventas', NULL),
-(5, 'Proveedor', NULL),
-(6, 'Cliente', NULL);
+INSERT INTO `rol` (`ID_rol_n`, `nom_rol`, `acronimo`, `permisos`, `token`, `FK_not`) VALUES
+(1, 'Administrador', 'A', '01,0101,0102,0103,0104,02,0201,0202,0203,0204,0205,0206,0207,0208,0209,0210,03,0301,0302,0303,04,0401,0402,0403,0404,0405,0406,05', '', NULL),
+(2, 'Bodega', 'B', '01,0101,0102,02,03,0301,0302,0303,0304,0305,0306,04,0401,0402,0403,0404,05', '', NULL),
+(3, 'Supervisor', 'S', '01,0101,0102,02,04,0401,0402,05,0501,0502,0503,06', '', NULL),
+(4, 'Ventas', 'V', '01,0101,0102,02,03,0301,0302,0303,0305,04,0401,0402,0403,05', '', NULL),
+(5, 'Proveedor', 'P', '01,0101,0102,02,03,04,05', '', NULL),
+(6, 'Cliente', 'C', '01,0101,0102,02,03,04,05', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -602,6 +633,7 @@ CREATE TABLE `rol_usuario` (
 INSERT INTO `rol_usuario` (`FK_rol`, `FK_us`, `FK_tipo_doc`, `fecha_asignacion`, `estado`) VALUES
 (1, '1', 'CC', '2020-10-17', '1'),
 (1, '1033710734', 'CC', '2020-10-15', '1'),
+(1, '1234', 'CC', '2020-11-15', '0'),
 (1, '1636012383599', 'CE', '2019-02-17', '1'),
 (1, '1691012831199', 'CC', '2019-08-16', '1'),
 (1, '1698091149999', 'CC', '2019-01-24', '1'),
@@ -629,9 +661,10 @@ INSERT INTO `rol_usuario` (`FK_rol`, `FK_us`, `FK_tipo_doc`, `fecha_asignacion`,
 (4, '1680091992499', 'CC', '2019-02-18', '1'),
 (4, '1687060309399', 'CC', '2019-09-25', '1'),
 (4, '1694050100899', 'CC', '2019-05-13', '1'),
-(4, '4', 'CC', '2020-10-17', '0'),
-(5, '5', 'CC', '2020-10-17', '0'),
-(6, '6', 'CC', '2020-10-17', '0');
+(4, '4', 'CC', '2020-10-17', '1'),
+(5, '5', 'CC', '2020-10-17', '1'),
+(6, '111', 'CC', '2020-11-15', '0'),
+(6, '6', 'CC', '2020-10-17', '1');
 
 -- --------------------------------------------------------
 
@@ -698,7 +731,10 @@ INSERT INTO `telefono` (`ID_tel`, `tel`, `CF_us`, `CF_tipo_doc`, `CF_rut`) VALUE
 (30, '322 577 45 89', '5', NULL, NULL),
 (31, '355 986 39 23', '4', NULL, NULL),
 (32, '311 376 45 78', '5', NULL, NULL),
-(33, '311 577 94 00', '6', NULL, NULL);
+(33, '311 577 94 00', '6', NULL, NULL),
+(34, 'fdsaf', '1234', NULL, NULL),
+(35, 'sadsdaf', '111', NULL, NULL),
+(36, '311 567 78 39', '5', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -812,7 +848,8 @@ INSERT INTO `tipo_pago` (`ID_tipo_pago`, `nom_tipo_pago`) VALUES
 (1, 'Efectivo'),
 (2, 'Tarjeta credito'),
 (3, 'Tarjeta debito'),
-(4, 'Bono oferta');
+(4, 'Bono oferta'),
+(5, 'PayPal');
 
 -- --------------------------------------------------------
 
@@ -828,7 +865,7 @@ CREATE TABLE `usuario` (
   `ape2` varchar(20) DEFAULT NULL,
   `fecha` date NOT NULL,
   `pass` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `foto` blob,
+  `foto` varchar(150) DEFAULT NULL,
   `correo` varchar(50) DEFAULT NULL,
   `FK_tipo_doc` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -838,25 +875,26 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`ID_us`, `nom1`, `nom2`, `ape1`, `ape2`, `fecha`, `pass`, `foto`, `correo`, `FK_tipo_doc`) VALUES
-('1', 'Javier', '', 'Reyes', 'Neira', '2020-10-09', '$2y$10$SQSweKHj3eNarPZAQoEoAuc3ZiKNq1axcrb3aNaXOimBQNFk9yDPW', 0x6a61762e706e67, 'jav-rn@hotmail.com', 'CC'),
-('1033710734', 'Johnny', 'Stiven', 'Neira', 'Martinez', '1989-06-15', 'ContraseñaFacil', 0x32303134303430365f3038323533303030305f694f532e6a7067, 'stiven_1033@hotmail.es', 'CC'),
-('1608051762299', 'Thor Alias', 'hijo de odin ', 'Mayer', 'ragnarok', '1989-04-18', '1234', 0x75732e706e67, 'eu.tellus@augue.com', 'CC'),
-('1624060419399', 'Carlos', 'Libby', 'Flynn', 'Morris', '1982-07-19', 'PVJ34CMM2DX', 0x75732e706e67, 'Curabitur@velitAliquamnisl.edu', 'CC'),
-('1628012272099', 'Dacey', 'Chanda', 'Gates', 'Foreman', '1995-09-02', 'MWX02YMX4GM', 0x75732e706e67, 'cursus.vestibulum@Vivamusnon.edu', 'CC'),
-('1636012383599', 'Irma', 'Rosalyn', 'Mullen', 'Cote', '1990-08-15', 'IKC07VII1NL', 0x75736d2e706e67, 'pulvinar.arcu.et@Nullatinciduntneque.org', 'CE'),
-('1651011048199', 'Rajah', 'Gage', 'Barry', NULL, '1987-12-19', 'BSZ77PRI6GH', 0x75732e706e67, 'lobortis.Class@egestasurna.ca', 'CC'),
-('1654011145999', 'Mollie', 'Jacqueline', 'Murphy', 'Henderson', '1997-12-14', 'KDF36PDZ2DU', 0x75732e706e67, 'nisi.magna@Nuncmauris.edu', 'CC'),
-('1662041247199', 'Elton', 'Hakeem', 'Morris', 'Howell', '1988-09-19', 'JPC81QFH3JG', 0x75736d2e706e67, 'Donec.est@temporeratneque.net', 'CC'),
-('1662101568299', 'Quin', 'Paki', 'Ford', 'Hahn', '1992-07-28', 'GMU34EQF1NR', 0x75732e706e67, 'semper.tellus.id@Proinvelnisl.ca', 'CC'),
-('1668040515399', 'Salvador', 'Desirae', 'Stevens', 'Perez', '1995-07-21', 'PWL76KXQ4FG', 0x75732e706e67, 'libero.lacus.varius@Quisque.co.uk', 'CC'),
-('1676090228999', 'James', 'Oprah', 'Dickerson', 'Turner', '1988-11-25', 'TUB17VSF8MZ', 0x75732e706e67, 'ut.molestie@morbitristiquesenectus.co.uk', 'CC'),
-('1687060309399', 'Kylynn', 'Aubrey', 'Daniel', NULL, '1990-01-11', 'YDS91KRH4PL', 0x75732e706e67, 'mattis@eu.com', 'CC'),
-('1694050100899', 'Jeremy', 'Miryam', 'Hahn', 'Trujillo', '1990-04-11', 'SGU29VRZ0IS', 0x75736d2e706e67, 'nec@adipiscinglobortisrisus.net', 'CC'),
-('2', 'Fabian', 'Pepito', 'Perez', 'Del Carmen', '2020-10-23', '$2y$10$tceRlw0LoTN2T.cp/aKv5.ufo.wjhXJi5aaExd4N9QYf6KaBxp.U2', 0x526f636b462e706e67, 'elfabiancho@gmail.com', 'CC'),
-('3', 'Alejandro', 'Daniel', 'Daza', 'Perez', '2020-10-30', '$2y$10$pxCbE3ot3TRMhaydl5LHxO3v4It4932HWIFbCk1Aywy2D8sodwVCq', 0x616c2e706e67, 'Alejandro@gmail.com', 'CC'),
-('4', 'Francisco', 'Roberto', 'Aguirre', 'Ayala', '2020-10-31', '$2y$10$62YVUv7w3/zPTYWe4SocpePBZ2u6VNk7Yya4qey8XWKmlNFvd44.2', 0x7573662e706e67, 'francisco@gmail.com', 'CC'),
-('5', 'Rafael', 'Martin', 'Bustamante', 'Chávez', '2020-10-31', '$2y$10$XyNg9q1UiiLmJAYJqYTIhur9IXHC8FapfqwmVFNKZXjdn/JitJmz6', 0x7573312e6a7067, 'raul@gmail.com', 'CC'),
-('6', 'Daniela', 'Milena', 'Echeverría', 'Fraga', '2020-10-30', '$2y$10$uJ59CIp7vZSAis30sGG2DOWmM4Huz5716IoQGE34g3ujEtKDTrdPe', 0x55733030312e6a7067, 'mile@gmail.com', 'CC');
+('1', 'Javier', '', 'Reyes', 'Neira', '2020-10-09', '$2y$10$SQSweKHj3eNarPZAQoEoAuc3ZiKNq1axcrb3aNaXOimBQNFk9yDPW', 'jav.png', 'jav-rn@hotmail.com', 'CC'),
+('111', 'David', 'Garzon', 'Perez', 'Perez', '2020-11-02', '$2y$10$/uhh/UKds2VnpSWBJNztzu.k7CuS4lDumxFFNBm/yrI3juZYsUyBi', 'user-icon1.jpg', 'elfabiancho01@gmail.com', 'CC'),
+('1234', 'Miguel', 'Daniel', 'Perez', 'Herrera', '2020-12-11', '$2y$10$1fnI32bugk722ZUanQwDDu4PhyQj1eKenbaFkwj5vBP8Ber8atbE6', 'user-icon1.jpg', 'eljav@gmail.com', 'CC'),
+('1608051762299', 'Thor Alias', 'hijo de odin ', 'Mayer', 'ragnarok', '1989-04-18', '1234', 'us.png', 'eu.tellus@augue.com', 'CC'),
+('1624060419399', 'Carlos', 'Dario', 'Flynn', 'Morris', '1982-07-19', 'PVJ34CMM2DX', 'us.png', 'Curabitur@velitAliquamnisl.edu', 'CC'),
+('1628012272099', 'Dacey', 'Chanda', 'Gates', 'Foreman', '1995-09-02', 'MWX02YMX4GM', 'us.png', 'cursus.vestibulum@Vivamusnon.edu', 'CC'),
+('1636012383599', 'Irma', 'Rosalyn', 'Mullen', 'Cote', '1990-08-15', 'IKC07VII1NL', 'usm.png', 'pulvinar.arcu.et@Nullatinciduntneque.org', 'CE'),
+('1651011048199', 'Rajah', 'Gage', 'Barry', 'Daza', '1987-12-19', 'BSZ77PRI6GH', 'us.png', 'lobortis.Class@egestasurna.ca', 'CC'),
+('1654011145999', 'Mollie', 'Jacqueline', 'Murphy', 'Henderson', '1997-12-14', 'KDF36PDZ2DU', 'us.png', 'nisi.magna@Nuncmauris.edu', 'CC'),
+('1662041247199', 'Marcela', 'Daniela', 'Morris', 'Howell', '1988-09-19', 'JPC81QFH3JG', 'usm.png', 'Donec.est@temporeratneque.net', 'CC'),
+('1662101568299', 'Quin', 'Paki', 'Ford', 'Hahn', '1992-07-28', 'GMU34EQF1NR', 'us.png', 'semper.tellus.id@Proinvelnisl.ca', 'CC'),
+('1668040515399', 'Salvador', 'Samuel', 'Stevens', 'Perez', '1995-07-21', 'PWL76KXQ4FG', 'us.png', 'libero.lacus.varius@Quisque.co.uk', 'CC'),
+('1676090228999', 'James', 'Oprah', 'Dickerson', 'Turner', '1988-11-25', 'TUB17VSF8MZ', 'us.png', 'ut.molestie@morbitristiquesenectus.co.uk', 'CC'),
+('1687060309399', 'Kylynn', 'Aubrey', 'Daniel', NULL, '1990-01-11', 'YDS91KRH4PL', 'us.png', 'mattis@eu.com', 'CC'),
+('1694050100899', 'Jeremy', 'Miryam', 'Hahn', 'Trujillo', '1990-04-11', 'SGU29VRZ0IS', 'usm.png', 'nec@adipiscinglobortisrisus.net', 'CC'),
+('2', 'Fabian', 'Pepito', 'Perez', 'Del Carmen', '2020-10-23', '$2y$10$tceRlw0LoTN2T.cp/aKv5.ufo.wjhXJi5aaExd4N9QYf6KaBxp.U2', 'RockF.png', 'elfabiancho01@gmail.com', 'CC'),
+('3', 'Alejandro', 'Daniel', 'Daza', 'Perez', '2020-10-30', '$2y$10$pxCbE3ot3TRMhaydl5LHxO3v4It4932HWIFbCk1Aywy2D8sodwVCq', 'al.png', 'Alejandro@gmail.com', 'CC'),
+('4', 'Francisco', 'Roberto', 'Aguirre', 'Ayala', '2020-10-31', '$2y$10$62YVUv7w3/zPTYWe4SocpePBZ2u6VNk7Yya4qey8XWKmlNFvd44.2', 'usf.png', 'francisco@gmail.com', 'CC'),
+('5', 'Pepito', 'Richar', 'Ramirez', 'Daza', '2020-11-06', '$2y$10$sFSjJ2EczPgz16BzzDwPLOoW56p2QjrrLW6bmvFVKmTENotzb7ZVe', 'user-icon1.jpg', 'pepito@gmail.com', 'CC'),
+('6', 'Daniela', 'Milena', 'Echeverría', 'Fraga', '2020-10-30', '$2y$10$uJ59CIp7vZSAis30sGG2DOWmM4Huz5716IoQGE34g3ujEtKDTrdPe', 'Us001.jpg', 'mile@gmail.com', 'CC');
 
 --
 -- Indexes for dumped tables
@@ -1072,7 +1110,7 @@ ALTER TABLE `direccion`
 -- AUTO_INCREMENT for table `factura`
 --
 ALTER TABLE `factura`
-  MODIFY `ID_factura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `ID_factura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `localidad`
@@ -1090,13 +1128,13 @@ ALTER TABLE `log_error`
 -- AUTO_INCREMENT for table `modific`
 --
 ALTER TABLE `modific`
-  MODIFY `ID_modifc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `ID_modifc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `notificacion`
 --
 ALTER TABLE `notificacion`
-  MODIFY `ID_not` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `ID_not` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `orden_entrada`
@@ -1108,7 +1146,7 @@ ALTER TABLE `orden_entrada`
 -- AUTO_INCREMENT for table `puntos`
 --
 ALTER TABLE `puntos`
-  MODIFY `Id_puntos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `Id_puntos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `rol`
@@ -1126,7 +1164,7 @@ ALTER TABLE `servidor_correo`
 -- AUTO_INCREMENT for table `telefono`
 --
 ALTER TABLE `telefono`
-  MODIFY `ID_tel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `ID_tel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `tipo_medida`
@@ -1150,7 +1188,7 @@ ALTER TABLE `tipo_not`
 -- AUTO_INCREMENT for table `tipo_pago`
 --
 ALTER TABLE `tipo_pago`
-  MODIFY `ID_tipo_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID_tipo_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables

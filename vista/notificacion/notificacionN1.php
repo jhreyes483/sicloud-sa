@@ -35,7 +35,7 @@ if( !isset( $_SESSION['usuario'] )  ){
 }  
 ?>
 
-<a class="btn btn-success btn-circle btn-small" href="../controlador/api.php?apicall=notificLeida&&idn=<?= $row[0] ?>">
+<a class="btn btn-success btn-circle btn-small" href="../controlador/api.php?apicall=notificLeida&&id=<?= $row[0] ?>">
   <i class="fas fa-bell fa-fw"></i>
 </a>
 

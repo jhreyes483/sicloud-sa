@@ -154,13 +154,15 @@ class ControllerDoc
         return $this->objModUs->readUsuarioModel();
     }
     public function eliminarUsuario($id_get){
-        $r1 = $this->objModUs->eliminarUsuario($id_get);
+      //  $r1 = $this->objModUs->eliminarUsuario($id_get);
+      $r1 = true;
         if($r1){
             $hora            = date("h:i:sa");
             $hora            = substr( $hora , 0, 8 );
             $fecha           = date('Y-m-d');
             $descrip         = "Usario eliminado ID " .$id_get;
             $FK_modific      = "2";
+            $this->session   = $this->objSession->desencriptaSesion();
             $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
             $ID_us_session   = $this->session['usuario']['ID_us'];
             $arm=[
@@ -482,6 +484,20 @@ class ControllerDoc
     }
     public function RangoInforme(){
         return $this->objModUs->consultaRangoInforme();
+    }
+
+    // metodo log delete actividad
+    public function deleteLog($id_log){
+        return $this->objModUs->deleteLog($id_log);
+    }
+    // muestra todas las notificaciones
+    public function verNotificacionesT(){
+        return $this->objModUs->consNotificacionesT();
+    }
+
+    // elimina notificacion
+    public function deleteNotific($id_notific){
+        return $this->objModUs->delteNotificacion($id_notific);
     }
 
 

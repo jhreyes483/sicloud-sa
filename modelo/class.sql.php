@@ -1053,6 +1053,35 @@ public function insertModificacion($a){
 }// fin de insersion modificacion
 //------------------------------------------
 //------------------------------------------
+//Muestra todas las notificaciones
+public function consNotificacionesT(){
+   $sql = 'SELECT N.ID_not , N.estado , N.descript , R.nom_rol, T.nom_tipo
+   FROM notificacion N 
+   JOIN rol R ON N.FK_rol = R.ID_rol_n
+   JOIN tipo_not T ON T.ID_tipo_noT = N.FK_not ';
+   $stm = $this->db->prepare($sql);
+   $stm->execute();
+   $aR = $stm->fetchAll();
+   return $aR;
+}
+
+public function delteNotificacion($id){
+   $sql = 'DELETE FROM notificacion  WHERE ID_not = :id';
+   $stm = $this->db->prepare($sql);
+   $stm->bindValue(":id",   $id, PDO::PARAM_STR);
+   $delete = $stm->execute();
+   if ($delete) {
+      return true;
+   } else {
+      return false;
+   }
+}
+
+
+
+
+
+//------------------------------------------
 //ver join de modificaciones
    public function verJoinModificacionesDB(){
       $sql = "SELECT M.ID_modifc , M.descrip , M.fecha , M.hora , 
@@ -1734,14 +1763,30 @@ public function verTelefonosEmpresa(){
          } // fin de if de message
       } // fin de if $res2¡
    } // fin de metodo eliminar notificaciones-----------------------------------------------------------
+   //=================================================================================
+   //================================================================================
+   //CLOG
+   public function deleteLog($id_log){
+      $sql = "DELETE from modific where ID_modifc = ? ";
+      $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id_log , PDO::PARAM_INT );
+      $res = $stm->execute();
+      if ($res) {
+         return true;
+      } else {
+         return false;
+      } // fin de if de message
+   }
+   
+
+
 
 
 } //Fin Clase Usuario
 
 
 
-//$objCont = new Usuario();
-//  echo '<pre>';  print_r($objCont->selectUsuarioRol(1)); echo '</pre>';
+
         
           # Pasar en el mismo orden de los ?
 

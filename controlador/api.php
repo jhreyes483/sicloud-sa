@@ -73,13 +73,11 @@ if(isset($_GET['apicall'])){
       header( 'location:  ../index.php');
       break;
       case 'readusuario';
-         //$db = new ControllerDoc();
          $response['error']     = false;
          $response['message']   = 'Solicitud completada correctamente';
          $response['contenido'] = $db->readUsuariosController();
       break;
       case 'elimianarUsuario';
-        // $db = new ControllerDoc();
          $bool =   $db->eliminarUsuario( $_GET['id'] );
          if( $bool ){
             $response['error']   =  false;
@@ -123,7 +121,6 @@ if(isset($_GET['apicall'])){
       break;
       case 'loginusuario':
          isTheseParametersAvailable( ['nDoc', 'pass', 'tDoc'] );
-     //    $db = new ControllerDoc();
          $result = $db->loginUsuarioController(
             $_POST['nDoc'],
             $_POST['pass'],
@@ -139,7 +136,6 @@ if(isset($_GET['apicall'])){
          }
       break;
       case 'activarCuenta':
-       //  $db = new ControllerDoc();
          $result = $db->activarCuenta($_GET['id'] );
          if(!$result){
             $response['error']      = true;
@@ -155,7 +151,6 @@ if(isset($_GET['apicall'])){
          header( 'location:  ../vista/CU009-controlUsuarios.php');
       break;
       case 'desactivarUsuario':
-       //  $db = new ControllerDoc();
          $result = $db->desactivarCuenta($_GET['id'] );
          if(!$result){
             $response['error']      = true;
@@ -185,7 +180,6 @@ if(isset($_GET['apicall'])){
             $_FILES['foto']['tmp_name']
 
          ];
-        // $db->ver($a ,1 );
          $result = $db->insertarProducto( $a );
          if(!$result){
             $response['error']      = true;
@@ -479,7 +473,7 @@ if(isset($_GET['apicall'])){
           $objSession->verificarAcceso();
       break;
       case 'notificLeida':
-         $r = $db->notificacionLeida($_GET['idn']);
+         $r = $db->notificacionLeida($_GET['id']);
          if($r){
            $response['error']      = false;
            $response['menssage']   = $_SESSION['message'] = 'Update exitoso exitosa';
@@ -490,6 +484,37 @@ if(isset($_GET['apicall'])){
            $_SESSION['color']      = 'danger';
         }
      break;
+     case 'deleteNotific':
+      //die($_GET['id']);
+            
+            $r = $db->deleteNotific( $_GET['id'] );
+            if($r){
+              $response['error']      = false;
+              $response['menssage']   = $_SESSION['message'] = 'Elimino log';
+              $_SESSION['color']      = 'success';
+           }else{
+              $response['error']      =  true;
+              $response['message']    = $_SESSION['message'] = 'Error al eliminar log'; 
+              $_SESSION['color']      = 'danger';
+           }
+           header( 'location:  ../vista/formNotificacion.php');
+         break;
+     case 'deleteLog':
+//die($_GET['id']);
+      
+      $r = $db->deleteLog( $_GET['id'] );
+      if($r){
+        $response['error']      = false;
+        $response['menssage']   = $_SESSION['message'] = 'Elimino log';
+        $_SESSION['color']      = 'success';
+     }else{
+        $response['error']      =  true;
+        $response['message']    = $_SESSION['message'] = 'Error al eliminar log'; 
+        $_SESSION['color']      = 'danger';
+        
+     }
+     header( 'location:  ../vista/formControl.php');
+  break;
 
       default:
       $response['error']      = true;

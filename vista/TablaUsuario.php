@@ -13,12 +13,12 @@ switch ($u['usuario']['ID_rol_n']) {
   
     default:
         echo "<script>alert('No tiene permiso para ingresar a este modulo');</script>";
-        echo "<script>window.location.replace('index.php');</script>";
+        echo "<script>window.location.replace('../index.php');</script>";
     break;
 }
 if ($in == false) {
     echo "<script>alert('No tiene permiso para ingresar a este modulo');</script>";
-    echo "<script>window.location.replace('index.php');</script>";
+    echo "<script>window.location.replace('../index.php');</script>";
 } else {
 
 
@@ -81,7 +81,6 @@ if (isset($_SESSION['message'])) {  ?>
                         <th scope="col">primer apellido</th>
                         <th scope="col">segundo apellido</th>
                         <th scope="col">fecha</th>
-                        <th scope="col">contraseña</th>
                         <th scope="col">correo</th>
                         <th scope="col">tipo documento</th>
                         <th scope="col">Accion</th>
@@ -92,7 +91,6 @@ if (isset($_SESSION['message'])) {  ?>
                         
 
                             if(isset($datos)){
-
                                 foreach ($datos as $i => $d){
                             
                            
@@ -109,7 +107,7 @@ if (isset($_SESSION['message'])) {  ?>
                     <td><?= $d[3] ?></td>
                     <td><?= $d[4] ?></td>
                     <td><?= $d[5] ?></td>
-                    <td><?= $d[7] ?></td>
+          
                     <td><?= $d[8] ?></td>
                     <td><?= $d[9] ?></td>
                     <td>

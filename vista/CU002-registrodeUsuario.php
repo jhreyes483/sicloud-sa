@@ -49,7 +49,7 @@ cardtitulo("Registro de Usuarios");
 
                                 </div><!-- fin de columna de 6 -->
                                 <div class="col-md-6">
-                                    <h5>Seleccione rol</h5>
+                                    <h5>Seleccione rol (pendiente aprobación)</h5>
                                     <div class="form-group">
                                         <select name="FK_rol" class="form-control">
                                            <?php  selectRol();  ?>
@@ -98,7 +98,13 @@ cardtitulo("Registro de Usuarios");
                 <input class="form-control" type="email" name="correo" required autofocus maxlength="25"><br>
                 <input type="hidden" name="accion" value="insert">
                 <input class="btn btn-success form-control my-2" type="submit" name="submit" value="Registrar">
-                <a class="btn btn-success form-control btn-block" href="TablaUsuario.php">Lista usuario</a>
+                <?php if( isset($_SESSION['usuario'])  ){
+                    $sRol = openssl_decrypt( $_SESSION['usuario']['ID_rol_n'], COD, KEY); 
+                    if($sRol   == 1){
+             echo   '<a class="btn btn-success form-control btn-block" href="TablaUsuario.php">Lista usuario</a>';
+                    }
+                    }
+            ?>
             </form>
         </div>
     </div>
