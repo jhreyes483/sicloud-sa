@@ -29,22 +29,27 @@ if ($in == false) {
 function selectProducto(){
     $objCon = new ControllerDoc();
     $datos = $objCon->verProductos();
+
     foreach($datos as $row) { 
+      
+        if( isset($_SESSION['id_p']) && $_SESSION['id_p'] == $row['ID_prod']  )
+        echo "selected"; 
     ?>
-        <option value="<?= $row['ID_prod'] ?>"><?= $row['nom_prod'] ?></option>
+        <option value="<?= $row['ID_prod']   ?>" ><?= $row['nom_prod'] ?></option>
     <?php } 
 }
 $objCon = new ControllerDoc();
     cardtitulo("Ingreso de producto-Bodega");
 //=======================================================================
 // Resepcion de datos
-         if(isset($_GET['p'])) $id = $_GET['p'];
+         if(isset($_GET['p']))  $_SESSION['id_p'] = $id = $_GET['p']; else $id   = 2041172460;
         $formulario = true;
       //  echo $id;
 //========================================================================
 // Captura de datos
-$id1    = 2041172460;
-$datos = $objCon->tablaProducto($id1);
+
+//$id1    = 2041172460;
+$datos = $objCon->tablaProducto($_SESSION['id_p']);
 foreach($datos as $row ){
     $idProd       =    $row['ID_prod']	 ;        
     $nomProduct   =    $row['nom_prod']	  ;   
@@ -106,10 +111,10 @@ if ($formulario == true){  ?>
                             <div class="col-md-4">
                                 <!-- inicio de divicion 1 -->
                                 <!-----------INI FORM INGREZAR CANTIDAD------------------------------------------------------------------------------------------>
-                                <form action="../controlador/post.php?accion=IngresarCantidad&&id=<?= $idProd ?>" method="POST">
+                                <form action="../controlador/api.php?apicall=IngresarCantidad&&id=<?= $idProd ?>" method="POST">
                                     <!-- derecha -->
 
-                                    <div class="form-group"><label for="">ID Producto</label><input class="form-control" value="<?= $idProd ?>" type=»text» disabled=»disabled» laceholder="ID producto" value="<?= $idUs  ?> " ; name="ID_prod"></div>
+                                    <div class="form-group"><label for="">ID Producto</label><input class="form-control" value="<?= $idProd ?>" type=»text» disabled=»disabled» laceholder="ID producto" value="<?= $idUs  ?> " name="ID_prod"></div>
                                     <div class="form-group"><label for="">Nombre Producto</label><input class="form-control" value="<?= $nomProduct  ?>" type=»text» disabled=»disabled» lass="form-control" placeholder="Nombre producto" name="nom_prod"></div>
                                     <div class="form-group"><label for="">Valor Producto</label><input class="form-control" type=»text» disabled=»disabled» value="<?= $valProduct  ?>" class="form-control" placeholder="Valor" name="val_prod"></div>
                                     <div class="form-group"> <input class="btn btn-primary form-control" type="submit" name="submit" value="Registrar entrega"> </div>

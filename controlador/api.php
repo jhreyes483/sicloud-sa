@@ -195,6 +195,35 @@ if(isset($_GET['apicall'])){
          }
          header( 'location:  ../vista/CU004-crearProductos.php');
       break;
+
+      case 'IngresarCantidad':
+          //$cant, $stock, $id
+         $a =[
+            $_POST['cantidad'],
+            $_POST['stok'],
+            $_GET['id'],
+         ];
+         $result = $db->inserCatidadProducto( $a );
+         if($result){
+            $response['error']      = true;
+            $response['menssage']   = $_SESSION['message'] = 'Registro entrega';
+            $response['contenido']  = $result;
+            $_SESSION['color']      = 'success';
+            
+         }else{
+            $response['error']      = false;
+            $response['message']    = $_SESSION['message'] = 'Error, no registro entrega'; 
+            $response['contenido']  = $result;
+            $_SESSION['color']      = 'danger';
+         }
+         header( 'location:  ../vista/CU003-ingresoProducto.php');
+      break;
+
+
+
+
+
+      
       
       case 'eliminarTelefono':
          $r= $db->eliminarTelefono($_GET['id']);
@@ -202,7 +231,7 @@ if(isset($_GET['apicall'])){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message'] = 'No elimino telefono';
             $response['contenido']  = $r;
-            $_SESSION['color']      = 'Danger';
+            $_SESSION['color']      = 'danger';
             
          }else{
             $response['error']      = false;
@@ -217,7 +246,7 @@ if(isset($_GET['apicall'])){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message'] = 'No elimino producto';
             $response['contenido']  = $r;
-            $_SESSION['color']      = 'Danger';
+            $_SESSION['color']      = 'danger';
          }else{
             $response['error']      = false;
             $response['message']    = $_SESSION['message'] = 'Elimino producto'; 

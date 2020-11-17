@@ -259,6 +259,19 @@ class ControllerDoc
     {
         return $this->objModUs->verCategorias();
     }
+    // CU003-ingresoProducto.php
+    public function inserCatidadProducto($a){
+        //$cant, $stock, $id
+        // $t = $stock + $cant;
+        $t = $a[1] + $a[0];
+        
+        $aT =[
+            $t,
+            $a[2]
+        ];
+        return $this->objModUs->inserCatidadProducto($aT);
+    }
+
     //formCategoria.php
     public function verCategoria()
     {

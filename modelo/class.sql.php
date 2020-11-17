@@ -1272,20 +1272,20 @@ public function delteNotificacion($id){
       }
    }
 
+//$cant, $stock, $id
+   public function inserCatidadProducto($a){
+         // ControllerDoc::ver($a[1], 1);
 
-   public function inserCatidadProducto($cant, $stock, $id){
-      $t = $stock + $cant;
       // UPDATE sicloud.producto SET stok_prod = '8' WHERE ID_prod = '0529063441';
       $sql = "UPDATE producto SET stok_prod = :stok_prod WHERE ID_prod = :ID_prod ";
       $stm = $this->db->prepare($sql);
-      $stm->bindValue(":id", $id,       PDO::PARAM_STR );
-      $stm->bindValue(":stok_prod", $t, PDO::PARAM_INT );
-      $stm->bindValue(":ID_prod", $id,  PDO::PARAM_STR );
+      $stm->bindValue(":stok_prod", $a[0], PDO::PARAM_INT );
+      $stm->bindValue(":ID_prod", $a[1],  PDO::PARAM_STR );
       $result = $stm->execute();
       if ($result) {
          return true;
       } else {
-         return true;
+         return false;
       }
    }
 
