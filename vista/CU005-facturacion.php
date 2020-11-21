@@ -2,6 +2,7 @@
 
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
+$objCon    = new ControllerDoc();
 $objSession =new Session();
 $u = $objSession->desencriptaSesion();
 
@@ -27,6 +28,7 @@ if ($in == false) {
     echo "<script>window.location.replace('index.php');</script>";
 } else {
 
+
     //------------------------------------------------------------------------------------
 
 
@@ -44,6 +46,7 @@ if ($in == false) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Facturacion</title>
         <script type="text/javascript" src = "js/funcions.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css"/>  
     </head>
     <body>
         
@@ -87,6 +90,34 @@ if ($in == false) {
     </div>
     <!-- Formulario datos cliente---------------------------------------------------------------------------------------------- -->
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="card my-4">
+            <div class="card-header bg-primary"><label for="" class="lead">Lista de Usuarios</label> </div>
+                <div class="card-body">
+                
+                    <table id="tablaUsuarios" class="table-striped mb-3">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Numero de Documento</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Correo</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            
+                            </tr>
+                        </thead>
+
+                        <tbody>
+            
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+</div>
 
 
     <!-- Formulario datos cliente---------------------------------------------------------------------------------------------- -->
@@ -180,3 +211,54 @@ if ($in == false) {
 rutFromFin();
 ?>
 
+<!--    Datatables-->
+
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+
+<script>
+      $(document).ready(function() {
+          $('#tablaUsuarios').DataTable( {
+            language: {
+                    processing: "Tratamiento en curso...",
+                    search: "Buscar&nbsp;:",
+                    lengthMenu: "Ordenar por _MENU_ ",
+                    info: "Mostrando _START_ al _END_ de un total de _TOTAL_",
+                    infoEmpty: "No existen datos.",
+                    infoFiltered: "(filtrado de _MAX_ elementos en total)",
+                    infoPostFix: "",
+                    loadingRecords: "Cargando...",
+                    zeroRecords: "No se encontraron datos con tu busqueda",
+                    emptyTable: "No hay datos disponibles en la tabla.",
+                    paginate: {
+                        first: "Primero",
+                        previous: "Anterior",
+                        next: "Siguiente",
+                        last: "Ultimo"
+                    },
+                    aria: {
+                        sortAscending: ": active para ordenar la columna en orden ascendente",
+                        sortDescending: ": active para ordenar la columna en orden descendente"
+                    }
+                },
+                scrollY: 400,
+                lengthMenu: [ [10, 25, -1], [10, 25, "All"] ],
+
+            "ajax":{
+                "url": "../controlador/api.php?apicall=selectUsuarioFactura",
+                "dataSrc":""
+            },
+            "columns":[
+                {"data": "ID_us"},
+                {"data": "nom1"},
+                {"data": "ape1"},
+                {"data": "correo"},
+                {"data": "nom_rol"},
+                {"data": "estado"},
+                {"defaultContent": "<button class='btn btn-primary'>Detalles</button>"}
+            ]  
+          });
+      });
+    </script>

@@ -544,6 +544,14 @@ if(isset($_GET['apicall'])){
      }
      header( 'location:  ../vista/formControl.php');
   break;
+  case 'selectUsuarioFactura':
+
+   $r = $db->selectUsuarioFac(6, 1);
+   //ControllerDoc::ver($r );
+
+   echo json_encode($r, JSON_UNESCAPED_UNICODE);
+die();
+      break;
 
       default:
       $response['error']      = true;
@@ -555,5 +563,6 @@ if(isset($_GET['apicall'])){
    // Empujar los valores apropiados en la consulta json
    $response['message'] = 'Llamado invalido del api';
 }
+
 
 echo json_encode($response);

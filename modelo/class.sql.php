@@ -308,7 +308,7 @@ public function loginUsuarioModel($datosModel){
 
  */
 
-   public function  selectUsuarioRol($id){
+   public function  selectUsuarioRol($id,  $tipo = 0){
        $sql = "SELECT distinct U.FK_tipo_doc, U.ID_us, U.nom1, U.nom2, 
        U.ape1, U.ape2, U.pass, U.foto, U.correo, 
        R.nom_rol,  R.nom_rol,
@@ -316,14 +316,65 @@ public function loginUsuarioModel($datosModel){
        FROM usuario U 
        JOIN  rol_usuario R_U ON R_U.FK_us = U.ID_us
        JOIN rol  R ON R_U.FK_rol = R.ID_rol_n 
-       WHERE R.ID_rol_n  = :id
+       WHERE R.ID_rol_n IN ( :id )
         ";
        $c = $this->db->prepare($sql);
        $c->bindValue(":id", $id);
        $c->execute();
-       $r = $c->fetchAll();
-   return $r;
+
+
+       switch ($tipo) {
+         case 0:
+         $r = $c->fetchAll();
+         return $r;
+         break;
+         case 1:
+         $r = $c->fetchAll(PDO::FETCH_ASSOC);
+        // print json_encode($r, JSON_UNESCAPED_UNICODE);
+         return $r;
+         break;
+
+       }
+       
+  
    }
+
+
+
+
+   
+   public function  selectUsuarioFac($id,  $tipo = 0){
+      $sql = "SELECT distinct U.FK_tipo_doc, U.ID_us, U.nom1, U.nom2, 
+      U.ape1, U.ape2, U.pass, U.foto, U.correo, 
+      R.nom_rol,  R.nom_rol,
+      R_U.estado
+      FROM usuario U 
+      JOIN  rol_usuario R_U ON R_U.FK_us = U.ID_us
+      JOIN rol  R ON R_U.FK_rol = R.ID_rol_n 
+       ";
+      $c = $this->db->prepare($sql);
+      $c->bindValue(":id", $id);
+      $c->execute();
+
+
+      switch ($tipo) {
+        case 0:
+        $r = $c->fetchAll();
+        return $r;
+        break;
+        case 1:
+        $r = $c->fetchAll(PDO::FETCH_ASSOC);
+       // print json_encode($r, JSON_UNESCAPED_UNICODE);
+        return $r;
+        break;
+
+      }
+      
+ 
+  }
+
+
+
 
    public function conteoUsuariosActivos(){
       $sql = "SELECT count(*) AS usuariosActivos 

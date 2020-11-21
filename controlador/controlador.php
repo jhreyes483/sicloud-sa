@@ -224,9 +224,28 @@ class ControllerDoc
     }
 
     //Metodos de entidad usuario form CU009-controlusuarios.php
-    public function selectUsuarioRol($id_rol)
-    {
-        return $this->objModUs->selectUsuarioRol($id_rol);
+   
+   
+    public function selectUsuarioFac( $id , $tipo= 0){
+   
+
+        //ControllerDoc::ver($tipo);
+        //$id = "1,2,3,4,5,6";
+ 
+        return $this->objModUs->selectUsuarioFac($id, $tipo);
+    }
+
+
+
+
+
+    public function selectUsuarioRol( $id , $tipo= 0){
+   
+
+        //ControllerDoc::ver($tipo);
+        //$id = "1,2,3,4,5,6";
+ 
+        return $this->objModUs->selectUsuarioRol($id, $tipo);
     }
     public function conteoUsuariosActivos()
     {
