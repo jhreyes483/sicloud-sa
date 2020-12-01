@@ -50,7 +50,7 @@ if ($in == false) {
     </head>
     <body>
         
-<div class="container-fluid col-md-8 my-4">
+<div class="container-fluid col-md-10 my-4">
    <div class="row">
             <!-- Formulario datos cliente---------------------------------------------------------------------------------------------- -->
             <div class="col-md-12">
@@ -90,13 +90,13 @@ if ($in == false) {
     </div>
     <!-- Formulario datos cliente---------------------------------------------------------------------------------------------- -->
 
-<div class="row">
+<div class="row mx-auto ">
     <div class="col-md-12">
         <div class="card my-4">
-            <div class="card-header bg-primary"><label for="" class="lead">Lista de Usuarios</label> </div>
+
                 <div class="card-body">
                 
-                    <table id="tablaUsuarios" class="table-striped mb-3">
+                    <table id="tablaUsuarios" class="table table-striped bg-bordered bg-white table-sm col-md-10 col-sm-4 col-xs-12 mx-auto">
                         <thead class="table-dark">
                             <tr>
                                 <th>Numero de Documento</th>

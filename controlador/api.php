@@ -543,15 +543,12 @@ if(isset($_GET['apicall'])){
         
      }
      header( 'location:  ../vista/formControl.php');
-  break;
-  case 'selectUsuarioFactura':
-
+   break;
+   case 'selectUsuarioFactura':
    $r = $db->selectUsuarioFac(6, 1);
-   //ControllerDoc::ver($r );
-
    echo json_encode($r, JSON_UNESCAPED_UNICODE);
-die();
-      break;
+   die();
+   break;
 
       default:
       $response['error']      = true;
@@ -561,7 +558,23 @@ die();
 }else{
    // Si no es un api el que se estaq invocando
    // Empujar los valores apropiados en la consulta json
+   if( !isset($_POST['apicalp'])){
    $response['message'] = 'Llamado invalido del api';
+}
+}
+
+switch ($_POST['apicalp']) {
+   case 'venta':
+      $a = $_SESSION['CARRITO'];
+      require_once 'controllerFacturacion.php';
+      $objFac = new  ControllerFactura();
+      $objFac->facturar($a, 1);
+      header( 'location:  ../vista/mostrarCarrito.php');
+      break;
+   
+   default:
+      # code...
+      break;
 }
 
 

@@ -6,6 +6,10 @@ if( !isset( $_SESSION['usuario'])){
     $_SESSION['message'] = 'Favor registrarse o iniciar sesion para realizar compra';
     $_SESSION['color'] = 'danger';
 }
+if( isset($_POST['venta'])  ){
+    echo 'existe venta';
+}
+
 
 ?>
 
@@ -68,6 +72,12 @@ if( !isset( $_SESSION['usuario'])){
                         </td>
                         <td >
                             <h3>$<?php echo number_format($total, 0, ',', '.'); ?></h3>
+                        </td>
+                        <td>
+                        <form action="../controlador/api.php" method = "post">
+                        <input type="hidden" name="apicalp" value="venta">
+                        <button class="btn btn-success"href="">Facturar</button>
+                        </form>
                         </td>
                     </tr>
                     <?php
