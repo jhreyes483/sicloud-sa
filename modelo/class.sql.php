@@ -10,6 +10,48 @@ class SQL extends Conexion{
    static function ningunDato(){
       return new self ();
    }
+   
+   //==================================================
+//CFACTURA
+
+   public function facturar($a){
+      ControllerDoc::ver($a);
+      $sql ="INSERT INTO `factura`( `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`) 
+      VALUES (  :total , :fecha , :status ,:iva, :tipo_pago )";
+      $consulta = $this->db->prepare($sql);
+      $consulta->bindValue(":total", $a[0], PDO::PARAM_INT);
+      $consulta->bindValue(":fecha", $a[1], PDO::PARAM_STR);
+      $consulta->bindValue(":status", $a[2], PDO::PARAM_STR);
+      $consulta->bindValue(":iva", $a[3], PDO::PARAM_STR);
+      $consulta->bindValue(":tipo_pago", $a[4], PDO::PARAM_INT);
+      $result = $consulta->execute();
+      $id = $this->db->lastInsertId();
+
+      return $id;
+   }
+
+   public function insertaProductosFactura($a){
+      $sql = "INSERT INTO det_factura( FK_det_factura ,  FK_det_prod, precio_unt, estado, cantidad, CF_us, CF_tipo_doc) 
+      VALUES (:FK_factura, :FK_prod, :precioU, :estado, :cantidad, :CF_us, :CF_tipo_doc)";
+      $consulta = $this->db->prepare($sql);
+      $consulta->bindValue(":FK_factura",$a[0], PDO::PARAM_INT);
+      $consulta->bindValue(":FK_prod", $a[1], PDO::PARAM_STR);
+      $consulta->bindValue(":precioU", $a[2], PDO::PARAM_INT);
+      $consulta->bindValue(":estado", 'NULL', PDO::PARAM_STR);
+      $consulta->bindValue(":cantidad", $a[3], PDO::PARAM_INT);
+      $consulta->bindValue(":CF_us", $a[4], PDO::PARAM_STR);
+      $consulta->bindValue(":CF_tipo_doc", $a[5], PDO::PARAM_STR);
+      $r = $consulta->execute();
+      if($r){
+         return true;
+      }else{
+         return false;
+      }
+   }
+   
+   
+   
+   
    //============================================================================
    //CUSUARIO
 
