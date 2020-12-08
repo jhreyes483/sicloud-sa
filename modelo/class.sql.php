@@ -10,8 +10,8 @@ class SQL extends Conexion{
    static function ningunDato(){
       return new self ();
    }
-   //============================================================================
-   //CUSUARIO
+   
+   //==================================================
 
    public function verPuntosYusuario($id){
       $sql = " SELECT U.ID_us  , U.nom1 , U.nom2 , U.ape1 , U.ape2 , U.fecha , U.pass , U.foto , U.correo , 
@@ -88,11 +88,15 @@ class SQL extends Conexion{
       U.nom1, U.nom2, U.ape1, 
       U.ape2,  U.pass, U.foto, 
       U.correo,  U.fecha, 
-      R.nom_rol, R_U.estado, R.ID_rol_n
+      R.nom_rol, R_U.estado, R.ID_rol_n,
+      T.tel, D.dir
       FROM usuario U 
-      JOIN  rol_usuario R_U ON R_U.FK_us = U.ID_us
-      JOIN rol  R ON R_U.FK_rol = R.ID_rol_n 
+      left JOIN  rol_usuario R_U ON R_U.FK_us = U.ID_us
+      left JOIN rol  R ON R_U.FK_rol = R.ID_rol_n 
+      left JOIN telefono T ON U.ID_us = T.CF_us
+      left JOIN direccion D ON D.CF_us = U.ID_us
       WHERE ID_us = :id
+      LIMIT 1
       ";
       $c = $this->db->prepare($sql);
       $c->bindValue(":id", $id, PDO::PARAM_STR);
@@ -836,6 +840,7 @@ public function eliminarErrorLog($id)
 //==================================================
 //CFACTURA
 
+
    public function facturar($a){
       ControllerDoc::ver($a);
       $sql ="INSERT INTO `factura`( `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`) 
@@ -848,7 +853,7 @@ public function eliminarErrorLog($id)
       $consulta->bindValue(":tipo_pago", $a[4], PDO::PARAM_INT);
       $result = $consulta->execute();
       $id = $this->db->lastInsertId();
-   
+
       return $id;
    }
 
@@ -870,7 +875,15 @@ public function eliminarErrorLog($id)
          return false;
       }
    }
+   
+   
+   
 
+
+ public function insertarFactura($a){
+    die('entro al modelo');
+   // ControllerDoc::ver($a, 1);
+ }
 
 
    public function verFecha($f){
@@ -977,32 +990,35 @@ public function eliminarErrorLog($id)
       return $result;
    }
    public function verFactura($id){
-      $sql = "SELECT   U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , 
-      D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , TD.nom_doc , U.ID_us
-         FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-         JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
-         JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
-         JOIN usuario U  on U.ID_us =  DF.CF_us
-         JOIN direccion D on D.CF_us = U.ID_us
-         JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
-         WHERE ID_factura = '$id'
+      $sql = "SELECT  TD.nom_doc , U.ID_us,  U.nom1,  U.nom2 , U.ape1 , U.ape2 , U.correo, 
+      F.ID_factura, F.fecha, D.dir , TP.nom_tipo_pago , F.total
+               FROM factura F 
+               JOIN tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
+               JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
+               JOIN usuario U  on U.ID_us =  DF.CF_us
+               JOIN direccion D on D.CF_us = U.ID_us
+               JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               WHERE ID_factura = ?
          LIMIT 1";
       $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id, PDO::PARAM_INT );
       $stm->execute();
       $result = $stm->fetchAll(); 
       return $result;
    }
-   public function verFactural($id){
-      $sql = "SELECT  U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , 
-      F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , 
-      Pr.val_prod , Pr.nom_prod
-         from factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-         join det_factura DF on F.ID_factura = DF.FK_det_factura
-         join producto Pr on Pr.ID_prod = DF.FK_det_prod
-         join usuario U  on U.ID_us =  DF.CF_us
-         join direccion D on D.CF_us = U.ID_us
-         where ID_factura = '$id'";
-      $stm = $this->db->prepare($sql);
+   public function consProductosFactura($id){
+      $sql = "SELECT   DF.FK_det_factura, DF.FK_det_prod, PR.nom_prod,
+      DF.cantidad , PR.val_prod , TD.nom_doc , U.ID_us
+               FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago 
+               JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               JOIN producto PR on PR.ID_prod = DF.FK_det_prod
+               JOIN usuario U  on U.ID_us =  DF.CF_us
+               JOIN direccion D on D.CF_us = U.ID_us
+               JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               WHERE ID_factura = ?";
+               $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id, PDO::PARAM_INT );
       $stm->execute();
       $result = $stm->fetchAll(); 
       return $result;

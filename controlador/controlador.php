@@ -594,6 +594,32 @@ class ControllerDoc
 
     }
 
+
+
+
+
+    public function insertFactura($a){
+
+        $fecha  = date('Y-m-d'); 
+         $iva = ($a[1] * 0.19);
+        $aF = [
+            $a[1],
+            $fecha,
+            'cancelado',
+            $iva,
+            1
+        ];
+       $this->objModUs->insertFactura($a);
+
+
+/*
+    INSERT INTO `factura` (`ID_factura`, `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`, `claveTransaccion`, `PaypalDatos`) VALUES (NULL, '40000', '2020-11-24', NULL, '123', '1', NULL, NULL);
+*/
+    }
+
+
+
+
     // notificaciones nav
     public function verNotificaciones($id_rol){
         return  $this->objModUs->verNotificaciones($id_rol);
