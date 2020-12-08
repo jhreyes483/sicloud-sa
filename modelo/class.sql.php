@@ -13,10 +13,6 @@ class SQL extends Conexion{
    
    //==================================================
 
-   
-   
-   
-
    public function verPuntosYusuario($id){
       $sql = " SELECT U.ID_us  , U.nom1 , U.nom2 , U.ape1 , U.ape2 , U.fecha , U.pass , U.foto , U.correo , 
       TD.nom_doc , 
@@ -994,32 +990,35 @@ public function eliminarErrorLog($id)
       return $result;
    }
    public function verFactura($id){
-      $sql = "SELECT   U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , 
-      D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , TD.nom_doc , U.ID_us
-         FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-         JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
-         JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
-         JOIN usuario U  on U.ID_us =  DF.CF_us
-         JOIN direccion D on D.CF_us = U.ID_us
-         JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
-         WHERE ID_factura = '$id'
+      $sql = "SELECT  TD.nom_doc , U.ID_us,  U.nom1,  U.nom2 , U.ape1 , U.ape2 , U.correo, 
+      F.ID_factura, F.fecha, D.dir , TP.nom_tipo_pago , F.total
+               FROM factura F 
+               JOIN tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
+               JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
+               JOIN usuario U  on U.ID_us =  DF.CF_us
+               JOIN direccion D on D.CF_us = U.ID_us
+               JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               WHERE ID_factura = ?
          LIMIT 1";
       $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id, PDO::PARAM_INT );
       $stm->execute();
       $result = $stm->fetchAll(); 
       return $result;
    }
-   public function verFactural($id){
-      $sql = "SELECT  U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , 
-      F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , 
-      Pr.val_prod , Pr.nom_prod
-         from factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-         join det_factura DF on F.ID_factura = DF.FK_det_factura
-         join producto Pr on Pr.ID_prod = DF.FK_det_prod
-         join usuario U  on U.ID_us =  DF.CF_us
-         join direccion D on D.CF_us = U.ID_us
-         where ID_factura = '$id'";
-      $stm = $this->db->prepare($sql);
+   public function consProductosFactura($id){
+      $sql = "SELECT   DF.FK_det_factura, DF.FK_det_prod, PR.nom_prod,
+      DF.cantidad , PR.val_prod , TD.nom_doc , U.ID_us
+               FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago 
+               JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               JOIN producto PR on PR.ID_prod = DF.FK_det_prod
+               JOIN usuario U  on U.ID_us =  DF.CF_us
+               JOIN direccion D on D.CF_us = U.ID_us
+               JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               WHERE ID_factura = ?";
+               $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id, PDO::PARAM_INT );
       $stm->execute();
       $result = $stm->fetchAll(); 
       return $result;

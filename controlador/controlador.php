@@ -595,18 +595,7 @@ class ControllerDoc
     }
 
 
-    public function facturacion($id){
-        ControllerDoc::ver('id de usuario-> '.$id);
 
-        $datosU = $this->objModUs->selectUsuarios($id);
-        $aProd  = $this->objModUs->verProductos();
-       if( count($datosU) == 0 ){ $aC[0] = "Usuario no existe";  return $aC;
-        } else{
-            $respuesta = 'OK';
-            $aC = [ $respuesta, $datosU, $aProd  ];
-            return $aC;
-        }
-    }
 
 
     public function insertFactura($a){
