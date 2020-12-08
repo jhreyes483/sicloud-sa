@@ -28,7 +28,7 @@ public function __construct(){
     $this->aMenu['A'][1][1]      = ['Admin Solisitud', 'CU009-controlUsuarios.php'];
     $this->aMenu['A'][1][2]      = ['Acumulación de puntos', 'CU006-acomulaciondepuntos.php'];
     $this->aMenu['A'][1][3]      = ['Facturacion', 'CU005-facturacion.php'];
-    $this->aMenu['A'][1][4]      = ['Consulta factura', 'formfactura.php'];
+    $this->aMenu['A'][1][4]      = ['Consulta factura', 'formFactura.php'];
     $this->aMenu['A'][1][5]      = ['Inf Ventas', 'CU005-facturacion.php'];
     $this->aMenu['A'][2]         = ['PRODUCTOS'];
     $this->aMenu['A'][2][1]      = ['Catalogo', 'catalogo.php?ops=1'] ;
@@ -79,7 +79,7 @@ public function __construct(){
     $this->aMenu['S'][4]         = [ 'INF. VENTAS'];
     $this->aMenu['S'][4][1]      = [ 'FECHA','verFecha.php'];
     $this->aMenu['S'][4][2]      = [ 'RANGO','verRango.php'];
-    $this->aMenu['S'][4][3]      = ['CONSULTA FACTURA', 'formfactura.php'];
+    $this->aMenu['S'][4][3]      = ['CONSULTA FACTURA', 'inffactura.php'];
     $this->aMenu['S'][5]         = [ 'PRODUCTOS'];
     $this->aMenu['S'][5][1]      = [ 'CATALOGO','catalogo.php?ops=1'];
     $this->aMenu['S'][5][2]      = [ 'ALERTAS','CU0014-alertas.php'];
@@ -99,7 +99,7 @@ public function __construct(){
     $this->aMenu['V'][4][1]      = [ 'CUENTAS','CU009-controlUsuarios.php'];
     $this->aMenu['V'][4][2]      = [ 'PUNTOS','CU006-acomulaciondepuntos.php'];
     $this->aMenu['V'][4][3]      = [ 'FACTURACION','CU005-facturacion.php'];
-    $this->aMenu['V'][4][4]      = ['CONSULTA FACTURA', 'formfactura.php'];
+    $this->aMenu['V'][4][4]      = ['CONSULTA FACTURA', 'formFactura.php'];
     $this->aMenu['V'][5]         = [ 'INICIO','../controlador/api.php?apicall=inicionRol'];
 
 
