@@ -29,7 +29,7 @@ public function __construct(){
     $this->aMenu['A'][1][2]      = ['Acumulación de puntos', 'CU006-acomulaciondepuntos.php'];
     $this->aMenu['A'][1][3]      = ['Facturacion', 'CU005-facturacion.php'];
     $this->aMenu['A'][1][4]      = ['Consulta factura', 'formFactura.php'];
-    $this->aMenu['A'][1][5]      = ['Inf Ventas', 'verFecha.php'];
+    $this->aMenu['A'][1][5]      = ['Inf Ventas', 'CU005-facturacion.php'];
     $this->aMenu['A'][2]         = ['PRODUCTOS'];
     $this->aMenu['A'][2][1]      = ['Catalogo', 'catalogo.php?ops=1'] ;
     $this->aMenu['A'][2][2]      = ['Crear producto', 'CU004-crearProductos.php'];

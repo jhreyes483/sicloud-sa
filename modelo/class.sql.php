@@ -842,7 +842,6 @@ public function eliminarErrorLog($id)
 
 
    public function facturar($a){
-      ControllerDoc::ver($a);
       $sql ="INSERT INTO `factura`( `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`) 
       VALUES (  :total , :fecha , :status ,:iva, :tipo_pago )";
       $consulta = $this->db->prepare($sql);
@@ -993,12 +992,12 @@ public function eliminarErrorLog($id)
       $sql = "SELECT  TD.nom_doc , U.ID_us,  U.nom1,  U.nom2 , U.ape1 , U.ape2 , U.correo, 
       F.ID_factura, F.fecha, D.dir , TP.nom_tipo_pago , F.total
                FROM factura F 
-               JOIN tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-               JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
-               JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
-               JOIN usuario U  on U.ID_us =  DF.CF_us
-               JOIN direccion D on D.CF_us = U.ID_us
-               JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               LEFT JOIN tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
+               LEFT JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               LEFT JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
+               LEFT JOIN usuario U  on U.ID_us =  DF.CF_us
+               LEFT JOIN direccion D on D.CF_us = U.ID_us
+               LEFT JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
                WHERE ID_factura = ?
          LIMIT 1";
       $stm = $this->db->prepare($sql);
@@ -1011,11 +1010,11 @@ public function eliminarErrorLog($id)
       $sql = "SELECT   DF.FK_det_factura, DF.FK_det_prod, PR.nom_prod,
       DF.cantidad , PR.val_prod , TD.nom_doc , U.ID_us
                FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago 
-               JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
-               JOIN producto PR on PR.ID_prod = DF.FK_det_prod
-               JOIN usuario U  on U.ID_us =  DF.CF_us
-               JOIN direccion D on D.CF_us = U.ID_us
-               JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               LEFT JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               LEFT JOIN producto PR on PR.ID_prod = DF.FK_det_prod
+               LEFT JOIN usuario U  on U.ID_us =  DF.CF_us
+               LEFT JOIN direccion D on D.CF_us = U.ID_us
+               LEFT JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
                WHERE ID_factura = ?";
                $stm = $this->db->prepare($sql);
       $stm->bindValue( 1, $id, PDO::PARAM_INT );

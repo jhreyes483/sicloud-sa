@@ -43,6 +43,7 @@ if( isset($accion)){
           header("Location: ../vista/CU005-facturacion.php?ID=$ID");
         break;
         case 'facturarInterno':
+          ControllerDoc::ver($_POST);
           $obj->facturar($_SESSION['venta'] , 0);            
         break;
     }
@@ -99,9 +100,13 @@ public function facturar($a , $tipo = 1){
                     $d[0],
                     $d[6],
                     $d[3],
-                    $this->session['usuario']['ID_us'],
-                    $this->session['usuario']['FK_tipo_doc'],
+                    $_POST['ID'],
+                    $_POST['FK_tipo_doc'],
                 ];
+                //echo $_POST['ID'];
+                //echo $_POST['FK_tipo_doc'];
+
+               // die();
                 $ID = $this->session['usuario']['ID_us'];
 
              $r =   $this->objMod->insertaProductosFactura($aP);
@@ -132,6 +137,7 @@ public function facturar($a , $tipo = 1){
                 $iva,
                 5
             ];
+
            $id_factura = $this->objMod->facturar($aF);
             foreach( $a as $i => $d ){
                 $aP= [
@@ -139,8 +145,8 @@ public function facturar($a , $tipo = 1){
                     $d['ID'],
                     $d['PRECIO'],
                     $d['CANTIDAD'],
-                    $this->session['usuario']['ID_us'],
-                    $this->session['usuario']['FK_tipo_doc'],
+                    $_POST['ID'],
+                    $_POST['FK_tipo_doc'],
                 ];
                 $r =   $this->objMod->insertaProductosFactura($aP);
                 if($r){

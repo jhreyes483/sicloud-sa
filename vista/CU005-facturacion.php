@@ -72,6 +72,8 @@ if ($in == false) {
                 </div>
             <?php
                 setMessage();
+
+
             }
             ?>
             <div class="row">
@@ -82,7 +84,9 @@ if ($in == false) {
                     <div class="card card-body">
 
                         <form action="" method="post">
+                        <i class="fas fa-user-plus mr-2"></i>
                             <button type="submit" class="btn btn-outline-success col-md-1 my-1 btn-sm">Buscar</button>
+                            
                             <div class="card card-body shadow">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -117,9 +121,9 @@ if ($in == false) {
                     <tr>
                         <th>Id producto</th>
                         <th>Producto</th>
-                        <th>Valor</th>
-                        <th>Cantidad</th>
                         <th>Stock</th>
+                        <th>Cantidad</th>
+                        <th><i class="fas fa-dollar-sign mr-2"></i>Valor</th>
                         <th>Categora</th>
                         <th>
                             Agregar
@@ -134,12 +138,12 @@ if ($in == false) {
                         <form action="../controlador/controllerFacturacion.php" method="POST">
                             <tbody>
                                 <tr>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?php echo $d[0] ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?php echo $d[2] ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="stok_prod" value="<?php echo $d[4] ?>"></td>
+                                    <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
+                                    <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[2] ?>"></td>
+                                    <td><input class="form-control" type=»text» readonly=»readonly» name="stok_prod" value="<?= $d[4] ?>"></td>
                                     <td><input class="form-control" type=number name="cantidad" value="<?= 1 ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="val_prod" value="<?php echo $d[3] ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="<?php echo $d[6] ?>"></td>
+                                    <td><input class="form-control" type=»text» readonly=»readonly» name="val_prod" value="<?=($d[3])  ?>"></td>
+                                    <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="<?= $d[6] ?>"></td>
                                     <input type="hidden" name="ID" value="<?= $ID ?? 0 ?>">
                                     <input type="hidden" name="accion" value="agregar">
                                     <td>
@@ -166,9 +170,9 @@ if ($in == false) {
                         <tr>
                             <th>Id producto</th>
                             <th>Producto</th>
-                            <th>Valor</th>
+                            <th>Stock</th>
                             <th>Cantidad</th>
-                            <th>Categoria</th>
+                            <th><i class="fas fa-dollar-sign mr-2"></i>Valor</th>
                             <th>Sub total</th>
                             <th></th>
                         </tr>
@@ -185,13 +189,16 @@ if ($in == false) {
                                     <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[1] ?>"></td>
                                     <td><input class="form-control" type=»number» readonly=»readonly» name="stok_prod" value="<?= $d[2] ?>"></td>
                                     <td><input class="form-control" type=»number» readonly=»readonly» name="val_prod" value="<?= $d[3] ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="<?= $d[4] ?>"></td>
-                                    <td><input class="form-control" type=»number» readonly=»readonly» name="sub_total" value="<?= $d[6] ?? 0 ?>"></td>
+                                    <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="$<?=number_format( ($d[4]??0), 0, ',', '.')  ?>"></td>
+                                    <td><input class="form-control" type=»number» readonly=»readonly» name="sub_total" value="$<?= number_format(($d[6]??0), 0, ',', '.')  ?>"></td>
                                     <td>
                                         <a class="btn btn-circle btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar porducto de factura" href="../controlador/controllerFacturacion.php?accion=eliminar&id_prod=<?php echo $i . '&ID=' . $ID; ?>">
                                             <i class="far fa-trash-alt" aria-hidden="true"></i>
                                         </a>
                                     </td>
+                               
+                     
+                                  
                                     <input type="hidden" name="ID" value="<?= $ID ?>">
                                     <input type="hidden" name="estado" value="Venta">
                                 </tr>
@@ -202,7 +209,10 @@ if ($in == false) {
                             <div class="col-md-2">
                                 <td colspan="5" class="mt-2" align="right"> <label for="total" class="lead">Total:</label> </td>
                             </div>
-                            <?php $totFactura =  array_sum(array_column($_SESSION['venta'], 6)) ?>
+                            <?php $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
+                            $totFactura       =  number_format(($totFactura??0), 0, ',', '.');
+                            
+                            ?>
                             <div class="col-md-2 ">
                                 <td colspan="6" class="mt-2 lead" align="right"> $ <?= $totFactura ?> </td>
                             </div>
@@ -231,18 +241,23 @@ if ($in == false) {
                                             </select>
                                         </div>
                                         <div class="col-lg-4 ml-auto">
+                                            <input type="hidden" name="FK_tipo_doc" value="<?= $aU[0][0] ?>">
+                                            <input type="hidden" name='ID' value="<?= $ID  ?>">
                                             <input type="hidden" name='accion' value="facturarInterno">
-                                            <input class="btn btn-success" value="facturar" type="submit">
+                                            
+                                            <button class="btn btn-success btn-sm"  type="submit"><i class="fas fa-file "></i>Facturar </button>
+                                            
                                         </div>
                                     </div>
                                 </form>
 
                                 <form action="../controlador/controllerFacturacion.php" method="post">
                                     <input type="hidden" name="accion" value="anular">
-                                    <input class="btn btn-danger" value="Anular" type="submit">
+                                    <button class="btn btn-danger btn-sm"  type="submit"> <i class="far fa-trash-alt" aria-hidden="true"></i> <br>Anular</button>
                                 </form>
                                 <p class="ml-auto">
                                     <label for="">Vendedor</label><br>
+                                    <i class="fas fa-user-plus mr-2"></i>
                                     <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
                                 </p>
                             </div><!-- fin de row -->
