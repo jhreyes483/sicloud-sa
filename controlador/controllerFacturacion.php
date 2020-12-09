@@ -121,6 +121,7 @@ public function facturar($a , $tipo = 1){
             }
             header("Location: ../vista/CU005-facturacion.php?ID=$ID");
         break;
+        
     // Facturacion de carrito de compras
         case 1:
             $total = 0;
@@ -145,8 +146,8 @@ public function facturar($a , $tipo = 1){
                     $d['ID'],
                     $d['PRECIO'],
                     $d['CANTIDAD'],
-                    $_POST['ID'],
-                    $_POST['FK_tipo_doc'],
+                    $this->session['usuario']['ID_us'],
+                    $this->session['usuario']['FK_tipo_doc'],
                 ];
                 $r =   $this->objMod->insertaProductosFactura($aP);
                 if($r){
