@@ -34,7 +34,7 @@ public function __construct(){
     $this->aMenu['A'][2][1]      = ['Catalogo', 'catalogo.php?ops=1'] ;
     $this->aMenu['A'][2][2]      = ['Crear producto', 'CU004-crearProductos.php'];
     $this->aMenu['A'][2][3]      = ['Ingresar producto', 'CU003-ingresoProducto.php'];
-    $this->aMenu['A'][2][4]      = ['Editar producto', 'edicionProductoTabla.php'];
+    $this->aMenu['A'][2][4]      = ['Editar producto', 'edicionProductoTabla.php?edit'];
     $this->aMenu['A'][2][5]      = ['Solicitar producto', 'CU0015_16(administrador)-solicitud.php'];
     $this->aMenu['A'][2][6]      = ['Sistema de alertas', 'CU0014-alertas.php'];
     $this->aMenu['A'][2][7]      = ['Stock','edicionProductoTabla.php'];
@@ -68,7 +68,7 @@ public function __construct(){
     $this->aMenu['B'][4]         = [ 'PROCESOS', 'tablaRegistro.php'];
     $this->aMenu['B'][4][1]      = [ 'CREAR PRODUCTO', 'CU004-crearProductos.php'];
     $this->aMenu['B'][4][2]      = [ 'INGRESO PRODUCTO', 'CU003-ingresoProducto.php'];
-    $this->aMenu['B'][4][3]      = [ 'EDITAR PRODUCTOS', 'edicionProductoTabla.php'];
+    $this->aMenu['B'][4][3]      = [ 'EDITAR PRODUCTOS', 'edicionProductoTabla.php?edit'];
     $this->aMenu['B'][4][4]      = [ 'SOLICITAR PEDIDO', 'CU0018-registropedido.php'];
     $this->aMenu['B'][5]         = [ 'INICIO','../controlador/api.php?apicall=inicionRol'];
 
