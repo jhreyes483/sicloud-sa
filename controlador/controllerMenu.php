@@ -64,7 +64,7 @@ public function __construct(){
     $this->aMenu['B'][3][3]      = [ 'CATEGORIAS', 'tablaCategoria.php'];
     $this->aMenu['B'][3][4]      = [ 'CANTIDAD', 'tablaRegistro.php'];
     $this->aMenu['B'][3][5]      = [ 'SISTEMA ALERTAS', 'CU0014-alertas.php'];
-    $this->aMenu['B'][3][6]      = [ 'STOCK','CU0014-alertas.php?stockGeneral'];
+    $this->aMenu['B'][3][6]      = [ 'STOCK','edicionProductoTabla.php'];
     $this->aMenu['B'][4]         = [ 'PROCESOS', 'tablaRegistro.php'];
     $this->aMenu['B'][4][1]      = [ 'CREAR PRODUCTO', 'CU004-crearProductos.php'];
     $this->aMenu['B'][4][2]      = [ 'INGRESO PRODUCTO', 'CU003-ingresoProducto.php'];
@@ -83,7 +83,7 @@ public function __construct(){
     $this->aMenu['S'][5]         = [ 'PRODUCTOS'];
     $this->aMenu['S'][5][1]      = [ 'CATALOGO','catalogo.php?ops=1'];
     $this->aMenu['S'][5][2]      = [ 'ALERTAS','CU0014-alertas.php'];
-    $this->aMenu['S'][5][3]      = [ 'STOCK','CU0014-alertas.php?stockGeneral'];
+    $this->aMenu['S'][5][3]      = [  'STOCK','edicionProductoTabla.php'];
     $this->aMenu['S'][6]         = [ 'INICIO','../controlador/api.php?apicall=inicionRol'];
 
     $this->aMenu['V'][1]         = [ 'CONSTITUCION'];
@@ -94,7 +94,7 @@ public function __construct(){
     $this->aMenu['V'][3][1]      = [ 'CATALOGO','catalogo.php?ops=1'];
     $this->aMenu['V'][3][2]      = [ 'CATEGORIAS', 'tablaCategoria.php'];
     $this->aMenu['V'][3][3]      = [ 'CANTIDAD', 'tablaRegistro.php'];
-    $this->aMenu['V'][3][5]      = [ 'STOCK','CU0014-alertas.php?stockGeneral'];
+    $this->aMenu['V'][3][5]      = [  'STOCK','edicionProductoTabla.php'];
     $this->aMenu['V'][4]         = [ 'USUARIOS'];
     $this->aMenu['V'][4][1]      = [ 'CUENTAS','CU009-controlUsuarios.php'];
     $this->aMenu['V'][4][2]      = [ 'PUNTOS','CU006-acomulaciondepuntos.php'];
