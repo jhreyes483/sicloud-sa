@@ -53,8 +53,17 @@ $objCon = new ControllerDoc();
                 <td><?= $d[3] ?></td>
                 <td><?= $d[4] ?></td>
                 <td>
-                    <a href="../controlador/api.php?apicall=deleteNotific&&id=<?= $d[0]  ?>" class="btn btn-circle btn-danger"><i class="far fa-trash-alt"></i></a>
-                    <a href="../controlador/api.php?apicall=notificLeida&&id=<?= $d[0]  ?>" class="btn btn-circle btn-success btn-"><i class="fas fa-arrow-right"></i></a>
+                    <a href="../controlador/api.php?apicall=deleteNotific&&id=<?= $d[0]  ?>" 
+                    class="btn btn-circle btn-danger"
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar notificacion"
+                    >
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                    <a href="../controlador/api.php?apicall=notificLeida&&id=<?= $d[0]  ?>" 
+                    class="btn btn-circle btn-success btn"
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Marcar como leida"
+                    ><i class="fas fa-arrow-right"></i>
+                    </a>
                 </td>
             </tbody>
         <?php

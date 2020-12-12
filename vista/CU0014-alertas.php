@@ -2,8 +2,12 @@
 //comprobacion de rol
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
-$objSession =new Session();
-$u = $objSession->desencriptaSesion();
+$objSession = new Session();
+$objCon     = new ControllerDoc();
+$u          = $objSession->desencriptaSesion();
+
+
+
 
 //comprobacion de rol
 $in = false;
@@ -32,7 +36,8 @@ if ($in == false) {
 } else {
 
 cardtitulo("Alertas");
-if (isset($_SESSION['message'])) {
+if (isset($_SESSION['message'])) {;
+$datos = $objCon->verProductos();
 ?>
     <!-- alerta boostrap -->
     <div class="col-md-4 mx-auto alert alert-<?php echo $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
@@ -50,7 +55,7 @@ if (isset($_SESSION['message'])) {
     <div class="col-md-12 mx-auto">
         <div class="row">
             <!-- form filtro por catiegorias -->
-            <div class="card col-md-3 my-4 shadow ">
+            <div class="card col-md-4 my-4 shadow ">
                 <div class="card-body ">
                     <h5 class="card-title text-center ">Seleccione Tipo de filtro</h5>
                     <!-- INI--FORM fitrol--------------------------------------------------------------------------------- -->
@@ -68,87 +73,9 @@ if (isset($_SESSION['message'])) {
                 </div>
             </div>
             <!--   fin de form Filtro---------------------------------------------------------------------------------------------- -->
-<?php
-
-$objModProd = new ControllerDoc();
-$datos = $objModProd->verProductosGrafica();
-//ControllerDoc::ver($datos);
-//echo '<pre>'; print_r($datos);  echo '</pre>'; //die('FIN');
-
-
-
-
-?>
-
-
-
-
-<!-- --------------------------------------------------------------------- -->
-<!-- Grafica torta -->
-
-
-
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-
-		<script type="text/javascript">
-$(function () {
-    $('#container').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'Productos'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Producto',
-            data: [
-
-            <?php
-
-                 foreach( $datos as $row  ){
-            ?>
-                [ '<?php echo $row['nom_prod'] ?> '  , <?php echo $row['stok_prod'] ?> ],
-              <?php  } ?>
-
-
-
-            ]
-        }]
-    });
-});
-
-
-		</script>
-	</head>
-	<body>
-<script src="estilos/js/highcharts.js"></script>
-<script src="estilos/js/modules/exporting.js"></script>
-<script src="estilos/js/highcharts-3d.js"></script>
-
-
-<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 <!-- ---------------------------------------------------------------------- -->
 
-</div>
+
             <?php        
 if(isset($_REQUEST['filtro'])){
             // evento select producto--------------------------------------------------------------------------------------------------------
@@ -162,12 +89,9 @@ if(isset($_REQUEST['filtro'])){
                             <form action="CU0014-alertas.php" method="POST">
                                 <select name="producto" class="form-control">
                                     <?php 
-                                    $objp= new ControllerDoc();
-                                    $datos = $objp->verProductos();
-                                    
-                                  $objModProd->ver($datos);
+             
+                                    $datos = $objCon->verProductos();
                                     foreach($datos as $i =>$row){
-                                    //while ($row = $datos->fetch_array()) {
                                     ?>
                                         <option value="<?= $row['ID_prod']  ?>"><?= $row['nom_prod']  ?></option>
                                     <?php } // fin de while productos    
@@ -184,8 +108,7 @@ if(isset($_REQUEST['filtro'])){
              //   } // fin de ver productos-------------------------------------------------------------------
         break;
         case 2:
-                // evento de busqueda producto por ID
-               // if ($_GET['filtro'] == 2) { ?>
+         ?>
                     <div class="card col-md-8 mx-auto my-4 shadow ">
                         <div class="card-body ">
                             <h5 class="card-title text-center ">Digite id de producto</h5>
@@ -209,8 +132,8 @@ if(isset($_REQUEST['filtro'])){
                             <form action="CU0014-alertas.php" method="POST">
                                 <select name="categoria" class="form-control">
                                     <?php 
-                                    $objC = new ControllerDoc();
-                                    $datos = $objC->verCategoria();
+    
+                                    $datos = $objCon->verCategoria();
                                     foreach($datos as $i =>$row){
 
                                     ?>
@@ -249,21 +172,20 @@ if(isset($_REQUEST['filtro'])){
 
 //----------------------------------------------------------------------------------------------------------------------------------
                 // CAPTURA DE DATOS SEGUN EL EVENTO
-                $objp = $objModProd;
                 if (isset($_POST['accion'])) {
                     // ver cantidad de productos por nombre
                     switch ($_POST['accion']) {
                         case 'alertaVerProducto':
                             $id = $_POST['producto'];
-                            $prod = $objp->verProductosId($id);
+                            $prod = $objCon->verProductosId($id);
                         break;
                         case 'alertaVerProductoID':
                             $id = $_POST['idProducto'];
-                            $prod = $objp->verProductosId($id);
+                            $prod = $objCon->verProductosId($id);
                         break;
                         case 'selectCategoria':
                             $id = $_POST['categoria'];
-                            $prod = $objp->verPorCategoria($id);
+                            $prod = $objCon->verPorCategoria($id);
                         default:
                         break;
                     }
@@ -321,7 +243,7 @@ if(isset($_GET['stockGeneral'])){
                             </tr>
                         </thead>
                         <?php 
-                        $datos = $objp->verProductos();
+                        $datos = $objCon->verProductos();
                         foreach($datos as $i =>$row){
                         //while ($row = $datos->fetch_array()) {
                             $p  =  $row['stok_prod'];

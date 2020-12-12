@@ -218,10 +218,27 @@ foreach ($datos as $i  => $d) {
                                 echo "Inactivo";
                             }  ?></td>
                         <td>
-                            <a href="EditarUsuario.php?ID_us=<?= $d['ID_us'] ?> " class="btn btn-circle btn-dark"><i class="fas fa-marker"></i></a>
+                            <a href="EditarUsuario.php?ID_us=<?= $d['ID_us'] ?> "
+                                class="btn btn-circle btn-dark"
+                                data-bs-toggle="tooltip" data-bs-placement="right" title="Editar usuario"
+                            >
+                                <i class="fas fa-marker"></i>
+                            </a>
                             <?php if ($u['usuario']['ID_rol_n'] == 1) {     ?>
-                                <a onclick="activarCuenta( <?php echo $d['ID_us']   ?> )" href="#" class="btn btn-circle btn-success"><i class="fas fa-check-square"></i> </a>
-                                <a onclick="desactivarCuenta( <?php echo $d['ID_us']   ?> )" href="#" class="btn btn-circle btn-danger"><i class="far fa-trash-alt"></i></a>
+                                <a onclick="activarCuenta( <?php echo $d['ID_us']   ?> )"
+                                    href="#" 
+                                    class="btn btn-circle btn-success"
+                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Activar cuenta"
+                                >
+                                 <i class="fas fa-check-square"></i> 
+                                </a>
+                                <a onclick="desactivarCuenta( <?php echo $d['ID_us']   ?> )" 
+                                    href="#" 
+                                    class="btn btn-circle btn-danger"
+                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Desactivar cuenta"
+                                >
+                                <i class="far fa-trash-alt"></i>
+                                </a>
                             <?php }  ?>
                         </td>
                     </tbody>

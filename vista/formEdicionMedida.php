@@ -7,8 +7,8 @@ cardtitulo("Editar medida");
 $objModMed = new ControllerDoc();
 
 //Accion editar 
-if ((isset($_GET['id']))) {
-    $id = $_GET['id'];
+if ((isset($_POST['id']))) {
+    extract($_POST);
     $datos = $objModMed->verMedidaPorId($id);
         foreach($datos as $i => $d){
 ?>
@@ -18,11 +18,12 @@ if ((isset($_GET['id']))) {
                     <div class="card">
                         <div class="card-header">Registro</div>
                         <div class="card-body">
-                            <form action="../controlador/api.php?id=<?= $_GET['id'] ?>&&apicall=insertUdateMedia"  method="POST">
+                            <form action="../controlador/api.php"  method="POST">
                                 <div class="form-group"><input class="form-control" type="text" name="nom" placeholder="Medida" value="<?= $d[1]  ?>" required autofocus maxlength="35"></div>
                                 <div class="form-group"><input class="form-control" type="text" name="acron" placeholder="Acronimo" value="<?= $d[2]  ?>" required autofocus maxlength="5"></div>
-                                <input type="hidden" name="accion" value="insertUdateMedia">
-                                <div class="form-group"><input class="form-control btn btn-primary" type="submit" name="submit"></div>
+                                <input type="hidden" name="apicalp" value="insertUdateMedia">
+                                <input type="hidden" name="id" value="<?= $_POST['id'] ?>">
+                                <div class="form-group"><input class="form-control btn btn-primary" type="submit" value="Actualizar medida"></div>
                             </form>
                         </div><!-- fin card body -->
                     </div><!-- fin de card -->

@@ -68,7 +68,11 @@ $objModModi = new ControllerDoc();
                     <td><?php  echo $row['nom_modific'] ?></td>
                     <td><?php  echo $row['nom_rol'] ?></td>
                     <td>
-                        <a href="../controlador/api.php?apicall=deleteLog&&id=<?= $row[0]  ?>" class="btn btn-circle btn-danger"><i class="far fa-trash-alt"></i></a>
+                        <a data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar actividad"
+                        href="../controlador/api.php?apicall=deleteLog&&id=<?= $row[0]  ?>" 
+                        class="btn btn-circle btn-danger">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
                     </td>
                 </tbody>
         <?php

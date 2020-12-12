@@ -5,8 +5,8 @@ rutFromIni();
 cardtitulo("Editar producto");
 $objCon = new ControllerDoc();
 
-if (isset($_GET)) {
-    extract($_GET);
+if (isset($_POST)) {
+    extract($_POST);
     $aC = $objCon->ControllerEditaProductos($id);
     if ($aC['response_status'] == 'OK') {
         $categoria =  $aC['response_msg'][0];
@@ -121,6 +121,9 @@ foreach ($proveedor as $p) {
         </div><!-- fin card body interno -->
     </div><!-- fin de container fluid -->
 </div><!-- Card externo -->
+
+
+
 
 
 <?php

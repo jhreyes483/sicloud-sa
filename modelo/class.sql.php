@@ -588,7 +588,7 @@ public function loginUsuarioModel($datosModel){
          WHERE ID_categoria = :ID_categoria ";
       $consulta = $this->db->prepare($sql);
       $consulta->bindValue(":ID_categoria", $a[0], PDO::PARAM_INT );
-      $consulta->bindValue(":nom_categoria", $a[1], PDO::PARAM_STR);
+      $consulta->bindValue(":nom_categoria", $a[1], PDO::PARAM_STR );
       $result = $consulta->execute();
       if($result){ 
          return true;
