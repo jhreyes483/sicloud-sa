@@ -540,7 +540,6 @@ if(isset($_GET['apicall'])){
         $response['error']      =  true;
         $response['message']    = $_SESSION['message'] = 'Error al eliminar log'; 
         $_SESSION['color']      = 'danger';
-        
      }
      header( 'location:  ../vista/formControl.php');
    break;
@@ -560,8 +559,12 @@ if(isset($_GET['apicall'])){
    // Empujar los valores apropiados en la consulta json
    if( !isset($_POST['apicalp'])){
    $response['message'] = 'Llamado invalido del api';
+}else{
+   ControllerDoc::ver($_POST['apicalp']);
+
 }
 }
+
 
 switch ($_POST['apicalp']) {
    case 'venta':
@@ -571,9 +574,37 @@ switch ($_POST['apicalp']) {
       $objFac->facturar($a, 1);
       header( 'location:  ../vista/mostrarCarrito.php');
       break;
+   case'updateProducto':
+     // $db->editarProducto()
+     ControllerDoc::ver($_POST);
+     extract($_POST);
+      $a = [
+         $ID_prod, // 0
+         $nom_prod, // 1
+         $val_prod, // 2
+         $stok_prod, // 3
+         $estado_prod, // 4
+          $CF_categoria, // 5
+          $CF_tipo_medida // 6
+         ];
+      
+      $r = $db->editarProducto($a);
+      if($r){
+         $response['error']      = false;
+         $response['menssage']   = $_SESSION['message'] = 'Edito producto '.$nom_prod.' de manera exitoza';
+         $_SESSION['color']      = 'success';
+      }else{
+         $response['error']      =  true;
+         $response['message']    = $_SESSION['message'] = 'Error al editar producto '.$nom_prod; 
+         $_SESSION['color']      = 'danger';
+      
+      }
+      header( "location:  ../vista/editarProducto.php?id=$ID_prod");
+
+      break;
    
    default:
-      # code...
+     echo 'no esta en metodo';
       break;
 }
 

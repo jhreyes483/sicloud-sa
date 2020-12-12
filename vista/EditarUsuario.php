@@ -4,11 +4,7 @@ rutFromIni();
 $objSession = new Session;
 $us = $objSession->desencriptaSesion();
 
-
-
-
 $id = $_GET['ID_us'];
-echo $id;
 $objCon =  new ControllerDoc();
 $datosUsusario  = $objCon->selectUsuarios($id);
 $datosRol       = $objCon->verRol();

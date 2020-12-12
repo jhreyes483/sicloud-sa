@@ -274,6 +274,26 @@ class ControllerDoc
     }
     // Metodos de categoria 
     //"CU004-crearProductos.php"
+
+//editarProducto.php
+    public function ControllerEditaProductos($id){
+        $producto   =  $this->objModUs->verProductosId($id);
+        $categorias =  $this->objModUs->verCategorias();
+        $medida     =  $this->objModUs->verMedida();
+        $provedor   =  $this->objModUs->verProveedor();
+        $estado     =[ 'estandar'  , 'promocion' ]; 
+        if( count($categorias) == 0)  return ['response_status' => 'error', 'response_msg' => 'No hay datos de categoria' ];
+        if( count($categorias) == 0)  return ['response_status' => 'error', 'response_msg' => 'No hay datos de categoria' ];
+        if( count($medida    ) == 0)  return ['response_status' => 'error', 'response_msg' => 'No hay datos de medida' ];
+        if( count($producto  ) == 0)  return ['response_status' => 'error', 'response_msg' => 'El producto no existe' ];
+        return  [ 'response_status' => 'OK', 'response_msg' =>  [$categorias , $medida, $provedor, $producto , $estado] ];
+    }
+
+    public function editarProducto($a){
+        return $this->objModUs->editarProducto($a);
+    }
+
+
     public function verCategorias()
     {
         return $this->objModUs->verCategorias();

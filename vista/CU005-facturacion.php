@@ -290,11 +290,6 @@ if ($in == false) {
             </div>
         </div>
         <?php
-
-
-
-
-
         rutFromFin();
         ?>
 

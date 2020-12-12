@@ -21,7 +21,6 @@ if( isset($accion)){
         break;
         case 'agregar':
             // Agraga prducto a factura
-            ECHO  $val_prod;
               $subTotal = ($cantidad *  $val_prod);
               $_SESSION['venta'][] = [
                   $ID_prod,
@@ -43,7 +42,6 @@ if( isset($accion)){
           header("Location: ../vista/CU005-facturacion.php?ID=$ID");
         break;
         case 'facturarInterno':
-          ControllerDoc::ver($_POST);
           $obj->facturar($_SESSION['venta'] , 0);            
         break;
     }
@@ -103,20 +101,17 @@ public function facturar($a , $tipo = 1){
                     $_POST['ID'],
                     $_POST['FK_tipo_doc'],
                 ];
-                //echo $_POST['ID'];
-                //echo $_POST['FK_tipo_doc'];
 
-               // die();
                 $ID = $this->session['usuario']['ID_us'];
 
              $r =   $this->objMod->insertaProductosFactura($aP);
              if($r){
-                 $_SESSION['venta'] = null;
+                 $_SESSION['venta']  = null;
                  $_SESSION['message']= "Facturo de manera exitosa, facturea numero  $id_factura";
-                 $_SESSION['color'] = "success";
+                 $_SESSION['color']  = "success";
              }else{
-                $_SESSION['message']= "Error al facuturar";
-                $_SESSION['color'] = "danger";
+                $_SESSION['message'] = "Error al facuturar";
+                $_SESSION['color']   = "danger";
              }
             }
             header("Location: ../vista/CU005-facturacion.php?ID=$ID");

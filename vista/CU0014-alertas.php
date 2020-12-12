@@ -72,16 +72,79 @@ if (isset($_SESSION['message'])) {
 
 $objModProd = new ControllerDoc();
 $datos = $objModProd->verProductosGrafica();
+//ControllerDoc::ver($datos);
 //echo '<pre>'; print_r($datos);  echo '</pre>'; //die('FIN');
-?>
-<div class="col-md-9">
-<!-- --------------------------------------------------------------------- -->
 
+
+
+
+?>
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
+<!-- Grafica torta -->
+
+
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+		<script type="text/javascript">
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Productos'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Producto',
+            data: [
+
+            <?php
+
+                 foreach( $datos as $row  ){
+            ?>
+                [ '<?php echo $row['nom_prod'] ?> '  , <?php echo $row['stok_prod'] ?> ],
+              <?php  } ?>
+
+
+
+            ]
+        }]
+    });
+});
+
+
+		</script>
 	</head>
 	<body>
 <script src="estilos/js/highcharts.js"></script>
 <script src="estilos/js/modules/exporting.js"></script>
 <script src="estilos/js/highcharts-3d.js"></script>
+
+
 <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 <!-- ---------------------------------------------------------------------- -->
 

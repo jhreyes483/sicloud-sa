@@ -1251,7 +1251,6 @@ public function delteNotificacion($id){
    } // fin de javaScript
 
 
-
    //query ver productos                                        R
    public function verProductos(){
       $sql = "SELECT P.ID_prod , P.img , P.nom_prod , 
@@ -1295,12 +1294,16 @@ public function delteNotificacion($id){
    //query ver productos                                       
    public function verProductosId($id){
       $sql = "SELECT P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , 
-      C.nom_categoria, T_M.nom_medida
-         from producto P 
-         join categoria C on P.CF_categoria = C.ID_categoria 
-         join tipo_medida T_M on P.CF_tipo_medida = T_M.ID_medida 
-         WHERE ID_prod = '$id' ";
+      C.nom_categoria, T_M.nom_medida, 
+      P.CF_categoria, P.CF_tipo_medida, 
+      FK_rut
+         FROM producto P 
+         LEFT JOIN categoria C ON P.CF_categoria = C.ID_categoria 
+         LEFT JOIN tipo_medida T_M ON P.CF_tipo_medida = T_M.ID_medida 
+         LEFT JOIN det_producto DP ON P.ID_prod = DP.FK_prod
+         WHERE ID_prod = :ID_prod ";
       $stm = $this->db->prepare($sql);
+      $stm->bindValue(":ID_prod", $id, PDO::PARAM_STR );;
       $stm->execute();
       $result = $stm->fetchAll();
       return $result;
@@ -1327,11 +1330,13 @@ public function delteNotificacion($id){
 
    //EDITAR PRODUCTO                                             U
    public function editarProducto($a){
+    //  ControllerDoc::ver($a, 1);
+      //die('modelo');
       $sql = "UPDATE producto SET ID_prod = :ID_prod , 
          nom_prod = :nom_prod , val_prod = :val_prod , 
          stok_prod = :stok_prod , estado_prod = :estado_prod, 
          CF_categoria = :CF_categoria , CF_tipo_medida = :CF_tipo_medida  
-      WHERE ID_prod = ? ";
+      WHERE ID_prod = :ID_prod";
       $stm = $this->db->prepare($sql);
       $stm = $this->db->prepare($sql);
       $stm->bindValue(":ID_prod",        $a[0] , PDO::PARAM_STR );
