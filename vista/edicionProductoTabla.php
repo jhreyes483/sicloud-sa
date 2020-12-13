@@ -46,6 +46,7 @@ if (isset($_SESSION['message'])) {  ?>
         </tr>
     </thead>
     <?php
+
     // $datos = $objp->verProductos();
     foreach ($datos as $i => $row) {
         //while ($row = $datos->fetch_array()) {

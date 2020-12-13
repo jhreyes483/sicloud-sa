@@ -1276,7 +1276,7 @@ public function delteNotificacion($id){
    public function verProductos(){
       $sql = "SELECT P.ID_prod , P.img , P.nom_prod , 
       P.val_prod , P.stok_prod , P.estado_prod , 
-      C.nom_categoria , M.nom_medida
+      C.nom_categoria , M.nom_medida , P.img
       from producto P join categoria C on C.ID_categoria = P.CF_categoria
       join tipo_medida M on P.CF_tipo_medida = M.ID_medida
       order by  P.stok_prod  desc , P.nom_prod asc;";
@@ -1334,7 +1334,7 @@ public function delteNotificacion($id){
    public function verJoin($id){
       $sql = "SELECT C.ID_categoria , C.nom_categoria, 
          P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , P.estado_prod , 
-         T.ID_medida , T.nom_medida , T.acron_medida, EP.nom_empresa
+         T.ID_medida , T.nom_medida , T.acron_medida, EP.nom_empresa , P.img
          FROM categoria C 
          JOIN producto P ON C.ID_categoria = P.CF_categoria 
          JOIN tipo_medida T ON T.ID_medida = P.CF_tipo_medida

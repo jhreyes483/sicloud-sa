@@ -27,15 +27,15 @@ if ($in == false) {
 } else {
 
 function selectProducto(){
+    
     $objCon = new ControllerDoc();
     $datos = $objCon->verProductos();
 
-    foreach($datos as $row) { 
-      
-        if( isset($_SESSION['id_p']) && $_SESSION['id_p'] == $row['ID_prod']  )
-        echo "selected"; 
+    foreach($datos as $row) {   
+        if(isset($_SESSION['id_p']))  $prod  = $_SESSION['id_p'];
+        if(isset($_GET['p']))         $prod  = $_SESSION['id_p'];
     ?>
-        <option value="<?= $row['ID_prod']   ?>" ><?= $row['nom_prod'] ?></option>
+        <option <?= ( $prod  ==  $row['ID_prod'] )? 'selected' :''; ?> value="<?= $row['ID_prod']   ?>" ><?= $row['nom_prod'] ?></option>
     <?php } 
 }
 $objCon = new ControllerDoc();
@@ -50,6 +50,7 @@ $objCon = new ControllerDoc();
 
 //$id1    = 2041172460;
 $datos = $objCon->tablaProducto($_SESSION['id_p']);
+//ControllerDoc::ver($datos, 1);
 foreach($datos as $row ){
     $idProd       =    $row['ID_prod']	 ;        
     $nomProduct   =    $row['nom_prod']	  ;   
@@ -106,8 +107,11 @@ if ($formulario == true){  ?>
 
         <div class="card card-body text-center  col-md-10 mx-auto my-4 ">
             <div class=" container-fluid ">
-                <div class="card card-body shadow mb-2"> <br>
-                    <div class="row">
+                <div class="card card-body shadow mb-2 ">
+                <div class="mx-auto text-center ">
+                                <img class="border border-secondary shadow img-profile ml-3 rounded-circle border-info " src="fonts/img/<?= ($row['img'] != '')?  $row['img'] : imgProducto; ?>" width="120" height="140">
+        </div>
+                    <div class="row my-2">
                             <div class="col-md-4">
                                 <!-- inicio de divicion 1 -->
                                 <!-----------INI FORM INGREZAR CANTIDAD------------------------------------------------------------------------------------------>
@@ -151,6 +155,9 @@ if ($formulario == true){  ?>
                 </div><!-- fin card body interno -->
             </div><!-- fin de container fluid -->
         </div><!-- Card externo -->
+
+
+                                </div>
 <?php
       }else{ echo "No hay datos";} // fin del while
 }
