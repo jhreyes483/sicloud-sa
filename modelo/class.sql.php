@@ -14,8 +14,9 @@ class SQL extends Conexion{
    //==================================================
 
    public function verPuntosYusuario($id){
-      $sql = " SELECT U.ID_us  , U.nom1 , U.nom2 , U.ape1 , U.ape2 , U.fecha , U.pass , U.foto , U.correo , 
-      TD.nom_doc , 
+      $sql = " SELECT U.ID_us  , U.nom1 , U.nom2 , U.ape1 , 
+      U.ape2 , U.fecha , U.pass , U.foto , U.correo , 
+      U.FK_tipo_doc , 
       RU.estado , 
       R.ID_rol_n , R.nom_rol , 
       P.puntos
@@ -842,20 +843,29 @@ public function eliminarErrorLog($id)
 
 
    public function facturar($a){
-      $sql ="INSERT INTO `factura`( `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`) 
-      VALUES (  :total , :fecha , :status ,:iva, :tipo_pago )";
+      $sql ="INSERT INTO `factura`( `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`,`FK_tipoV`) 
+      VALUES (  :total , :fecha , :status ,:iva, :tipo_pago , :pago)";
       $consulta = $this->db->prepare($sql);
       $consulta->bindValue(":total", $a[0], PDO::PARAM_INT);
       $consulta->bindValue(":fecha", $a[1], PDO::PARAM_STR);
       $consulta->bindValue(":status", $a[2], PDO::PARAM_STR);
       $consulta->bindValue(":iva", $a[3], PDO::PARAM_STR);
       $consulta->bindValue(":tipo_pago", $a[4], PDO::PARAM_INT);
+      $consulta->bindValue(":pago", $a[5], PDO::PARAM_INT);
       $result = $consulta->execute();
       $id = $this->db->lastInsertId();
 
       return $id;
    }
 
+
+
+     public function verTipoV(){
+        $sql= "SELECT * FROM `tipo_venta`";
+        $stm = $this->db->prepare($sql);
+        $stm->execute();
+        return $stm->fetchAll(); 
+     }
    public function insertaProductosFactura($a){
       $sql = "INSERT INTO det_factura( FK_det_factura ,  FK_det_prod, precio_unt, estado, cantidad, CF_us, CF_tipo_doc) 
       VALUES (:FK_factura, :FK_prod, :precioU, :estado, :cantidad, :CF_us, :CF_tipo_doc)";
@@ -966,13 +976,23 @@ public function eliminarErrorLog($id)
       return $result;
    }
 // valida factura en un periodo de fechas
-   public function verIntervaloFecha($fechaIni, $fechaFin){
-      $sql = "SELECT * FROM factura
-          WHERE fecha <= '$fechaFin' AND  fecha >= '$fechaIni' 
+   public function verIntervaloFecha($fF, $fI){
+      $sql = "SELECT  DISTINCT TD.nom_doc , U.ID_us,  U.nom1,  U.nom2 , U.ape1 , U.ape2 , U.correo, 
+      F.ID_factura, F.fecha, D.dir , TP.nom_tipo_pago , F.total
+               FROM factura F 
+               LEFT JOIN tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
+               LEFT JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               LEFT JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
+               LEFT JOIN usuario U  on U.ID_us =  DF.CF_us
+               LEFT JOIN direccion D on D.CF_us = U.ID_us
+               LEFT JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+       WHERE F.fecha BETWEEN  '$fF' AND  '$fI' 
           ORDER BY fecha ASC";
       $stm = $this->db->prepare($sql);
       $stm->execute();
       $result = $stm->fetchAll(); 
+      //echo $sql;
+      //die();
       return $result;
    }
 // Ver datos  usuario en factura
@@ -990,7 +1010,7 @@ public function eliminarErrorLog($id)
    }
    public function verFactura($id){
       $sql = "SELECT  TD.nom_doc , U.ID_us,  U.nom1,  U.nom2 , U.ape1 , U.ape2 , U.correo, 
-      F.ID_factura, F.fecha, D.dir , TP.nom_tipo_pago , F.total
+      F.ID_factura, F.fecha, D.dir , TP.nom_tipo_pago , F.total, V.tipo
                FROM factura F 
                LEFT JOIN tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
                LEFT JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
@@ -998,6 +1018,7 @@ public function eliminarErrorLog($id)
                LEFT JOIN usuario U  on U.ID_us =  DF.CF_us
                LEFT JOIN direccion D on D.CF_us = U.ID_us
                LEFT JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               JOIN tipo_venta V ON V.id_tipoV =  FK_tipoV
                WHERE ID_factura = ?
          LIMIT 1";
       $stm = $this->db->prepare($sql);
@@ -1593,7 +1614,7 @@ public function insertPuntos( $a ){
 
    // metodo ver roles                            R
    public function verRol(){
-      $sql = "SELECT * FROM rol";
+      $sql = "SELECT DISTINCT * FROM rol";
       $consulta = $this->db->prepare($sql);
       $consulta->execute();
       $result = $consulta->fetchAll();

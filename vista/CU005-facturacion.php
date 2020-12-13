@@ -37,6 +37,7 @@ if ($in == false) {
             $aU    = $aC['response_msg'][0];
             $aP    = $aC['response_msg'][1];
             $aPgo  = $aC['response_msg'][2];
+            $aTipV = $aC['response_msg'][3];
         } else {
             $error = '<div class="col-lg-6 col-12 col-sm-12 shadow-lg mx-auto text-center my-4  alert alert-danger alert-dismissible fade show" role="alert">
             <h1>' . $aC['response_msg'] . '</h1> <br> 
@@ -45,6 +46,7 @@ if ($in == false) {
         }
     }
 ?>
+
 
     <!DOCTYPE html>
     <html lang="es">
@@ -72,8 +74,6 @@ if ($in == false) {
                 </div>
             <?php
                 setMessage();
-
-
             }
             ?>
             <div class="row">
@@ -84,9 +84,9 @@ if ($in == false) {
                     <div class="card card-body">
 
                         <form action="" method="post">
-                        <i class="fas fa-user-plus mr-2"></i>
+                            <i class="fas fa-user-plus mr-2"></i>
                             <button type="submit" class="btn btn-outline-success col-md-1 my-1 btn-sm">Buscar</button>
-                            
+
                             <div class="card card-body shadow">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -102,21 +102,70 @@ if ($in == false) {
                             <div class="col-md-4">
                                 <div class="form-group"><label for="">Telefono</label><input type=»text» readonly=»readonly» value="<?= $aU[0][13]  ?>" class="form-control" name="tel" id="nit_cliente" /></div>
                             </div><!-- fin de primera divicion de 3 -->
-                            </div>
-                            <div class="row">
-                                
-                                <div class="col-md-12">
-                                <label for="" class="text center mx-auto">Direccion</label>
-                                <input class="form-control" type=»text» readonly=»readonly» value="<?= $aU[0][14] ?>"></div>
-                            </div>
-                        <?php
-                        }
-                        ?>
                     </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <label for="" class="text center mx-auto">Direccion</label>
+                            <input class="form-control" type=»text» readonly=»readonly» value="<?= $aU[0][14] ?>"></div>
+                    </div>
+                <?php
+                        }
+                ?>
                 </div>
             </div>
+        </div>
 
-            <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto">
+        <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto">
+            <thead class="bg-dark text-white text-center">
+                <tr>
+                    <th>Id producto</th>
+                    <th>Producto</th>
+                    <th>Stock</th>
+                    <th>Cantidad</th>
+                    <th><i class="fas fa-dollar-sign mr-2"></i>Valor</th>
+                    <th>Categora</th>
+                    <th>
+                        Agregar
+                    </th>
+                </tr>
+            </thead>
+            <?php
+            if (isset($aP)) {
+                $ID = (isset($ID)) ? $ID : 0;
+                foreach ($aP as $i => $d) {
+            ?>
+                    <form action="../controlador/controllerFacturacion.php" method="POST">
+                        <tbody>
+                            <tr>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[2] ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="stok_prod" value="<?= $d[4] ?>"></td>
+                                <td><input class="form-control" type=number name="cantidad" value="<?= 1 ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="val_prod" value="<?= ($d[3])  ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="<?= $d[6] ?>"></td>
+                                <input type="hidden" name="ID" value="<?= $ID ?? 0 ?>">
+                                <input type="hidden" name="accion" value="agregar">
+                                <td>
+                                    <button type="submit" class="btn btn-circle btn-success btn-sm" href="" data-bs-toggle="tooltip" data-bs-placement="right" title="Agragar producto a factura">
+                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </form>
+        <?php
+                }
+            }
+        }
+        ?>
+        <p class="e">Productos disponibles</p>
+        </table>
+        <?php
+        if (isset($_SESSION['venta'])) {
+        ?>
+            <p class="e">Productos a facturar</p>
+            <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto shadow rounded">
                 <thead class="bg-dark text-white text-center">
                     <tr>
                         <th>Id producto</th>
@@ -124,170 +173,149 @@ if ($in == false) {
                         <th>Stock</th>
                         <th>Cantidad</th>
                         <th><i class="fas fa-dollar-sign mr-2"></i>Valor</th>
-                        <th>Categora</th>
-                        <th>
-                            Agregar
-                        </th>
+                        <th>Sub total</th>
+                        <th></th>
                     </tr>
                 </thead>
-                <?php
-                if (isset($aP)) {
-                    $ID = (isset($ID)) ? $ID : 0;
-                    foreach ($aP as $i => $d) {
-                ?>
-                        <form action="../controlador/controllerFacturacion.php" method="POST">
-                            <tbody>
-                                <tr>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[2] ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="stok_prod" value="<?= $d[4] ?>"></td>
-                                    <td><input class="form-control" type=number name="cantidad" value="<?= 1 ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="val_prod" value="<?=($d[3])  ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="<?= $d[6] ?>"></td>
-                                    <input type="hidden" name="ID" value="<?= $ID ?? 0 ?>">
-                                    <input type="hidden" name="accion" value="agregar">
-                                    <td>
-                                        <button type="submit" class="btn btn-circle btn-success btn-sm" href="" data-bs-toggle="tooltip" data-bs-placement="right" title="Agragar producto a factura">
-                                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </form>
-            <?php
-                    }
-                }
-            }
-            ?>
-            <p class="e">Productos disponibles</p>
-            </table>
-            <?php
-            if (isset($_SESSION['venta'])) {
-            ?>
-                <p class="e">Productos a facturar</p>
-                <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto shadow rounded">
-                    <thead class="bg-dark text-white text-center">
-                        <tr>
-                            <th>Id producto</th>
-                            <th>Producto</th>
-                            <th>Stock</th>
-                            <th>Cantidad</th>
-                            <th><i class="fas fa-dollar-sign mr-2"></i>Valor</th>
-                            <th>Sub total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <form action="" method="post">
-                        <?php
+                <form action="" method="post">
+                    <?php
 
-                        $ID = (isset($ID)) ? $ID : $u['usuario']['ID_us'];
-                        foreach ($_SESSION['venta'] as $i => $d) {
-                        ?>
-                            <tbody>
-                                <tr>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[1] ?>"></td>
-                                    <td><input class="form-control" type=»number» readonly=»readonly» name="stok_prod" value="<?= $d[2] ?>"></td>
-                                    <td><input class="form-control" type=»number» readonly=»readonly» name="val_prod" value="<?= $d[3] ?>"></td>
-                                    <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="$<?=number_format( ($d[4]??0), 0, ',', '.')  ?>"></td>
-                                    <td><input class="form-control" type=»number» readonly=»readonly» name="sub_total" value="$<?= number_format(($d[6]??0), 0, ',', '.')  ?>"></td>
-                                    <td>
-                                        <a class="btn btn-circle btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar porducto de factura" href="../controlador/controllerFacturacion.php?accion=eliminar&id_prod=<?php echo $i . '&ID=' . $ID; ?>">
-                                            <i class="far fa-trash-alt" aria-hidden="true"></i>
-                                        </a>
-                                    </td>
-                               
-                     
-                                  
-                                    <input type="hidden" name="ID" value="<?= $ID ?>">
-                                    <input type="hidden" name="estado" value="Venta">
-                                </tr>
-                            <?php
-                        }
-                            ?>
-                            <!-- la de los perros, no se acepta -->
-                            <div class="col-md-2">
-                                <td colspan="5" class="mt-2" align="right"> <label for="total" class="lead">Total:</label> </td>
-                            </div>
-                            <?php $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
-                            $totFactura       =  number_format(($totFactura??0), 0, ',', '.');
-                            
-                            ?>
-                            <div class="col-md-2 ">
-                                <td colspan="6" class="mt-2 lead" align="right"> $ <?= $totFactura ?> </td>
-                            </div>
+                    $ID = (isset($ID)) ? $ID : $u['usuario']['ID_us'];
+                    foreach ($_SESSION['venta'] as $i => $d) {
+                    ?>
+                        <tbody>
+                            <tr>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[1] ?>"></td>
+                                <td><input class="form-control" type=»number» readonly=»readonly» name="stok_prod" value="<?= $d[2] ?>"></td>
+                                <td><input class="form-control" type=»number» readonly=»readonly» name="val_prod" value="<?= $d[3] ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="$<?= number_format(($d[4] ?? 0), 0, ',', '.')  ?>"></td>
+                                <td><input class="form-control" type=»number» readonly=»readonly» name="sub_total" value="$<?= number_format(($d[6] ?? 0), 0, ',', '.')  ?>"></td>
+                                <td>
+                                    <a class="btn btn-circle btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar porducto de factura" href="../controlador/controllerFacturacion.php?accion=eliminar&id_prod=<?php echo $i . '&ID=' . $ID; ?>">
+                                        <i class="far fa-trash-alt" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+
+
+
+                                <input type="hidden" name="ID" value="<?= $ID ?>">
+                                <input type="hidden" name="estado" value="Venta">
                             </tr>
-                            </tbody>
-                </table>
-                </form>
+                        <?php
+                    }
+                        ?>
+                        <!-- la de los perros, no se acepta -->
+                        <div class="col-md-2">
+                            <td colspan="5" class="mt-2" align="right"> <label for="total" class="lead">Total:</label> </td>
+                        </div>
+                        <?php $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
+                        $totFactura       =  number_format(($totFactura ?? 0), 0, ',', '.');
 
-                <!-- Datos venta---------------------------------------------------------------------------------------------- -->
-                <div class="col-md-12">
-                    <br><br><br>
-                    <p class="e">Datos de venta</p>
-                    <div class="card card-body ">
-                        <div class="card card-body  shadow">
-                            <div class="row">
-                                <form action="../controlador/controllerFacturacion.php" method="post">
-                                    <div class="row">
-                                        <div class="col-lg-8">
-                                            <select class="form-control" name="pago">
-                                                <?php
-                                                foreach ($aPgo as $i => $row) {
-                                                ?>
-                                                    <option value="<?= $row[0] ?>"><?= $row[1] ?></option>
-                                                <?php }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-4 ml-auto">
-                                            <input type="hidden" name="FK_tipo_doc" value="<?= $aU[0][0] ?>">
-                                            <input type="hidden" name='ID' value="<?= $ID  ?>">
-                                            <input type="hidden" name='accion' value="facturarInterno">
-                                            
-                                            <button class="btn btn-success btn-sm"  type="submit"><i class="fas fa-file "></i>Facturar </button>
-                                            
-                                        </div>
+                        ?>
+                        <div class="col-md-2 ">
+                            <td colspan="6" class="mt-2 lead" align="right"> $ <?= $totFactura ?> </td>
+                        </div>
+                        </tr>
+                        </tbody>
+            </table>
+            </form>
+
+            <!-- Datos venta---------------------------------------------------------------------------------------------- -->
+            <div class="col-md-12">
+                <br><br><br>
+                <p class="e">Datos de venta</p>
+                <div class="card card-body ">
+                    <div class="card card-body  shadow">
+                        <div class="row">
+                            <form action="../controlador/controllerFacturacion.php" method="post">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <select class="form-control" name="pago">
+                                            <?php
+                                            foreach ($aPgo as $i => $row) {
+                                            ?>
+                                                <option value="<?= $row[0] ?>"><?= $row[1] ?></option>
+                                            <?php }
+                                            ?>
+                                        </select>
                                     </div>
-                                </form>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" name="tipo">
+                                            <?php
+                                            foreach ($aTipV as $i => $row) {
+                                            ?>
+                                                <option value="<?= $row[0] ?>"><?= $row[1] ?></option>
+                                            <?php }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-12"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 ">
+                                        <input type="hidden" name="FK_tipo_doc" value="<?= $aU[0][0] ?>">
+                                        <input type="hidden" name='ID' value="<?= $ID  ?>">
+                                        <input type="hidden" name='accion' value="facturarInterno">
+                                        <hr>
+                                        <div class="card card-body shadow-lg">
+                                        <button class="btn btn-success  my-2" type="submit"><i class="fas fa-file "></i>Facturar </button>
+                                        </div>
 
-                                <form action="../controlador/controllerFacturacion.php" method="post">
-                                    <input type="hidden" name="accion" value="anular">
-                                    <button class="btn btn-danger btn-sm"  type="submit"> <i class="far fa-trash-alt" aria-hidden="true"></i> <br>Anular</button>
-                                </form>
-                                <p class="ml-auto">
-                                    <label for="">Vendedor</label><br>
-                                    <i class="fas fa-user-plus mr-2"></i>
-                                    <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
-                                </p>
-                            </div><!-- fin de row -->
-                        </div><!-- fin de row -->
-                    </div><!-- fin de card -->
-                </div><br><br>
-            <?php
-            }
-            ?>
-            <div class="row">
-                <div class="col-md-12 col-lg-12 mx-auto">
-                    <div class="card my-4">
-                        <table id="tablaUsuarios" class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto shadow rounded">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Numero de Documento</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Correo</th>
-                                    <th>Rol</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                                    </div>
+                                    <div class="col-lg-6 ">
+
+                            </form>
+
+                            <form action="../controlador/controllerFacturacion.php" method="post">
+                                <input type="hidden" name="accion" value="anular">
+                                <hr>
+                                <div class="card card-body shadow-lg">
+                                <button class="btn btn-danger  my-2" type="submit"><i class="far fa-trash-alt"></i>Anular </button>
+                                </div>
+                                
+                            </form>
+                            </div>
+                            
+                            </div>
+                            <img class="ml-auto" height="150" width="150" src="fonts/factura.png" alt="">
                     </div>
+       
+                    <p class="ml-auto">
+
+ 
+                        <label for="">Vendedor</label><br>
+                        <i class="fas fa-user-plus mr-2"></i>
+                        <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
+                    </p>
+                </div><!-- fin de row -->
+            </div><!-- fin de row -->
+            </div><!-- fin de card -->
+            </div><br><br>
+        <?php
+        }
+        ?>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 mx-auto">
+                <div class="card my-4">
+                    <table id="tablaUsuarios" class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto shadow rounded">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Numero de Documento</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Correo</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
         </div>
         <?php
         rutFromFin();

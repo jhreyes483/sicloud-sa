@@ -7,6 +7,7 @@ $objConF    = new ControllerFactura();
 $objSession = new Session();
 $u = $objSession->desencriptaSesion();
 
+
 //comprobacion de rol
 $in = false;
 switch ($u['usuario']['ID_rol_n']) {
@@ -75,7 +76,7 @@ if ($in == false) {
                             <div class="row">
                                 <div class="col-lg-12 card card-body">ORDEN DE COMPRA <br>N-A</div>
                                 <div class="col-lg-12 card card-body">MEDIO DE PAGO<?php echo "<br>" . $row['nom_tipo_pago'];          ?> </div>
-                                <div class="col-lg-12 card card-body">TIPO <br> Venta </div>
+                                <div class="col-lg-12 card card-body">TIPO <br> <?= $row[12] ?> </div>
                             <?php } ?>
                             </div>
                         </div>

@@ -54,9 +54,11 @@ cardtitulo('Edicion producto')
                 <td><img class="card card-body  mx-auto" src="fonts/img/<?php echo $row['img']; ?>" alt="Card image cap" height="130px" width="150px"></td>
                 <td><?php echo $row['nom_medida'] ?></td>
 
-                <?php if ($s['usuario']['ID_rol_n'] == 1 || $s['usuario']['ID_rol_n'] == 1) {   ?>
+                <?php// if ($s['usuario']['ID_rol_n'] == 1 || $s['usuario']['ID_rol_n'] == 1) {   ?>
                     <td>
-                        <a class="btn  btn-success" href="CU003-ingresoProducto.php?consulta=Validar+exitencia&&p=<?php echo $row['ID_prod'] ?>">ingreso</a>
+                        <a class="btn  btn-success" href="CU003-ingresoProducto.php?consulta=Validar+exitencia&&p=<?php echo $row['ID_prod'] ?>"
+                        data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresar productos a inventario"
+                        >ingreso</a>
 
 
                     </td>
@@ -85,7 +87,7 @@ cardtitulo('Edicion producto')
                         ?>
                     </td>
 
-                <?php  }  ?>
+                <?php // }  ?>
 
 
             </tr>

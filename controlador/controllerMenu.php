@@ -29,7 +29,7 @@ public function __construct(){
     $this->aMenu['A'][1][2]      = ['Acumulación de puntos', 'CU006-acomulaciondepuntos.php'];
     $this->aMenu['A'][1][3]      = ['Facturacion', 'CU005-facturacion.php'];
     $this->aMenu['A'][1][4]      = ['Consulta factura', 'formFactura.php'];
-    $this->aMenu['A'][1][5]      = ['Inf Ventas', 'CU005-facturacion.php'];
+    $this->aMenu['A'][1][5]      = ['Inf Ventas', 'CU0012-informeVentas.php'];
     $this->aMenu['A'][2]         = ['PRODUCTOS'];
     $this->aMenu['A'][2][1]      = ['Catalogo', 'catalogo.php?ops=1'] ;
     $this->aMenu['A'][2][2]      = ['Crear producto', 'CU004-crearProductos.php'];
@@ -79,7 +79,7 @@ public function __construct(){
     $this->aMenu['S'][4]         = [ 'INF. VENTAS'];
     $this->aMenu['S'][4][1]      = [ 'FECHA','verFecha.php'];
     $this->aMenu['S'][4][2]      = [ 'RANGO','verRango.php'];
-    $this->aMenu['S'][4][3]      = ['CONSULTA FACTURA', 'infFactura.php'];
+    $this->aMenu['S'][4][3]      = ['CONSULTA FACTURAS', 'CU0012-informeVentas.php'];
     $this->aMenu['S'][5]         = [ 'PRODUCTOS'];
     $this->aMenu['S'][5][1]      = [ 'CATALOGO','catalogo.php?ops=1'];
     $this->aMenu['S'][5][2]      = [ 'ALERTAS','CU0014-alertas.php'];

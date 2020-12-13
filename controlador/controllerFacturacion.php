@@ -64,6 +64,7 @@ public function facturacion($id){
     $datosU = $this->objMod->selectUsuarios($id);
     $aProd  = $this->objMod->verProductos();
     $aPago  = $this->objMod->verPago();
+    $TipoV  = $this->objMod->verTipoV();
 
     if( count($datosU) == 0 ){ //$aC[0] = "Usuario no existe";  return $aC;
         return ['response_status' => 'error', 'response_msg' => 'No hay datos' ];
@@ -71,7 +72,8 @@ public function facturacion($id){
         return [ 'response_status' =>'OK', 'response_msg' => [
                     $datosU,
                     $aProd,
-                    $aPago
+                    $aPago,
+                    $TipoV
                     ]
                 ];    
     }
@@ -87,11 +89,14 @@ public function facturar($a , $tipo = 1){
             $aF =[
                 $total,
                 $fecha,
-                'venta interna',
+                'N/A',
                 $iva,
-                $_POST['pago']
+                $_POST['pago'],
+                $_POST['tipo']
             ];
+            
            $id_factura = $this->objMod->facturar($aF);
+
             foreach( $a as $i => $d ){
                 $aP= [
                     $id_factura,
@@ -99,7 +104,7 @@ public function facturar($a , $tipo = 1){
                     $d[6],
                     $d[3],
                     $_POST['ID'],
-                    $_POST['FK_tipo_doc'],
+                    $_POST['FK_tipo_doc']
                 ];
 
                 $ID = $this->session['usuario']['ID_us'];
@@ -107,10 +112,10 @@ public function facturar($a , $tipo = 1){
              $r =   $this->objMod->insertaProductosFactura($aP);
              if($r){
                  $_SESSION['venta']  = null;
-                 $_SESSION['message']= "Facturo de manera exitosa, facturea numero  $id_factura";
+                 $_SESSION['message']= "Facturo de manera exitosa, factura numero  $id_factura";
                  $_SESSION['color']  = "success";
              }else{
-                $_SESSION['message'] = "Error al facuturar";
+                $_SESSION['message'] = "Error al facturar";
                 $_SESSION['color']   = "danger";
              }
             }
@@ -129,10 +134,12 @@ public function facturar($a , $tipo = 1){
             $aF =[
                 $total,
                 $fecha,
-                'venta en linea',
+                'En proceso',
                 $iva,
-                5
+                5,
+                1
             ];
+          //
 
            $id_factura = $this->objMod->facturar($aF);
             foreach( $a as $i => $d ){
@@ -142,14 +149,14 @@ public function facturar($a , $tipo = 1){
                     $d['PRECIO'],
                     $d['CANTIDAD'],
                     $this->session['usuario']['ID_us'],
-                    $this->session['usuario']['FK_tipo_doc'],
+                    $this->session['usuario']['FK_tipo_doc']
                 ];
                 $r =   $this->objMod->insertaProductosFactura($aP);
                 if($r){
                    $_SESSION['message']= "Facturo de manera exitosa, factura numero  $id_factura";
                    $_SESSION['color'] = "success";
                 }else{
-                   $_SESSION['message']= "Error al facuturar";
+                   $_SESSION['message']= "Error al facturar";
                    $_SESSION['color'] = "danger";
                 }
             }
