@@ -43,7 +43,7 @@ if ($in == false) {
         } else {
             die('<div class="col-lg-6 col-12 col-sm-12 shadow-lg mx-auto text-center my-4  alert alert-danger alert-dismissible fade show" role="alert">
         <h1>' . $aC['response_msg'] . '</h1> <br> 
-        <a class="btn btn-outline-primary"  href="index.php">Seleccionar otra fecha</a>
+        <a class="btn btn-outline-primary"  href="#">Seleccione otra factura</a>
      </div>');
         }
 ?>
