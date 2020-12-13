@@ -1,6 +1,10 @@
 <?php
 define("KEY", "proyectoSicloud");
 define("COD", "AES-128-ECB");
+define("imgUsuario", "UserSinImagen.jpg");
+define("imgProducto", "ProductoSinImagen.png");
+
+
 $obj =new Session();
 
 class Session{

@@ -5,10 +5,29 @@ $objSession = new Session();
 $objP       = new ControllerDoc();
 $datos      = $objP->verProductos();
 $s          = $objSession->desencriptaSesion();
-cardtitulo('Edicion producto')
+$modulo     = ( isset($_GET['edit']) ) ?  'Editar producto' : 'Stock de productos'; 
+
+
+cardtitulo( $modulo  );
+
+if (isset($_SESSION['message'])) {  ?>
+    <!-- alerta boostrap -->
+    <div class="alert text-center col-md-4 mx-auto alert-<?= $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
+        <?php
+        echo  $_SESSION['message']  ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+<?php
+    setMessage();
+}
+
 ?>
+
+
 <table class="table table text-center table-striped  table-bordered bg-white table-sm col-md-10 col-sm-10 col-xs-12 mx-auto">
-    <thead>
+    <thead class="bg-white">
         <tr>
             <th>Nombre Producto</th>
             <th>Valor Producto</th>
@@ -51,7 +70,7 @@ cardtitulo('Edicion producto')
                 <td class=" <?php echo  $c  ?>"><?php echo $row['stok_prod'] ?></td>
                 <td><?php echo $row['estado_prod'] ?></td>
                 <td><?php echo $row['nom_categoria'] ?></td>
-                <td><img class="card card-body  mx-auto" src="fonts/img/<?php echo $row['img']; ?>" alt="Card image cap" height="130px" width="150px"></td>
+                <td><img class="card card-body  mx-auto" src="fonts/img/<?= ($row['img'] != '')?  $row['img'] : imgProducto; ?>" alt="Card image cap" height="130px" width="150px"></td>
                 <td><?php echo $row['nom_medida'] ?></td>
 
                 <?php// if ($s['usuario']['ID_rol_n'] == 1 || $s['usuario']['ID_rol_n'] == 1) {   ?>

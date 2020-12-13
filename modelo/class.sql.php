@@ -1213,7 +1213,7 @@ public function delteNotificacion($id){
          JOIN usuario U ON M.FK_us = U.ID_us
          JOIN rol_usuario R_U on U.ID_us = R_U.FK_us
          JOIN rol R on R_U.FK_rol = R.ID_rol_n
-         ORDER BY fecha";
+         ORDER BY fecha, hora";
       $consulta= $this->db->prepare($sql);
       $result = $consulta->execute();
       $result = $consulta->fetchAll();
@@ -1667,6 +1667,38 @@ public function insertPuntos( $a ){
          return false;
       }
    }
+
+
+
+//Borrar registro de rol de tabla Rol_usuario
+public function eliminarRoldeUsuario($id){ 
+   $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
+   $stm = $this->db->prepare($sql1);
+   $res = $stm->execute();
+      $res  = true;
+   if($res){
+      $sql2 = "DELETE FROM rol_usuario WHERE FK_us = $id";
+      $stm = $this->db->prepare($sql2);
+      $res1 = $stm->execute(); 
+   }
+   if($res1){
+      $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
+      $stm = $this->db->prepare($sql3);
+      $res2 = $stm->execute();
+   }
+   if($res2){
+      return true;
+   }else{
+      return false;
+   }
+}
+
+
+
+
+
+
+
 //======================================
 //======================================
 //CTELEFONO

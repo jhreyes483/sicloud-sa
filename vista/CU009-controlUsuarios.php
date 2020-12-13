@@ -31,7 +31,9 @@ if ($in == false) {
 
     $objCon = new ControllerDoc();
     $tabla = false;
-    cardtituloS("Administrador de solicitiudes")
+    cardtituloS("Administrador de solicitiudes");
+
+
 ?>
 
     <script>
@@ -203,7 +205,7 @@ foreach ($datos as $i  => $d) {
                     </thead>
                     <tbody>
                         <!-- Los nombres que estan en [''] son los mismos de los atributos de la base de datos de lo contrario dara un error -->
-                        <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?= $d['foto']; ?>" alt="Card image cap" height="65" width="70"></td>
+                        <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?=  ($d['foto'] != '' ) ?$d['foto']  :imgUsuario  ?>" alt="Card image cap" height="65" width="70"></td>
                         <td><?= $d['FK_tipo_doc'] ?></td>
                         <td><?= $d['ID_us'] ?></td>
                         <td><?= $d['nom1'] ?></td>

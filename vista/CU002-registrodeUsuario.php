@@ -1,12 +1,12 @@
 <?php
 include_once '../controlador/controladorrutas.php';
 rutFromIni();
-$objCon = new ControllerDoc();
-
+$objCon    = new ControllerDoc();
+$datosRol  =  $objCon->verRol();
 
 function selectDocumeto(){
-    $objCon = new ControllerDoc();
-    $datos     =  $objCon->selectDocumento();
+    $objCon     = new ControllerDoc();
+    $datos      =  $objCon->selectDocumento();
     foreach($datos as $i => $d ) {
     ?>
         <option value="<?= $d[0] ?>"><?= $d[1] ?></option>
@@ -14,11 +14,12 @@ function selectDocumeto(){
 }
  
 function selectRol(){
-    $objCon = new ControllerDoc();
-    $datosRol  =  $objCon->verRol();
+    $objCon     = new ControllerDoc();
+    $datosRol   =  $objCon->verRol();
+
     foreach($datosRol as $i =>  $d){
 ?>
-    <option value="<?= $d[0]   ?>"><?=  $d[1]   ?></option>
+    <option  <?= ( $d[0] == 6  )? 'selected': ''?>  value="<?= $d[0]   ?>"><?=  $d[1]   ?></option>
 <?php  }
 }
 cardtitulo("Registro de Usuarios");

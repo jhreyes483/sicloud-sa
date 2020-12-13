@@ -100,7 +100,7 @@ if (isset($_SESSION['message'])) {  ?>
 
                 <tbody>
                 <tr>
-                <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?= $d[7]; ?>" alt="Card image cap" height="65" width="70"></td>
+                <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?=  ($d[7] != '' ) ?$d[7]  :imgUsuario  ?>" alt="Card image cap" height="65" width="70"></td>
                     <td><?= $d[0] ?></td>
                     <td><?= $d[1] ?></td>
                     <td><?= $d[2] ?></td>

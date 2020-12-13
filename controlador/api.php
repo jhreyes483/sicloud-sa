@@ -162,7 +162,6 @@ if(isset($_GET['apicall'])){
             $response['menssage']   = $_SESSION['message'] = 'No desactivo cuenta';
             $response['contenido']  = $result;
             $_SESSION['color']      =  'danger';
-            
          }else{
             $response['error']      = false;
             $response['message']    = $_SESSION['message'] = 'Desactivo cuenta';

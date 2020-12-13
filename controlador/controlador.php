@@ -153,33 +153,293 @@ class ControllerDoc
     public function readUsuarioModel(){
         return $this->objModUs->readUsuarioModel();
     }
-    public function eliminarUsuario($id_get){
-      //  $r1 = $this->objModUs->eliminarUsuario($id_get);
-      $r1 = true;
-        if($r1){
-            $hora            = date("h:i:sa");
-            $hora            = substr( $hora , 0, 8 );
-            $fecha           = date('Y-m-d');
-            $descrip         = "Usario eliminado ID " .$id_get;
-            $FK_modific      = "2";
-            $this->session   = $this->objSession->desencriptaSesion();
-            $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
-            $ID_us_session   = $this->session['usuario']['ID_us'];
-            $arm=[
-                $descrip,
-                $fecha,
-                $hora, 
-                $ID_us_session,
-                $tDoc_us_session,
-                $FK_modific
-            ];
-            $r4 = $this->objModUs->insertModificacion($arm);
-            if($r4){
-                return true;
-            }else{
-                return false;    
-            }
+
+
+    public function contruyeLogActividad($id_modificado  , $tipo ){
+        // Elimina usuario = $tipo 1
+        // Actualizo usuario = $tipo 2
+        // Activo cuenta = $tipo 3
+        // Elimina producto  $tipo 4
+        // Actualiza producto $tipo 5
+        // Elimina categoria $tipo 6
+        // Actualiza categoria $tipo 7
+        // Elimina empresa $tipo 8
+        // Actualiza empresa 9
+         //  Elimina Unidad de medida $tipo 10
+        // Actualiza Unidad de medida  empresa 11
+         //Borro log  de actividad 12
+         //Borro Log de errores 13
+        //Borro Log de notificacion 14
+        // Desaciva cuenta usaurio 15
+
+
+        $hora            = date("h:i:sa");
+        $hora            = substr( $hora , 0, 8 );
+        $fecha           = date('Y-m-d');
+        switch ($tipo) {
+            case 1:
+                $entidad         = 'Usuario';
+                $FK_modific      = 2;
+                $descrip         = "$entidad modificado ID " .$id_modificado;
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 2:
+                $entidad         = 'Usuario';
+                $FK_modific      = 1;
+                $descrip         = "$entidad modificado ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 3:
+                $entidad         = 'Usuario';
+                $FK_modific      = 5;
+                $descrip         = "$entidad modificado ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 4:
+                $entidad         ='Producto';
+                $FK_modific      = 2;
+                $descrip         = "$entidad modificado ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            case 5:
+                $entidad         ='Producto';
+                $FK_modific      = 1;
+                $descrip         = "$entidad modificado ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 6:
+                $entidad         ='Categoria';
+                $FK_modific      = 2;
+                $descrip         = "$entidad modificada ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 7:
+                $entidad         ='Categoria';
+                $FK_modific      = 1;
+                $descrip         = "$entidad modificada ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 8:
+                $entidad         ='Empresa';
+                $FK_modific      = 2;
+                $descrip         = "$entidad modificada ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            case 9:
+                $entidad         ='Empresa';
+                $FK_modific      = 1;
+                $descrip         = "$entidad modificada ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 10:
+                $entidad         ='Unidad de medida';
+                $FK_modific      = 2;
+                $descrip         = "$entidad modificada ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            case 11:
+                $entidad         ='Unidad de medidad';
+                $FK_modific      = 1;
+                $descrip         = "$entidad modificada ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 12:
+                $entidad         ='Borro Log de actividad';
+                $FK_modific      = 2;
+                $descrip         = "$entidad";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            case 13:
+                $entidad         ='Borro Log de errores';
+                $FK_modific      = 2;
+                $descrip         = "$entidad";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            case 14:
+                $entidad         ='Borro Log de notificacion';
+                $FK_modific      = 2;
+                $descrip         = "$entidad";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            case 15:
+                $entidad         = 'Usuario';
+                $FK_modific      = 6;
+                $descrip         = "$entidad modificado ID $id_modificado";
+                $this->session   = $this->objSession->desencriptaSesion();
+                $tDoc_us_session = $this->session['usuario']['ID_acronimo'] ;
+                $ID_us_session   = $this->session['usuario']['ID_us'];
+                $arm=[
+                    $descrip,
+                    $fecha,
+                    $hora, 
+                    $ID_us_session,
+                    $tDoc_us_session,
+                    $FK_modific
+                ];
+            return $this->objModUs->insertModificacion($arm);
+            break;
+            
+            default:
+               die('no inserto modificacion');
+            break;
         }
+    }
+
+
+    public function eliminarUsuario($id_get){
+        $ra         = $this->objModUs->eliminarRoldeUsuario($id_get);
+        if($ra) $rb = $this->objModUs->eliminarTelefono($id_get) ;
+        if($rb) $rc = $this->objModUs->eliminarUsuario($id_get) ;
+        if($rc) return $this->contruyeLogActividad($id_get  , 1 );
     }
     public function actualizarDatosUsuario($id, $array){
         $r1 = $this->objModUs->actualizarDatosUsuario($id, $array);
@@ -189,31 +449,7 @@ class ControllerDoc
             if($r2){
                 $_SESSION['message'] = 'Actualizo rol';
                 $_SESSION['danger']  = 'Error al actualizar rol';
-                $hora                = date("h:i:sa");
-                $hora                = substr( $hora , 0, 8 );
-                $fecha               = date('Y-m-d');
-                $descrip             = "Usario modificado ID " . $array[0];
-                $FK_modific          = "4";
-                $this->session       = $this->objSession->desencriptaSesion();
-                $tDoc_us_session     = $this->session['usuario'] ['ID_acronimo'] ;
-                $ID_us_session       = $this->session['usuario']['ID_us'];
-               
-                $arm=[
-                    $descrip,
-                    $fecha,
-                    $hora, 
-                    $ID_us_session,
-                    $tDoc_us_session,
-                    $FK_modific
-                ];
-
-
-                $r4 = $this->objModUs->insertModificacion($arm);
-                if($r4){
-                    return true;
-                }else{
-                    return false;    
-                }
+                return $this->contruyeLogActividad($id  , 2 );
             }
         }else{
             $_SESSION['message'] = 'Error al actualizar usuario';
@@ -265,12 +501,23 @@ class ControllerDoc
     }
     public function activarCuenta($id)
     {
-        return $this->objModUs->activarCuenta($id);
+        $r1 = $this->objModUs->activarCuenta($id);
+        if($r1){
+            return  $this->contruyeLogActividad($id , 3 );
+        }else{
+            return false;
+        }
     }
 
     public function desactivarCuenta($id)
     {
-        return $this->objModUs->desactivarCuenta($id);
+        $r1 = $this->objModUs->desactivarCuenta($id);
+        if($r1){
+            return  $this->contruyeLogActividad($id  , 15 );
+        }else{
+            return false;
+         } 
+   
     }
     // Metodos de categoria 
     //"CU004-crearProductos.php"
@@ -290,7 +537,12 @@ class ControllerDoc
     }
 
     public function editarProducto($a){
-        return $this->objModUs->editarProducto($a);
+        $r = $this->objModUs->editarProducto($a);
+        if($r){
+            return $this->contruyeLogActividad($a[0], 5 );
+        }else{
+            return false;
+        }
     }
 
 
@@ -386,7 +638,13 @@ class ControllerDoc
        return $this->objModUs->ConteoProductosT();
     }
     public function EliminarProducto($id){
-      return $this->objModUs->EliminarProducto($id);
+      $r1 = $this->objModUs->EliminarProducto($id);
+      if($r1){
+          return $this->contruyeLogActividad($id  , 4 );
+      }else{
+          return false;
+      }
+
     }
     // Catalogo
     public function buscarPorNombreProducto($id)
@@ -492,14 +750,29 @@ class ControllerDoc
         return $this->objModUs->insertCategoria($a);
     }
     public function actualizarDatosCategoria($a){
-        return $this->objModUs->actualizarDatosCategoria($a);
+        $r = $this->objModUs->actualizarDatosCategoria($a);
+        if($r){
+            return $this->contruyeLogActividad($a[0]  , 7 );
+        }else{
+            return false;
+        }
     }
     public function eliminarCategoria($a){
-        return $this->objModUs->eliminarCategoria($a);
+        $r = $this->objModUs->eliminarCategoria($a);
+        if($r){
+            return $this->contruyeLogActividad($a[0]  , 6 );
+        }else{
+            return false;
+        }
     }
     // formEmpresa.php
     public function eliminarEmpresa($a){
-        return $this->objModUs->eliminarEmpresa($a);
+        $r = $this->objModUs->eliminarEmpresa($a);
+        if($r){
+            return $this->contruyeLogActividad($a[0] ,8  );
+        }else{
+            return false;
+        }
     }
     //formEmpresa.php
     public function insertEmpresa($a){
@@ -509,20 +782,33 @@ class ControllerDoc
         return $this->objModUs->verDatoEmpresaPorId($id);
     }
     public function actualizarDatosEmpresa($a){
-        return  $this->objModUs->actualizarDatosEmpresa($a);
+        $r = $this->objModUs->actualizarDatosEmpresa($a);
+        if($r){
+            return $this->contruyeLogActividad($a[0] , 9 );
+        }else{
+            return false;
+        }
     }
     // formMedida.php
     public function insertMedia($a){
         return $this->objModUs->insertMedia($a);
     }
     public function eliminarDatosMedia($a){
-        return $this->objModUs->eliminarDatosMedia($a);
+        $r = $this->objModUs->eliminarDatosMedia($a);
+        if($r){
+            return $this->contruyeLogActividad($a[0]  , 10 );
+        }
     }
     public function verMedidaPorId($id){
         return $this->objModUs->verMedidaPorId($id);
     }
     public function actualizarDatosMedida($a){
-        return $this->objModUs->actualizarDatosMedida($a);
+        $r = $this->objModUs->actualizarDatosMedida($a);
+        if($r){
+            return $this->contruyeLogActividad($a[0]  , 11);
+        }else{
+            return false;
+        }
     }
 
     public function selectUsuarios($id){
