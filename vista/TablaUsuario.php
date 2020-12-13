@@ -39,14 +39,7 @@ window.location = "../controlador/api.php?accion=eliminarUsuario&&id="+ id_to_de
 </script>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+
 
     <div class="container my-5 mx-auto">
         <div class="card card-body">
@@ -76,10 +69,8 @@ if (isset($_SESSION['message'])) {  ?>
                     <tr>
                         <th scope="col">foto</th>
                         <th scope="col">ID</th>
-                        <th scope="col">primer nombre</th>
-                        <th scope="col">segundo nombre</th>
-                        <th scope="col">primer apellido</th>
-                        <th scope="col">segundo apellido</th>
+                        <th scope="col">Nombres</th>
+                        <th scope="col">Apellidos</th>
                         <th scope="col">fecha</th>
                         <th scope="col">correo</th>
                         <th scope="col">tipo documento</th>
@@ -88,8 +79,6 @@ if (isset($_SESSION['message'])) {  ?>
 
                         $objus= new ControllerDoc();
                         $datos = $objus-> readUsuariosController();
-                        
-
                             if(isset($datos)){
                                 foreach ($datos as $i => $d){
                             
@@ -102,20 +91,23 @@ if (isset($_SESSION['message'])) {  ?>
                 <tr>
                 <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?=  ($d[7] != '' ) ?$d[7]  :imgUsuario  ?>" alt="Card image cap" height="65" width="70"></td>
                     <td><?= $d[0] ?></td>
-                    <td><?= $d[1] ?></td>
-                    <td><?= $d[2] ?></td>
-                    <td><?= $d[3] ?></td>
-                    <td><?= $d[4] ?></td>
+                    <td><?= $d[1].' '.$d[2] ?></td>
+                    <td><?= $d[3].' '.$d[4] ?></td>
                     <td><?= $d[5] ?></td>
-          
                     <td><?= $d[8] ?></td>
                     <td><?= $d[9] ?></td>
                     <td>
-                        <a href="EditarUsuario.php?ID_us=<?= $d[0] ?> " class="btn btn-circle btn-secondary">
-                        <i class="fas fa-search fa-sm"></i>
-                        <a href="../controlador/api.php?apicall=elimianarUsuario&&id=<?= $d[0] ?> "  class="btn btn-circle btn-danger">
-                                <i class="far fa-trash-alt"></i>
-                            </a>
+                        <a href="EditarUsuario.php?ID_us=<?= $d[0] ?> " 
+                        class="btn btn-circle btn-secondary"
+                        data-bs-toggle="tooltip" data-bs-placement="right" title="Editar usuario"
+                        >
+                        <i class="fas fa-marker"></i>
+                        <a href="../controlador/api.php?apicall=elimianarUsuario&&id=<?= $d[0] ?> "
+                        class="btn btn-circle btn-danger"
+                        data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar usuario"
+                        >
+                        <i class="far fa-trash-alt"></i>
+                        </a>
                     </td>
                 </tr>
 

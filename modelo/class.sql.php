@@ -1208,7 +1208,7 @@ public function delteNotificacion($id){
 //ver join de modificaciones
    public function verJoinModificacionesDB(){
       $sql = "SELECT M.ID_modifc , M.descrip , M.fecha , M.hora , 
-      M.FK_us , M.FK_doc  ,  U.nom1 , U.ape1 ,  T_M.nom_modific , R.nom_rol  
+      M.FK_us , M.FK_doc  ,  U.nom1 , U.ape1 ,  T_M.nom_modific , R.nom_rol , U.nom2 , U.ape2 
          from tipo_modific T_M JOIN modific M on T_M.ID_t_modific =  M.FK_modific
          JOIN usuario U ON M.FK_us = U.ID_us
          JOIN rol_usuario R_U on U.ID_us = R_U.FK_us

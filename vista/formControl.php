@@ -7,6 +7,7 @@ cardtitulo("Control de notificaciones");
 $objModModi = new ControllerDoc();
 ?>
 
+
 <div class="container-fluid ">
 
         <!-- formulario de registro -->
@@ -41,8 +42,8 @@ $objModModi = new ControllerDoc();
                         <th>Hora</th>
                         <th>ID usuario</th>
                         <th>Documento</th>
-                        <th>P.nombre</th>
-                        <th>P.apellido</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
                         <th>Modificacion</th>
                         <th>Rol</th>
                          </tr>
@@ -57,16 +58,16 @@ $objModModi = new ControllerDoc();
                 </thead>
                 <tbody>
                     <!-- Los nombres que estan son los mismos de los atributos de la base de datos de lo contrario dara un error -->
-                    <td><?php  echo $row['ID_modifc'] ?></td>
-                    <td><?php  echo $row['descrip'] ?></td>
-                    <td><?php  echo $row['fecha'] ?></td>
-                    <td><?php  echo $row['hora'] ?></td>
-                    <td><?php  echo $row['FK_us'] ?></td>
-                    <td><?php  echo $row['FK_doc'] ?></td>
-                    <td><?php  echo $row['nom1'] ?></td>
-                    <td><?php  echo $row['ape1'] ?></td>
-                    <td><?php  echo $row['nom_modific'] ?></td>
-                    <td><?php  echo $row['nom_rol'] ?></td>
+                    <td><?= $row['ID_modifc'] ?></td>
+                    <td><?= $row['descrip'] ?></td>
+                    <td><?= $row['fecha'] ?></td>
+                    <td><?= $row['hora'] ?></td>
+                    <td><?= $row['FK_us'] ?></td>
+                    <td><?= $row['FK_doc'] ?></td>
+                    <td><?= $row['nom1'].' '.$row['nom2'] ?></td>
+                    <td><?= $row['ape1'].' '.$row['ape2'] ?></td>
+                    <td><?= $row['nom_modific'] ?></td>
+                    <td><?= $row['nom_rol'] ?></td>
                     <td>
                         <a data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar actividad"
                         href="../controlador/api.php?apicall=deleteLog&&id=<?= $row[0]  ?>" 

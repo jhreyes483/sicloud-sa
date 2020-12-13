@@ -4,6 +4,8 @@ rutFromIni();
 $objSession =new Session();
 $u = $objSession->desencriptaSesion();
 
+
+
 //comprobacion de rol
 $in = false;
 switch ($u['usuario']['ID_rol_n']) {
@@ -29,7 +31,12 @@ if ($in == false) {
 
     //--------------------------------------------------------------------------
 
-    $objCon = new ControllerDoc();
+    $objCon     = new ControllerDoc();
+    $activos    = $objCon->conteoUsuariosActivos();
+    $inactivos  = $objCon->conteoUsuariosInactivos();
+    $totaUs     = ($inactivos +  $activos);
+
+
     $tabla = false;
     cardtituloS("Administrador de solicitiudes");
 
@@ -181,16 +188,14 @@ if ((isset($datos))  && ($tabla == true)) {
 ?>
         <div class="col-lg-12">
             <div class="table-responsive">
-                <table id="example" style="width:100%" class=" col-lg-12  table-bordered  table-striped bg-white   mx-auto">
-                    <thead>
+                <table id="example" style="width:100%" class=" col-lg-12  table-bordered  table-striped bg-white  mx-auto">
+                    <thead  >
                         <tr>
                             <th>Foto</th>
                             <th>Tipo doc</th>
                             <th>Documento</th>
-                            <th>P. Nombre</th>
-                            <th>S. Nombre</th>
-                            <th>P. Apellido</th>
-                            <th>S. Apellido</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
                             <th>Rol</th>
                             <th>Correo</th>
                             <th>Estado</th>
@@ -208,17 +213,11 @@ foreach ($datos as $i  => $d) {
                         <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?=  ($d['foto'] != '' ) ?$d['foto']  :imgUsuario  ?>" alt="Card image cap" height="65" width="70"></td>
                         <td><?= $d['FK_tipo_doc'] ?></td>
                         <td><?= $d['ID_us'] ?></td>
-                        <td><?= $d['nom1'] ?></td>
-                        <td><?= $d['nom2'] ?></td>
-                        <td><?= $d['ape1'] ?></td>
-                        <td><?= $d['ape2'] ?></td>
+                        <td><?= $d['nom1'].' '.$d['nom2']  ?></td>
+                        <td><?= $d['ape1'].' '.$d['ape2']  ?></td>
                         <td><?= $d['nom_rol'] ?></td>
                         <td><?= $d['correo'] ?></td>
-                        <td><?php if ($d['estado'] == 1) {
-                                echo "Activo";
-                            } else {
-                                echo "Inactivo";
-                            }  ?></td>
+                        <td><?= ($d['estado'] == 1) ? 'Activo': 'Inactivo'; ?></td>
                         <td>
                             <a href="EditarUsuario.php?ID_us=<?= $d['ID_us'] ?> "
                                 class="btn btn-circle btn-dark"
@@ -227,14 +226,14 @@ foreach ($datos as $i  => $d) {
                                 <i class="fas fa-marker"></i>
                             </a>
                             <?php if ($u['usuario']['ID_rol_n'] == 1) {     ?>
-                                <a onclick="activarCuenta( <?php echo $d['ID_us']   ?> )"
+                                <a onclick="activarCuenta( <?= $d['ID_us']   ?> )"
                                     href="#" 
                                     class="btn btn-circle btn-success"
                                     data-bs-toggle="tooltip" data-bs-placement="right" title="Activar cuenta"
                                 >
                                  <i class="fas fa-check-square"></i> 
                                 </a>
-                                <a onclick="desactivarCuenta( <?php echo $d['ID_us']   ?> )" 
+                                <a onclick="desactivarCuenta( <?=  $d['ID_us']   ?> )" 
                                     href="#" 
                                     class="btn btn-circle btn-danger"
                                     data-bs-toggle="tooltip" data-bs-placement="right" title="Desactivar cuenta"
@@ -253,11 +252,7 @@ foreach ($datos as $i  => $d) {
         </div><!-- div de tablas -->
         </div>
         </div><!-- fin de primera divicion -->
-        <?php
-        $activos   = $objCon->conteoUsuariosActivos();
-        $inactivos = $objCon->conteoUsuariosInactivos();
-        $totaUs    = ($inactivos +  $activos);
-        ?>
+
         <div class="card card-body col-lg-11 mx-auto my-4 text-center ">
             <h5 class="my-2">Usuarios</h5>
             <div class="row col-lg-10 mx-auto">
@@ -265,21 +260,21 @@ foreach ($datos as $i  => $d) {
                 <div class=" col-md-4  mx-auto card card-body shadow ">
                     <div class="form-group  col-lg-10 row">
                         <label class="col-sm-9" for="">Activos</label>
-                        <input class="form-control col-sm-3" type="text" value="<?php echo $activos ?>" disabled>
+                        <input class="form-control col-sm-3" type="text" value="<?= $activos ?>" disabled>
                     </div>
                 </div>
 
                 <div class=" col-md-4  mx-auto card card-body shadow">
                     <div class="form-group  col-lg-10 row">
                         <label class="col-sm-9" for="">Inactivos</label>
-                        <input class="form-control col-sm-3" type="text" value="<?php echo $inactivos ?>" disabled>
+                        <input class="form-control col-sm-3" type="text" value="<?= $inactivos ?>" disabled>
                     </div>
                 </div>
 
                 <div class=" col-md-4  mx-auto card card-body shadow">
                     <div class="form-group  col-lg-10 row">
                         <label class="col-sm-9" for="">Registrados</label>
-                        <input class="form-control col-sm-3" type="text" value="<?php echo $totaUs ?>" disabled>
+                        <input class="form-control col-sm-3" type="text" value="<?= $totaUs ?>" disabled>
                     </div>
                 </div>
                 <!-- -------------------------------------------------------------- -->
