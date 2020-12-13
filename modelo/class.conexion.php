@@ -19,12 +19,12 @@
         }
 
 
-
     static function conexionPDO(){
-        $DB_HOST = 'bzsvpsfy9oknkorinigg-mysql.services.clever-cloud.com';
-        $DB_USER = 'uu1ftcn3edrvx0se';
-        $DB_PASS = 'YTZ9rXNKvoAIDwOwvvFj';
+        $DB_HOST = 'localhost';
+        $DB_USER = 'root';
+        $DB_PASS = '';
         $DB_NAME = 'bzsvpsfy9oknkorinigg';
+
         try {
             $dsn = "mysql:host=$DB_HOST;dbname=$DB_NAME";
             $db = new PDO($dsn, $DB_USER,  $DB_PASS);
@@ -37,11 +37,10 @@
  */
 
     static function conexionPDO(){
-        $DB_HOST = 'localhost';
-        $DB_USER = 'root';
-        $DB_PASS = '';
+        $DB_HOST = 'bzsvpsfy9oknkorinigg-mysql.services.clever-cloud.com';
+        $DB_USER = 'uu1ftcn3edrvx0se';
+        $DB_PASS = 'YTZ9rXNKvoAIDwOwvvFj';
         $DB_NAME = 'bzsvpsfy9oknkorinigg';
-
         try {
             $dsn = "mysql:host=$DB_HOST;dbname=$DB_NAME";
             $db = new PDO($dsn, $DB_USER,  $DB_PASS);
