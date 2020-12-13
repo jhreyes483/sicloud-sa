@@ -1336,10 +1336,10 @@ public function delteNotificacion($id){
          P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , P.estado_prod , 
          T.ID_medida , T.nom_medida , T.acron_medida, EP.nom_empresa , P.img
          FROM categoria C 
-         JOIN producto P ON C.ID_categoria = P.CF_categoria 
-         JOIN tipo_medida T ON T.ID_medida = P.CF_tipo_medida
-         JOIN det_producto DP ON P.ID_prod = DP.FK_prod
-         JOIN empresa_provedor EP ON DP.FK_rut = EP.ID_rut 
+         LEFT JOIN producto P ON C.ID_categoria = P.CF_categoria 
+         LEFT JOIN tipo_medida T ON T.ID_medida = P.CF_tipo_medida
+         LEFT JOIN det_producto DP ON P.ID_prod = DP.FK_prod
+         LEFT JOIN empresa_provedor EP ON DP.FK_rut = EP.ID_rut 
          WHERE  P.ID_prod = '$id' LIMIT 1";
       $stm = $this->db->prepare($sql);
       $stm->execute();

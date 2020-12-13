@@ -49,8 +49,8 @@ $objCon = new ControllerDoc();
 // Captura de datos
 
 //$id1    = 2041172460;
-$datos = $objCon->tablaProducto($_SESSION['id_p']);
-//ControllerDoc::ver($datos, 1);
+$datos = $objCon->tablaProducto($id);
+
 foreach($datos as $row ){
     $idProd       =    $row['ID_prod']	 ;        
     $nomProduct   =    $row['nom_prod']	  ;   
