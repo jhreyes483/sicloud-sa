@@ -1,6 +1,7 @@
 <?php
 
 include_once '../controlador/controladorrutas.php';
+include_once '../controlador/controllerFacturacion.php';
 rutFromIni();
 $objSession =new Session();
 $u      = $objSession->desencriptaSesion();
@@ -33,6 +34,7 @@ if ($in == false) {
     //--------------------------------------------------------------------------
 cardtitulo("Informe de Bodega");
 $objModFact = new ControllerDoc();
+
 
 
 
@@ -77,7 +79,11 @@ $objModFact = new ControllerDoc();
 <?php
 if (isset($_POST['consulta'])) {
     extract($_POST);
-    $facturas   = $objModFact->verIntervaloFecha($f1, $f2);
+    $facturas    = $objModFact->verIntervaloFecha($f1, $f2);
+    $total       = array_sum( array_column($facturas , 11));
+    $v            = new CifrasEnLetras();
+    //Convertimos el total en letras
+    $letra = ($v->convertirEurosEnLetras($total));
 ?>
 
 
@@ -91,9 +97,11 @@ if (isset($_POST['consulta'])) {
                             
                             <th>fecha</th>
                             <th>Nombre de cliente</th>
-                            <th>total</th>
-                            <th>Iva</th>
+                           
+                       
                             <th>Medio de pago</th>
+                            <th>Iva</th>
+                            <th>total</th>
                             <th>Factura No.</th>
                         </tr>
                     </thead>
@@ -105,9 +113,11 @@ if (isset($_POST['consulta'])) {
                             <tr>       
                                 <td ><?=$d[8] ?></td>
                                 <td><?= $d[2].' '.$d[3] .' '.$d[4].' '.$d[5] ?> </td>
-                                <td><?= $d[11] ?></td>
-                                <td><?= ($d[11] * 0.19) ?></td>
                                 <td><?= $d[10] ?></td>
+                                <td><?= ('$'.number_format( ($d[11] * 0.19)  , 0, ',', '.') )  ?></td>
+                              
+                                <td><?= '$'.number_format( $d[11] , 0, ',', '.');  ?></td>
+                         
 
                                 <td>
                                 
@@ -116,23 +126,40 @@ if (isset($_POST['consulta'])) {
                                     data-bs-toggle="tooltip" data-bs-placement="right" title="Consultar factura"
                                     ><?=$d[7] ?>  </i>
                                 </a>
-
-
                                 </td>
-                                
-                                
-
                             </tr>
                         </tbody>
+                       
                     <?php
+                    
                     } // fin de while tabla
                     ?>
+                                        <tr>
+                    <td  colspan="3" class="mt-2 lead" align="right">
+                        Total
+                     </td>
+
+                    <td  colspan="2" class="mt-2 lead" align="right">
+
+                    <?= '$'.number_format( $total , 0, ',', '.');  ?><td></td>
+                     </td>
+                     </tr>
+                     <tr>
+                         <td class="bg-dark text-white" colspan="6" >
+                            <em><?= ucfirst($letra) ; ?></em> 
+                         </td>
+                     </tr>
+
                 </table>
             </div>
         </div>
     </div>
+
+
 <?php
 }
+
+
 rutFinFooterFrom();
 rutFromFin();
 }// fin de validacion permisos

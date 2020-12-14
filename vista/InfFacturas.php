@@ -124,7 +124,7 @@ if ($in == false) {
                                             $letra = ($v->convertirEurosEnLetras($aU[0][11]));
                             ?>
                             <div>
-                                <span><?php echo $letra; ?></span>
+                                <span><?= ucfirst($letra)?></span>
                             </div>
                         </div>
                         <div class="col-lg-4 card card-body">

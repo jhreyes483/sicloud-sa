@@ -45,8 +45,12 @@ if ($in == false) {
          </div>';
         }
     }
+
+    $v = new CifrasEnLetras();
+    //Convertimos el total en letras
 ?>
 
+                                        
 
     <!DOCTYPE html>
     <html lang="es">
@@ -204,17 +208,18 @@ if ($in == false) {
                             </tr>
                         <?php
                     }
-                        ?>
-                        <!-- la de los perros, no se acepta -->
-                        <div class="col-md-2">
-                            <td colspan="5" class="mt-2" align="right"> <label for="total" class="lead">Total:</label> </td>
-                        </div>
-                        <?php $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
+                         $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
+                         $letra           =  ucfirst( ($v->convertirEurosEnLetras($totFactura )) );
                         $totFactura       =  number_format(($totFactura ?? 0), 0, ',', '.');
 
                         ?>
+                        <!-- la de los perros, no se acepta -->
+                        <td colspan="4"> <em><?= $letra ?></em></td>
+                        <div class="col-md-2">
+                            <td colspan="1" class="mt-2" align="right"> <label for="total" class="lead">Total:</label> </td>
+                        </div>
                         <div class="col-md-2 ">
-                            <td colspan="6" class="mt-2 lead" align="right"> $ <?= $totFactura ?> </td>
+                            <td colspan="" class="mt-2 lead" align="right"> $ <?= $totFactura ?> </td>
                         </div>
                         </tr>
                         </tbody>
