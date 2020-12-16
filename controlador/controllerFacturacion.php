@@ -21,6 +21,7 @@ if( isset($accion)){
         break;
         case 'agregar':
             // Agraga prducto a factura
+            if(  !in_array( $ID_prod  ,   array_column($_SESSION['venta'] , 0 ) )  ){ 
               $subTotal = ($cantidad *  $val_prod);
               $_SESSION['venta'][] = [
                   $ID_prod,
@@ -35,6 +36,14 @@ if( isset($accion)){
               $_SESSION['color']   = 'success'; 
               header("Location: ../vista/CU005-facturacion.php?ID=$ID");
               $accion = null; 
+            }else{
+             // die('producto ya existe');
+
+              $_SESSION['message'] = 'Error, Producto ya existe';
+              $_SESSION['color']   = 'danger'; 
+              header("Location: ../vista/CU005-facturacion.php?ID=$ID");
+            }
+
         break;
         case 'eliminar':
           // Elimina producto de factura
