@@ -3,9 +3,11 @@ include_once '../controlador/controladorrutas.php';
 rutFromIniLogin();
 ?>
 
-    <link rel="stylesheet" href="../pulic/css/reset.min.css">
-    <link rel="stylesheet" href="../public/css/login.css">
+<link rel="stylesheet" href="../public/css/reset.min.css">
+<link rel="stylesheet" href="../public/css/login.css">
+<link rel="stylesheet" href="../public/css/bootstrap.css">
 </head>
+
 <body>
 
     <section class="user">
@@ -27,16 +29,18 @@ rutFromIniLogin();
             <div class="user_options-forms" id="user_options-forms">
                 <div class="user_forms-login">
                     <h2 class="forms_title">Ingreso</h2>
-                    <form class="forms_form" action="../controlador/api.php?apicall=loginusuario"  method="POST">
+                    <form class="forms_form" action="../controlador/api.php?apicall=loginusuario" method="POST">
                         <fieldset class="forms_fieldset">
                             <div class="forms_field">
-                            <div class="form-group">
-                                <select class="form-control" name="tDoc" id="">
-                                    <option class = "form-control"  value="CC">CC</option>
-                                    <option class = "form-control" value="CE">CE</option>
-                                    <option class = "form-control" value="TI">TI</option>
-                                </select>
-                            </div>
+
+                                <div class="form-group">
+                                    <select class="form-control" name="tDoc" id="">
+                                        <option class="form-control" value="CC">CC</option>
+                                        <option class="form-control" value="CE">CE</option>
+                                        <option class="form-control" value="TI">TI</option>
+                                    </select>
+                                </div>
+                            <div class="forms_field">
                                 <input type="number" name="nDoc" placeholder="No. documento" class="forms_field-input" required autofocus />
                             </div>
                             <div class="forms_field">
@@ -50,27 +54,27 @@ rutFromIniLogin();
                     </form>
 
 
-    <div class="my-2">
-    <?php if (isset($_SESSION['message'])) { ?>
-                <!-- alerta boostrap -->
-                <div class="alert alert-<?php echo $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
-                    <?php
-                    echo  $_SESSION['message']  ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <?php
-                setMessage();
-                //session_unset();
-            } ?>
-    </div>
+                    <div class="my-2">
+                        <?php if (isset($_SESSION['message'])) { ?>
+                            <!-- alerta boostrap -->
+                            <div class="alert alert-<?php echo $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
+                                <?php
+                                echo  $_SESSION['message']  ?>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <?php
+                            setMessage();
+                            //session_unset();
+                        } ?>
+                    </div>
 
 
-                    
+
                 </div>
                 <div class="user_forms-signup">
-                    <img width="250px"src="fonts/registrarh.PNG">
+                    <img width="250px" src="fonts/registrarh.PNG">
                     <div class="forms_buttons">
                         <a href="./CU002-registrodeUsuario.php">
                             <input type="submit" value="Registrarse" class="forms_buttons-action">
@@ -85,7 +89,7 @@ rutFromIniLogin();
     <!-- partial -->
     <script src="estilos/js/script.js"></script>
 
-<?php
-rutFromFin();
-rutFinFooterFrom();
-?>
+    <?php
+    rutFromFin();
+    rutFinFooterFrom();
+    ?>
