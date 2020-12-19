@@ -32,7 +32,11 @@
         </ul>
         
         <div class="ml-5">
-            <a href="vista/loginregistrar.php" class="text-white lead">Sign In
+            <!--  href="vista/loginregistrar.php" -->
+            <a
+            onclick="abre()"
+            
+            class="text-white lead">Sign In
             <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-person-circle text-white" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
                   <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -43,4 +47,24 @@
         </div>
     </div>
 </nav>
+
+<script>
+function abre(){
+  if (window.screen) {
+      var aw = screen.availWidth;
+      var ah = screen.availHeight;
+  }
+  var inedittoWin=window.open('toolbar=0,location=0,directories=0,status=0, menubar=0,scrollbars=1,resizable=1, menubar=0, left=0, top=0, width='+ aw + ', height=' + ah);
+  if (!inedittoWin ||  inedittoWin.closed){
+      inedittoWin.location='vista/loginregistrar.php';
+  }else{
+      var url = inedittoWin.location.toString();
+      if(url.indexOf("vista/loginregistrar.php")!=-1) inedittoWin.focus();
+      else inedittoWin.location='vista/loginregistrar.php';
+  }
+
+  if (ineditto != null) ineditto.focus(); 
+  else alert("Su sistema tiene un Bloqueador de Popups Activo\n\nEs necesario que habilite las ventanas emergentes para sicloud.com\npara esto, vaya al menu \"Herramientas/Opciones\" de su navegador\ny en la pestana \"Contenido\", agregue como excepci�n a sicloud.com");
+}
+</script>
 <!-- nav -->

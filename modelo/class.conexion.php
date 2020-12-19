@@ -33,8 +33,10 @@
         }
         return $db;
     }
+     */
 
- */
+    
+
 
     static function conexionPDO(){
         $DB_HOST = 'bzsvpsfy9oknkorinigg-mysql.services.clever-cloud.com';
@@ -49,6 +51,8 @@
         }
         return $db;
     }
+
+
 
 }
 

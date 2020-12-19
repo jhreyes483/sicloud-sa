@@ -118,8 +118,12 @@ endif;
                                 </div>
                                
                                 <h5>Numero de identificacion: </h5>
-                                <?= "Id anterior".$id;  ?>
-                                <input class="form-control" type="number" name="ID_us" value="<?=  $ID_us  ?>" required autofocus maxlength="11">
+                                <!-- 
+                                <?// "Id anterior".$id;  ?>
+
+                                 -->
+      
+                                <input class="form-control" type=»number» readonly=»readonly» name="ID_us" value="<?=  $ID_us  ?>" required autofocus maxlength="11">
                             
                     </div><br>
                 </div>
