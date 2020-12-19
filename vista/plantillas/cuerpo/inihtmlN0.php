@@ -6,7 +6,6 @@
 
     <link href="public/css/google.css" rel="stylesheet" type="text/css">
     <link href="public/css/bootstrap.min.css"   rel="stylesheet" >
-    <link href="public/css/bootstrap.css"  rel="stylesheet">
     <link href="public/css/jav.css" rel="stylesheet" >
     <link href="public/css/animate.css" rel="stylesheet" >
 
