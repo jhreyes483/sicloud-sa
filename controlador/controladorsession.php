@@ -16,7 +16,7 @@ class Session{
    }
 
    public function inicioSesion(){
-      if(!isset($_SESSION['usuario']) ){
+      if(!isset($_SESSION) ){
          session_start();
       }
    }
