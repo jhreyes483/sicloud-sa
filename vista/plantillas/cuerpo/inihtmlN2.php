@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="estilos/css/bootstrap.min.css">
     <link rel="stylesheet" href="estilos/css/jav.css">
     <link rel="stylesheet"href="estilos/css/animate.css">
+    <link href="public/css/font-awesome.min.css" rel="stylesheet" >
 
     
     <?php

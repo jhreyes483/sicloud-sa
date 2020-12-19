@@ -13,6 +13,7 @@
   <link href="../public/css/bootstrap.min.css"  rel="stylesheet" type="text/css" >
   <link  href="../public/css/jav.css"rel="stylesheet" type="text/css">
   <link href="../public/css/animate.css"rel="stylesheet" type="text/css">
+  <link href="../public/css/font-awesome.min.css" rel="stylesheet" >
   <!-- js -->
     <title>Sicloud</title>
    <script>

@@ -12,6 +12,7 @@
     <link href="../../../public/css/bootstrap.min.css"  rel="stylesheet">
     <link href="../../../public/css/jav.css" rel="stylesheet" >
     <link href="../../../public/css/animate.css" rel="stylesheet" >
+    <link href="../../../public/css/font-awesome.min.css" rel="stylesheet" >
 
 
     <!--  -->
