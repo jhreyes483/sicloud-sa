@@ -49,12 +49,13 @@
 </nav>
 
 <script>
+
 function abre(){
   if (window.screen) {
       var aw = screen.availWidth;
       var ah = screen.availHeight;
   }
-  var inedittoWin=window.open('toolbar=0,location=0,directories=0,status=0, menubar=0,scrollbars=1,resizable=1, menubar=0, left=0, top=0, width='+ aw + ', height=' + ah);
+  var inedittoWin=window.open('','Cicloud_Base','toolbar=0,location=0,directories=0,status=0, menubar=0,scrollbars=1,resizable=1, menubar=0, left=0, top=0, width='+ aw + ', height=' + ah);
   if (!inedittoWin ||  inedittoWin.closed){
       inedittoWin.location='vista/loginregistrar.php';
   }else{
@@ -64,7 +65,7 @@ function abre(){
   }
 
   if (ineditto != null) ineditto.focus(); 
-  else alert("Su sistema tiene un Bloqueador de Popups Activo\n\nEs necesario que habilite las ventanas emergentes para sicloud.com\npara esto, vaya al menu \"Herramientas/Opciones\" de su navegador\ny en la pestana \"Contenido\", agregue como excepci�n a sicloud.com");
+  else alert("Su sistema tiene un Bloqueador de Popups Activo\n\nEs necesario que habilite las ventanas emergentes para ineditto.com\npara esto, vaya al menu \"Herramientas/Opciones\" de su navegador\ny en la pesta�a \"Contenido\", agregue como excepci�n a sicloud.com");
 }
 </script>
 <!-- nav -->
