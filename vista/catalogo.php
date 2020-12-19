@@ -5,6 +5,7 @@ include_once '../controlador/controladorrutas.php';
 include_once '../controlador/ControladorCarrito.php';
 rutFromIni();
 $objMod = new ControllerDoc();
+$objCar = new ControllerCarrito;
 $num = 0;
 $datos = $objMod->verProductos();
 

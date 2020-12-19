@@ -2,19 +2,22 @@
 <?php
 //session_destroy();
 include_once '../modelo/class.sql.php';
+include_once 'controladorrutas.php';
+conficController();
 
 date_default_timezone_set("America/Bogota");
 
 
 
-
-class ControllerDoc
+class ControllerDoc extends Controller
 {
-    private $session, $objModUs;
 
 
+
+    private $objSession, $objModUs;
     public function __construct(){
-        include_once 'controladorsession.php';
+        parent::__construct();
+        include_once 'controladorsession.php';  
         $this->objModUs    = SQL::ningunDato();
         $this->objSession  = Session::ningunDato();
     }
@@ -916,11 +919,6 @@ class ControllerDoc
             1
         ];
        $this->objModUs->insertFactura($a);
-
-
-/*
-    INSERT INTO `factura` (`ID_factura`, `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`, `claveTransaccion`, `PaypalDatos`) VALUES (NULL, '40000', '2020-11-24', NULL, '123', '1', NULL, NULL);
-*/
     }
 
 
@@ -934,192 +932,15 @@ class ControllerDoc
     public function notificacionLeida($a){
         return $this->objModUs->notificacionLeida($a);
     }
-    static function ver($dato, $sale=0, $float= false, $email=''){
-        echo '<div style="background-color:#fbb; border:1px solid maroon;  margin:auto 5px; text-align:left;'. ($float? ' float:left;':'').' padding:7px; border-radius:7px; margin-top:10px">';
-        if(is_array($dato) || is_object($dato) ){
-            echo '<pre><br><b>&raquo;&raquo;&raquo; DEBUG</b><br>'; print_r($dato); echo '</pre>'; 
-        }else{
-            if(isset($dato)){
-                echo '<b>&raquo;&raquo;&raquo; DEBUG &laquo;&laquo;&laquo;</b><br><br>'.nl2br($dato); 	
-            }else{
-                echo 'LA VARIABLE NO EXISTE';
-            }
-        }
-        echo '</div>';
-        if($sale==1) die();
-    }
-
-
-    //metodos telefonos
-    
-}
 
 
 
-
-
-
-
-/*
-if(isset($_GET['action']) && $_GET['action'] == 'login'){
-    $instanciacontrolador = Usuario::ningunDato();
-    $instanciacontrolador->LoginVista();
-}
-if(isset($_GET['accion']) && $_GET['accion'] == 'insert'){
-    $instanciacontrolador = Usuario::ningunDato();
-    $instanciacontrolador->InsertVista();
-}
-//include_once '../clases/class.empresa.php';
-//include_once '../clases/class.conexion.php';
-//include_once '../clases/class.categoria.php';
-//include_once '../clases/class.producto.php';
-//include_once '../clases/class.usuario.php';
-//include_once '../clases/class.rol.php';
-//include_once '../clases/class.medida.php';
-//include_once '../clases/class.error.php';
-//$us = Usuario::ningunDato();
-//---------------------------------------------------------------
-if ((isset($_GET['id'])) && (isset($_GET['accion']))) {
-    //-------------------------------------------------------------------- 
-    //USUARIO
-    if ($_GET['accion'] == 'eliminarUsuario') {
-        echo 'estoy en accion eliminar usuario';
-        $id =  $_GET['id'];
-        $objCon = Usuario::ningunDato();
-        $objCon->eliminarUsuario($id);
-    }
-}
-    //--------------------------------------------------------------------
-/*
-    //-------------------------------------------------------------------- 
-    //MEDIDA   
-    if ($_GET['accion'] == 'eliminarMedida') {
-        include_once '../session/sessiones.php';
-        // echo "estoy en eliminar medida";
-        $id = $_GET['id'];
-        Medida::eliminarDatosMedia($id);
-    }
-    //--------------------------------------------------------------------
-    //EMPRESA
-    //Eliminar
-    if ($_GET['accion'] == 'eliminarEmpresa') {
-        include_once '../session/sessiones.php';
-        echo "estoy en accion eliminar empresa";
-        $id = $_GET['id'];
-        $objCon = Empresa::ningunDatoP();
-        $objCon->eliminarEmpresa($id);
-    }
-    //--------------------------------------------------------------------
-    //CATEGORIA
-    //Eliminar
-    if ($_GET['accion'] == 'eliminarCategoria') {
-        include_once '../session/sessiones.php';
-        echo 'estoy en accion eliminar categoria';
-        $id =  $_GET['id'];
-        $objCon = Categoria::ningunDatoC();
-        $objCon->eliminarCategoria($id);
-    }
-    //----------------------------------------------------------------
-    //PRODUCTO
-    //Eliminar
-    if ($_GET['accion'] == 'EliminarProducto') {
-        include_once '../session/sessiones.php';
-        $id = $_GET['id'];
-        $producto =  Producto::eliminarProducto($id);
-        Producto::eliminarProducto($id);
-    }
-    //-------------------------------------------------------------
-    // USUARIO 
-    //Aprobar Cuenta
-    if ($_GET['accion'] == 'aprobarUsuario') {
-        include_once '../session/sessiones.php';
-        $id = $_GET['id'];
-        $us->activarCuenta($id);
-    }
-    //-------------------------------------------------------------
-    // USUARIO 
-    //descatvar Cuenta
-    if ($_GET['accion'] == 'desactivarUsuario') {
-        include_once '../session/sessiones.php';
-        $id = $_GET['id'];
-
-     //   $us= Usuario::ningunDato();
-        $us->desactivarCuenta($id);
-    }
-    //-----------------------------------------------------------
-    //ROL
-    if ($_GET['accion'] == 'eliminarRol') {
-        include_once '../session/sessiones.php';
-        $id = $_GET['id'];
-        Rol::eliminarRol($id);
-    }
-    //-------------------------------------------------------------------------
-    //ERROR
-    //Eliminar
-    if ($_GET['accion'] == 'eliminarError') {
-        $id = $_GET['id'];
-        ErrorLog::eliminarErrorLog($id);
-    }
-//-------------------------------------------------------------
-// Ver factura = vista = ComprasUsuarios.php
-//../metodos/get.php?accion=verFactura
-
-if( $_REQUEST['accion'] == 'verFactura'){
-    echo "Estoy en ver factura";
-     $id =  $_REQUEST['id'];
-    // header("Location: ../ajax/includes/factura.php?u=$id");
-    header("Location: ../ajax/showFactura.php?u=$id");
-}
-//-------------------------------------------------------------
-
-} // fin de isset accion y id
-
-//----------------------------------------------
-//SESSION
-//cerrar sesion
-//-----------------------------------------------------------------
-if (isset($_GET['cerrarSesion'])) {
-
-    //include_once 'cerrar.php';
-    //include_once 'sessiones.php';
-
-    if (isset($_SESSION['usuario'])) {
-        session_unset();
-        session_destroy();
-    }
-    session_start();
-    $_SESSION['message'] = "Cerro sesion";
-    $_SESSION['color'] = "primary";
-    header("location: ../index.php");
-    $_SESSION['message'] = "Cerro sesion";
-    echo "cerro sesion";
-}
-// Lista de productos en pantalla
-//-----------------------------------------------------------
-//include_once '../session/sessiones.php';
-//include_once './metodosDAO.php';
- //echo print_r ($_SESSION['usuario']);
- if(isset($_GET['ops'])){
-$op = $_REQUEST['ops'];
-switch ($op){
-    case 1:
-        unset($_SESSION['lista']);
-        $lista=    $objMetodo =Producto::listaProductosImg();
-       
-        $_SESSION['lista']=$lista;
-        header("Location: ../Catalogo.php");
-        break;
-    case 2;
-        break; 
+    public function index()
+    {
+        die('implemetar index');
 
     }
 }
-//$objMod = Rol::ningunDato();
-//-------------------------------------------------------------
-// $objCon = new ControllerDoc();
-// // $d = $objCon->verRol();
 
-
-*/
 
 ?>

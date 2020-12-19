@@ -1,14 +1,26 @@
 <?php
+// Varoles por defecto
 define("KEY", "proyectoSicloud");
 define("COD", "AES-128-ECB");
 define("imgUsuario", "UserSinImagen.jpg");
 define("imgProducto", "ProductoSinImagen.png");
+define('SESSION_TIME', (60*60)); // sesenta segundos por sensenta minutos = 1 hora
+// 2 dias = (60*60*2)
+
 
 
 $obj =new Session();
 
+
 class Session{
    public $obj;
+public function __construct(){
+
+   if(empty($_SESSION) ){
+   @session_set_cookie_params(SESSION_TIME);
+   $this->inicioSesion();
+   }
+}
 
 
    static function ningunDato(){
@@ -16,9 +28,7 @@ class Session{
    }
 
    public function inicioSesion(){
-      if(!isset($_SESSION) ){
-         session_start();
-      }
+        @session_start();
    }
 
    public function cerrarSesion(){
@@ -138,9 +148,67 @@ class Session{
       return $_SESSION['usuario'];
    }
 
+
+   public static function destroy($clave = false){
+      if($clave){
+        if(is_array($clave)){
+           for($i=0; $i < count($clave); $i++){
+              if(isset($_SESSION[$clave[$i]])){
+                 unset($_SESSION[$clave[$i]]);
+              }
+           }
+          }else{
+             if(isset($_SESSION[$clave])){
+              unset($_SESSION[$clave]);
+             }
+         }
+       }else{
+        session_destroy();
+     }
+    }
+
+
+
+
+
+
+
+
+
+
+/*
+    public static function tiempo(){
+      echo '<pre>';
+
+      if(!isset( $_SESSION['tiempo'] )   ){
+         $_SESSION['tiempo'] = (SESSION_TIME * 60 );
+         print_r($_SESSION['tiempo'] );
+         echo '<h1> time -> '.time();
+         echo '<h1> tiem menos session tiempo -> '. abs(time() - $_SESSION['tiempo'])  ;
+
+       // throw new Exception('No se ha definido el tiempo de sesion');
+     }
+     if(SESSION_TIME==0){
+        return;
+      }
+     if(   abs (time()- $_SESSION['tiempo']) > (SESSION_TIME*60)){
+        Session::destroy();
+       header('location:'.BASE_URL.'error/access/8080');
+     }else{
+      $_SESSION['tiempo'] =  time();
+      }
+   }
+*/
+
+
+
+
+
+
+
 }
 
-$obj->inicioSesion();
+// $obj->inicioSesion();
 //$obj->validarSesion();
 
 if(isset($_GET['cerrar']) ){

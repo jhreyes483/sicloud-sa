@@ -48,7 +48,12 @@
     </div>
 </nav>
 
+
+
+
 <script>
+
+
 
 function abre(){
   if (window.screen) {
@@ -63,9 +68,6 @@ function abre(){
       if(url.indexOf("vista/loginregistrar.php")!=-1) inedittoWin.focus();
       else inedittoWin.location='vista/loginregistrar.php';
   }
-
-  if (ineditto != null) ineditto.focus(); 
-  else alert("Su sistema tiene un Bloqueador de Popups Activo\n\nEs necesario que habilite las ventanas emergentes para ineditto.com\npara esto, vaya al menu \"Herramientas/Opciones\" de su navegador\ny en la pesta�a \"Contenido\", agregue como excepci�n a sicloud.com");
 }
 </script>
 <!-- nav -->

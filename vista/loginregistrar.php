@@ -2,19 +2,10 @@
 include_once '../controlador/controladorrutas.php';
 rutFromIniLogin();
 ?>
-<!DOCTYPE html>
 
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300, 400, 500" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="estilos/css/style.css">
-
+    <link rel="stylesheet" href="../pulic/css/reset.min.css">
+    <link rel="stylesheet" href="../public/css/login.css">
 </head>
-
 <body>
 
     <section class="user">
