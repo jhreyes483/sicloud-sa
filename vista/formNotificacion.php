@@ -60,6 +60,7 @@ $objCon = new ControllerDoc();
                 foreach ($datos as $d) {
                 ?>
                     </tr>
+<<<<<<< HEAD
                     <td><?= $d[0] ?></td>
                     <td><?= $d[1] ?></td>
                     <td><?= $d[2] ?></td>
@@ -75,6 +76,31 @@ $objCon = new ControllerDoc();
                     </tr>
 
                 <?php
+=======
+            </thead>
+            <tbody>
+                <!-- Los nombres que estan son los mismos de los atributos de la base de datos de lo contrario dara un error -->
+                <td><?= $d[0] ?></td>
+                <td><?= $d[1] ?></td>
+                <td><?= $d[2] ?></td>
+                <td><?= $d[3] ?></td>
+                <td><?= $d[4] ?></td>
+                <td>
+                    <a href="../controlador/api.php?apicall=deleteNotific&&id=<?= $d[0]  ?>" 
+                    class="btn btn-circle btn-danger"
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar notificacion"
+                    >
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                    <a href="../controlador/api.php?apicall=notificLeida&&id=<?= $d[0]  ?>" 
+                    class="btn btn-circle btn-success btn"
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Marcar como leida"
+                    ><i class="fas fa-arrow-right"></i>
+                    </a>
+                </td>
+            </tbody>
+        <?php
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
 
                 } //fin del while
 

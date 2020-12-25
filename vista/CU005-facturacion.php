@@ -50,7 +50,11 @@ if ($in == false) {
     //Convertimos el total en letras
 ?>
 
+<<<<<<< HEAD
 
+=======
+                                        
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
 
     <!DOCTYPE html>
     <html lang="es">
@@ -119,7 +123,11 @@ if ($in == false) {
             </div>
         </div>
 
+<<<<<<< HEAD
         <table id="productos" class="tablesorter">
+=======
+        <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto">
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
             <thead class="bg-dark text-white text-center">
                 <tr>
                     <th>Id producto</th>
@@ -133,6 +141,7 @@ if ($in == false) {
                     </th>
                 </tr>
             </thead>
+<<<<<<< HEAD
 
 
             <tbody>
@@ -145,6 +154,16 @@ if ($in == false) {
 
                         <tr>
                             <form action="../controlador/controllerFacturacion.php" method="POST">
+=======
+            <?php
+            if (isset($aP)) {
+                $ID = (isset($ID)) ? $ID : 0;
+                foreach ($aP as $i => $d) {
+            ?>
+                    <form action="../controlador/controllerFacturacion.php" method="POST">
+                        <tbody>
+                            <tr>
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[2] ?>"></td>
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="stok_prod" value="<?= $d[4] ?>"></td>
@@ -158,6 +177,7 @@ if ($in == false) {
                                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                     </button>
                                 </td>
+<<<<<<< HEAD
                             </form>
                         </tr>
 
@@ -169,12 +189,27 @@ if ($in == false) {
             }
             ?>
             <p class="e">Productos disponibles</p>
+=======
+                            </tr>
+                        </tbody>
+                    </form>
+        <?php
+                }
+            }
+        }
+        ?>
+        <p class="e">Productos disponibles</p>
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
         </table>
         <?php
         if (isset($_SESSION['venta'])) {
         ?>
             <p class="e">Productos a facturar</p>
+<<<<<<< HEAD
             <table>
+=======
+            <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto shadow rounded">
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                 <thead class="bg-dark text-white text-center">
                     <tr>
                         <th>Id producto</th>
@@ -186,14 +221,23 @@ if ($in == false) {
                         <th></th>
                     </tr>
                 </thead>
+<<<<<<< HEAD
                 <tbody>
+=======
+                <form action="" method="post">
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                     <?php
 
                     $ID = (isset($ID)) ? $ID : $u['usuario']['ID_us'];
                     foreach ($_SESSION['venta'] as $i => $d) {
                     ?>
+<<<<<<< HEAD
                         <tr>
                             <form action="" method="post">
+=======
+                        <tbody>
+                            <tr>
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[1] ?>"></td>
                                 <td><input class="form-control" type=»number» readonly=»readonly» name="stok_prod" value="<?= $d[2] ?>"></td>
@@ -205,6 +249,7 @@ if ($in == false) {
                                         <i class="far fa-trash-alt" aria-hidden="true"></i>
                                     </a>
                                 </td>
+<<<<<<< HEAD
                                 <input type="hidden" name="ID" value="<?= $ID ?>">
                                 <input type="hidden" name="estado" value="Venta">
                             </form>
@@ -217,6 +262,21 @@ if ($in == false) {
 
                     ?>
                     <tr>
+=======
+
+
+
+                                <input type="hidden" name="ID" value="<?= $ID ?>">
+                                <input type="hidden" name="estado" value="Venta">
+                            </tr>
+                        <?php
+                    }
+                         $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
+                         $letra           =  ucfirst( ($v->convertirEurosEnLetras($totFactura )) );
+                        $totFactura       =  number_format(($totFactura ?? 0), 0, ',', '.');
+
+                        ?>
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                         <!-- la de los perros, no se acepta -->
                         <td colspan="4"> <em><?= $letra ?></em></td>
                         <div class="col-md-2">
@@ -225,10 +285,17 @@ if ($in == false) {
                         <div class="col-md-2 ">
                             <td colspan="" class="mt-2 lead" align="right"> $ <?= $totFactura ?> </td>
                         </div>
+<<<<<<< HEAD
                     </tr>
                 </tbody>
             </table>
 
+=======
+                        </tr>
+                        </tbody>
+            </table>
+            </form>
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
 
             <!-- Datos venta---------------------------------------------------------------------------------------------- -->
             <div class="col-md-12">
@@ -268,7 +335,11 @@ if ($in == false) {
                                         <input type="hidden" name='accion' value="facturarInterno">
                                         <hr>
                                         <div class="card card-body shadow-lg">
+<<<<<<< HEAD
                                             <button class="btn btn-success  my-2" type="submit"><i class="fas fa-file "></i>Facturar </button>
+=======
+                                        <button class="btn btn-success  my-2" type="submit"><i class="fas fa-file "></i>Facturar </button>
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                                         </div>
 
                                     </div>
@@ -280,6 +351,7 @@ if ($in == false) {
                                 <input type="hidden" name="accion" value="anular">
                                 <hr>
                                 <div class="card card-body shadow-lg">
+<<<<<<< HEAD
                                     <button class="btn btn-danger  my-2" type="submit"><i class="far fa-trash-alt"></i>Anular </button>
                                 </div>
 
@@ -298,6 +370,26 @@ if ($in == false) {
                     <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
                 </p>
             </div><!-- fin de row -->
+=======
+                                <button class="btn btn-danger  my-2" type="submit"><i class="far fa-trash-alt"></i>Anular </button>
+                                </div>
+                                
+                            </form>
+                            </div>
+                            
+                            </div>
+                            <img class="ml-auto" height="150" width="150" src="fonts/factura.png" alt="">
+                    </div>
+       
+                    <p class="ml-auto">
+
+ 
+                        <label for="">Vendedor</label><br>
+                        <i class="fas fa-user-plus mr-2"></i>
+                        <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
+                    </p>
+                </div><!-- fin de row -->
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
             </div><!-- fin de row -->
             </div><!-- fin de card -->
             </div><br><br>
@@ -329,6 +421,7 @@ if ($in == false) {
         <?php
         rutFromFin();
         ?>
+<<<<<<< HEAD
 
 
         <script>
@@ -383,6 +476,40 @@ if ($in == false) {
                             sortAscending: ": active para ordenar la columna en orden ascendente",
                             sortDescending: ": active para ordenar la columna en orden descendente"
                         }
+=======
+
+        <!--    Datatables-->
+
+
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('#tablaUsuarios').DataTable({
+                    language: {
+                        processing: "Tratamiento en curso...",
+                        search: "Buscar&nbsp;:",
+                        lengthMenu: "Ordenar por _MENU_ ",
+                        info: "Mostrando _START_ al _END_ de un total de _TOTAL_",
+                        infoEmpty: "No existen datos.",
+                        infoFiltered: "(filtrado de _MAX_ elementos en total)",
+                        infoPostFix: "",
+                        loadingRecords: "Cargando...",
+                        zeroRecords: "No se encontraron datos con tu busqueda",
+                        emptyTable: "No hay datos disponibles en la tabla.",
+                        paginate: {
+                            first: "Primero",
+                            previous: "Anterior",
+                            next: "Siguiente",
+                            last: "Ultimo"
+                        },
+                        aria: {
+                            sortAscending: ": active para ordenar la columna en orden ascendente",
+                            sortDescending: ": active para ordenar la columna en orden descendente"
+                        }
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                     },
                     scrollY: 400,
                     lengthMenu: [

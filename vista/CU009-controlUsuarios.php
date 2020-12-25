@@ -40,7 +40,11 @@ if ($in == false) {
     $tabla = false;
     cardtituloS("Administrador de solicitiudes");
 
+<<<<<<< HEAD
     rutFromFin();
+=======
+
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
 ?>
 
 <script src="../public/js/tablesorter-master/jquery.tablesorter.js"></script>
@@ -197,6 +201,7 @@ if ((isset($datos))  && ($tabla == true)) {
 ?>
         <div class="col-lg-12">
             <div class="table-responsive">
+<<<<<<< HEAD
                 <table id="lis"  style="width:100%" class="tablesorte">
                     <thead>
                         <tr>
@@ -208,6 +213,19 @@ if ((isset($datos))  && ($tabla == true)) {
                             <th><i class="fas fa-arrows-alt-v"></i>Rol</th>
                             <th><i class="fas fa-arrows-alt-v"></i>Correo</th>
                             <th><i class="fas fa-arrows-alt-v"></i>Estado</th>
+=======
+                <table id="example" style="width:100%" class=" col-lg-12  table-bordered  table-striped bg-white  mx-auto">
+                    <thead  >
+                        <tr>
+                            <th>Foto</th>
+                            <th>Tipo doc</th>
+                            <th>Documento</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Rol</th>
+                            <th>Correo</th>
+                            <th>Estado</th>
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                             <th>Accion</th>
                         </tr>
                         </thead>
@@ -217,8 +235,15 @@ if ((isset($datos))  && ($tabla == true)) {
 foreach ($datos as $i  => $d) {
     
 ?>
+<<<<<<< HEAD
 
                         <tr>                        <!-- Los nombres que estan en [''] son los mismos de los atributos de la base de datos de lo contrario dara un error -->
+=======
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los nombres que estan en [''] son los mismos de los atributos de la base de datos de lo contrario dara un error -->
+>>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                         <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?=  ($d['foto'] != '' ) ?$d['foto']  :imgUsuario  ?>" alt="Card image cap" height="65" width="70"></td>
                         <td><?= $d['FK_tipo_doc'] ?></td>
                         <td><?= $d['ID_us'] ?></td>
