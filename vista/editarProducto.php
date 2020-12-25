@@ -15,7 +15,6 @@ if (isset($_POST)) {
         $producto  =  $aC['response_msg'][3];
         $estado    =  $aC['response_msg'][4];
     } else {
-<<<<<<< HEAD
         die('<h1>' . $aC['response_msg'] . '<h1>');
     }
 }
@@ -32,48 +31,15 @@ if (isset($_SESSION['message'])) {
 <?php
     setMessage();
 }
-=======
-        die( '<h1>'.$aC['response_msg'].'<h1>');
-    }
-}
-
-
-
-
-if (isset($_SESSION['message'])) {
->>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
 ?>
-    <!-- alerta boostrap -->
-    <div class="col-lg-4 mx-auto alert alert-<?php echo $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
-        <?php echo  $_SESSION['message']  ?>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-<?php
-
- setMessage();
-}
-?>
-
-
-
-
 
 <div class="card card-body text-center  col-md-10 mx-auto p-2 ">
     <div class=" container-fluid ">
         <div class="card card-body shadow mb-5"> <br>
             <div class="row">
-<<<<<<< HEAD
                 <?php
                 foreach ($producto as $row) {
                 ?>
-=======
-<?php
-foreach ($producto as $row) {
-?>
->>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                     <div class="col-md-4">
                         <!-- inicio de divicion 1 -->
                         <form action="../controlador/api.php" method="POST">
@@ -81,11 +47,7 @@ foreach ($producto as $row) {
                             <div class="form-group"><label for="">ID Producto</label><input class="form-control" value="<?= $row['ID_prod'] ?>" type="text" placeholder="ID producto" value="<?php $row['ID_prod']  ?> " ; name="ID_prod"></div>
                             <div class="form-group"><label for="">Nombre Producto</label><input class="form-control" value="<?= $row['nom_prod']  ?>" type="text" class="form-control" placeholder="Nombre producto" name="nom_prod"></div>
                             <div class="form-group"><label for="">Valor Producto</label><input class="form-control" type="number" value="<?= $row['val_prod']  ?>" class="form-control" placeholder="Valor" name="val_prod"></div>
-<<<<<<< HEAD
                             <input type="hidden" name="apicalp" value="updateProducto">
-=======
-                            <input type="hidden" name = "apicalp" value="updateProducto">
->>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                             <div class="form-group"> <input class="btn btn-primary form-control" type="submit" name="submit" value="actualizar Producto"> </div>
                     </div><!-- fin de primera divicion-->
 
@@ -95,7 +57,6 @@ foreach ($producto as $row) {
                         <div class="form-group">
                             <label for="">Selecciones estado</label>
                             <select name="estado_prod" class="form-control">
-<<<<<<< HEAD
                                 <?php
                                 foreach ($estado as $e) {
                                 ?>
@@ -103,15 +64,6 @@ foreach ($producto as $row) {
                                 <?php
                                 }
                                 ?>
-=======
-    <?php 
-    foreach($estado as $e){
-    ?>
-        <option <?=   ( $e == $producto[0][4] )? 'selected': ''; ?> value="<?= $e ?>"><?= $e ?></option>
-    <?php
-    }
-    ?>
->>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                             </select>
                         </div>
                         <div class="form-group"><label for="">Stock Inicial</label><input type="number" class="form-control" value="<?php echo $row['stok_prod'] ?>" name="stok_prod" required autofocus></div>
@@ -122,7 +74,6 @@ foreach ($producto as $row) {
                         <div class="form-group"><label for="">Categoria de producto</label><br>
                         <?php  }  ?>
                         <select class="form-control" name="CF_categoria">
-<<<<<<< HEAD
                             <?php
 
 
@@ -130,53 +81,27 @@ foreach ($producto as $row) {
                             ?>
                                 <option <?= ($c['ID_categoria'] == $producto[0]['CF_categoria']) ? 'selected' : ''; ?> value="<?= $c['ID_categoria'] ?>"><?= $c['nom_categoria'] ?></option>
                             <?php } ?>
-=======
-<?php
-
-
-foreach ($categoria as $c) {
-?>
-    <option <?= ($c['ID_categoria'] == $producto[0]['CF_categoria']  )? 'selected': ''; ?> value="<?= $c['ID_categoria'] ?>"><?= $c['nom_categoria'] ?></option>
-<?php } ?>
->>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                         </select>
                         </div><!--  fin de form-group Producto -->
 
 
                         <div class="form-group"><label for="">Medida</label>
                             <select class="form-control" name="CF_tipo_medida">
-<<<<<<< HEAD
                                 <?php
                                 foreach ($medida as $m) {
                                 ?>
                                     <option <?= ($m[0] ==  $producto[0][8]) ? 'selected' : ''; ?> value="<?= $m[0] ?>"><?= $m[1] ?></option>
                                 <?php }
                                 ?>
-=======
-<?php
-foreach ($medida as $m) {
-?>
-    <option <?= ( $m[0] ==  $producto[0][8] )? 'selected' : ''; ?>  value="<?= $m[0] ?>"><?= $m[1] ?></option>
-<?php }
-?>
->>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                             </select>
                         </div><!--  fin de form-group Medida -->
                         <div class=" form-group"><label for="">Provedor</label>
                             <select class="form-control" name="FK_rut">
-<<<<<<< HEAD
                                 <?php
                                 foreach ($proveedor as $p) {
                                 ?>
                                     <option <?= ($p[0]  == $producto[0][9]) ? 'selected' : '';  ?> value="<?= $p[0]  ?>"> <?= $p[1]  ?> </option>
                                 <?php  } ?>
-=======
-<?php
-foreach ($proveedor as $p) {
-?>
-    <option <?= ($p[0]  == $producto[0][9] )? 'selected' : '';  ?> value="<?= $p[0]  ?>"> <?= $p[1]  ?> </option>
-<?php  } ?>
->>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
                             </select>
                         </div><!--  fin de form-group Provedor-->
                         <!-- BOTON A ENLACE TABLA -->
@@ -195,12 +120,8 @@ foreach ($proveedor as $p) {
 <?php
 rutFinFooterFrom();
 rutFromFin();
-<<<<<<< HEAD
 
 ?>
 <script>
 
 </script>
-=======
-?>
->>>>>>> ddf88fe40d29fc61ec819bc71aff4d2fa3eaa775
