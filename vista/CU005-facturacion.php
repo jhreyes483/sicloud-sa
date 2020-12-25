@@ -50,7 +50,7 @@ if ($in == false) {
     //Convertimos el total en letras
 ?>
 
-                                        
+
 
     <!DOCTYPE html>
     <html lang="es">
@@ -59,7 +59,6 @@ if ($in == false) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Facturacion</title>
-        <script type="text/javascript" src="js/funcions.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css" />
     </head>
 
@@ -120,7 +119,7 @@ if ($in == false) {
             </div>
         </div>
 
-        <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto">
+        <table id="productos" class="tablesorter">
             <thead class="bg-dark text-white text-center">
                 <tr>
                     <th>Id producto</th>
@@ -134,14 +133,18 @@ if ($in == false) {
                     </th>
                 </tr>
             </thead>
-            <?php
-            if (isset($aP)) {
-                $ID = (isset($ID)) ? $ID : 0;
-                foreach ($aP as $i => $d) {
-            ?>
-                    <form action="../controlador/controllerFacturacion.php" method="POST">
-                        <tbody>
-                            <tr>
+
+
+            <tbody>
+                <?php
+
+                if (isset($aP)) {
+                    $ID = (isset($ID)) ? $ID : 0;
+                    foreach ($aP as $i => $d) {
+                ?>
+
+                        <tr>
+                            <form action="../controlador/controllerFacturacion.php" method="POST">
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[2] ?>"></td>
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="stok_prod" value="<?= $d[4] ?>"></td>
@@ -155,21 +158,23 @@ if ($in == false) {
                                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                                     </button>
                                 </td>
-                            </tr>
-                        </tbody>
-                    </form>
-        <?php
+                            </form>
+                        </tr>
+
+            <?php
+                    }
                 }
+                echo '</tbody>
+                   ';
             }
-        }
-        ?>
-        <p class="e">Productos disponibles</p>
+            ?>
+            <p class="e">Productos disponibles</p>
         </table>
         <?php
         if (isset($_SESSION['venta'])) {
         ?>
             <p class="e">Productos a facturar</p>
-            <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto shadow rounded">
+            <table>
                 <thead class="bg-dark text-white text-center">
                     <tr>
                         <th>Id producto</th>
@@ -181,14 +186,14 @@ if ($in == false) {
                         <th></th>
                     </tr>
                 </thead>
-                <form action="" method="post">
+                <tbody>
                     <?php
 
                     $ID = (isset($ID)) ? $ID : $u['usuario']['ID_us'];
                     foreach ($_SESSION['venta'] as $i => $d) {
                     ?>
-                        <tbody>
-                            <tr>
+                        <tr>
+                            <form action="" method="post">
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
                                 <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[1] ?>"></td>
                                 <td><input class="form-control" type=»number» readonly=»readonly» name="stok_prod" value="<?= $d[2] ?>"></td>
@@ -200,19 +205,18 @@ if ($in == false) {
                                         <i class="far fa-trash-alt" aria-hidden="true"></i>
                                     </a>
                                 </td>
-
-
-
                                 <input type="hidden" name="ID" value="<?= $ID ?>">
                                 <input type="hidden" name="estado" value="Venta">
-                            </tr>
-                        <?php
+                            </form>
+                        </tr>
+                    <?php
                     }
-                         $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
-                         $letra           =  ucfirst( ($v->convertirEurosEnLetras($totFactura )) );
-                        $totFactura       =  number_format(($totFactura ?? 0), 0, ',', '.');
+                    $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
+                    $letra           =  ucfirst(($v->convertirEurosEnLetras($totFactura)));
+                    $totFactura       =  number_format(($totFactura ?? 0), 0, ',', '.');
 
-                        ?>
+                    ?>
+                    <tr>
                         <!-- la de los perros, no se acepta -->
                         <td colspan="4"> <em><?= $letra ?></em></td>
                         <div class="col-md-2">
@@ -221,10 +225,10 @@ if ($in == false) {
                         <div class="col-md-2 ">
                             <td colspan="" class="mt-2 lead" align="right"> $ <?= $totFactura ?> </td>
                         </div>
-                        </tr>
-                        </tbody>
+                    </tr>
+                </tbody>
             </table>
-            </form>
+
 
             <!-- Datos venta---------------------------------------------------------------------------------------------- -->
             <div class="col-md-12">
@@ -264,7 +268,7 @@ if ($in == false) {
                                         <input type="hidden" name='accion' value="facturarInterno">
                                         <hr>
                                         <div class="card card-body shadow-lg">
-                                        <button class="btn btn-success  my-2" type="submit"><i class="fas fa-file "></i>Facturar </button>
+                                            <button class="btn btn-success  my-2" type="submit"><i class="fas fa-file "></i>Facturar </button>
                                         </div>
 
                                     </div>
@@ -276,24 +280,24 @@ if ($in == false) {
                                 <input type="hidden" name="accion" value="anular">
                                 <hr>
                                 <div class="card card-body shadow-lg">
-                                <button class="btn btn-danger  my-2" type="submit"><i class="far fa-trash-alt"></i>Anular </button>
+                                    <button class="btn btn-danger  my-2" type="submit"><i class="far fa-trash-alt"></i>Anular </button>
                                 </div>
-                                
-                            </form>
-                            </div>
-                            
-                            </div>
-                            <img class="ml-auto" height="150" width="150" src="fonts/factura.png" alt="">
-                    </div>
-       
-                    <p class="ml-auto">
 
- 
-                        <label for="">Vendedor</label><br>
-                        <i class="fas fa-user-plus mr-2"></i>
-                        <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
-                    </p>
-                </div><!-- fin de row -->
+                            </form>
+                        </div>
+
+                    </div>
+                    <img class="ml-auto" height="150" width="150" src="fonts/factura.png" alt="">
+                </div>
+
+                <p class="ml-auto">
+
+
+                    <label for="">Vendedor</label><br>
+                    <i class="fas fa-user-plus mr-2"></i>
+                    <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
+                </p>
+            </div><!-- fin de row -->
             </div><!-- fin de row -->
             </div><!-- fin de card -->
             </div><br><br>
@@ -326,6 +330,28 @@ if ($in == false) {
         rutFromFin();
         ?>
 
+
+        <script>
+            $(document).ready(function() {
+                $("#productos").tablesorter({
+                    widgets: ['zebra'],
+                    sortList: [
+                        [4, 0]
+                    ],
+                    headers: {
+                        0: {
+                            sorter: false
+                        },
+                        1: {
+                            sorter: false
+                        },
+                        2: {
+                            sorter: false
+                        }
+                    }
+                });
+            });
+        </script>
         <!--    Datatables-->
 
 

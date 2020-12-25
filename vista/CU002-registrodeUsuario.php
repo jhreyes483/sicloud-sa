@@ -114,3 +114,4 @@ cardtitulo("Registro de Usuarios");
 rutFinFooterFrom();
 rutFromFin();
 ?>
+

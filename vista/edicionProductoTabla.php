@@ -5,10 +5,10 @@ $objSession = new Session();
 $objP       = new ControllerDoc();
 $datos      = $objP->verProductos();
 $s          = $objSession->desencriptaSesion();
-$modulo     = ( isset($_GET['edit']) ) ?  'Editar producto' : 'Stock de productos'; 
+$modulo     = (isset($_GET['edit'])) ?  'Editar producto' : 'Stock de productos';
 
 
-cardtitulo( $modulo  );
+cardtitulo($modulo);
 
 if (isset($_SESSION['message'])) {  ?>
     <!-- alerta boostrap -->
@@ -22,112 +22,122 @@ if (isset($_SESSION['message'])) {  ?>
 <?php
     setMessage();
 }
+rutFromFin();
 
 ?>
 
 
-<table class="table table text-center table-striped  table-bordered bg-white table-sm col-md-10 col-sm-10 col-xs-12 mx-auto">
-    <thead class="bg-white">
+<script>
+    $(document).ready(function() {
+        $("table").addClass("table-hover bg-white table-sm table-bordered")
+        $("#stock").tablesorter({
+            widgets: ['zebra'],
+            sortList: [
+                [2, 1],
+                [0, 0]
+            ],
+            headers: {
+                5: {
+                    sorter: false
+                },
+                7: {
+                    sorter: false
+                }
+            }
+        });
+    });
+</script>
+
+
+
+<table id="stock" class="col-md-10 col-sm-10 col-xs-12 text-centar mx-auto">
+    <thead class="bg-dark text-white">
         <tr>
-            <th>Nombre Producto</th>
-            <th>Valor Producto</th>
-            <th>Stock </th>
-            <th>Estado del producto</th>
-            <th>categoria</th>
+            <th><i class="fas fa-arrows-alt-v"></i> Nombre Producto</th>
+            <th><i class="fas fa-arrows-alt-v"></i>Valor Producto</th>
+            <th><i class="fas fa-arrows-alt-v"></i>Stock </th>
+            <th><i class="fas fa-arrows-alt-v"></i>Estado del producto</th>
+            <th><i class="fas fa-arrows-alt-v"></i>categoria</th>
             <th>Imagen</th>
-            <th>Medida</th>
+            <th><i class="fas fa-arrows-alt-v"></i>Medida</th>
             <th>Ingresar a inventario</th>
-            <?php  
-            if(isset($_GET['edit'])) echo '<th>Edicion de producto</th>';
+            <?php
+            if (isset($_GET['edit'])) echo '<th>Edicion de producto</th>';
             ?>
-            
+
             <?php if ($_SESSION['usuario']['ID_rol_n'] == 1 || $_SESSION['usuario']['ID_rol_n'] == 1) {   ?>
                 <th>Accion</th><?php }  ?>
         </tr>
     </thead>
-    <?php
-
-    // $datos = $objp->verProductos();
-    foreach ($datos as $i => $row) {
-        //while ($row = $datos->fetch_array()) {
-        $p  =  $row['stok_prod'];
-
-
-        $c = "text";
-        if ($p < 2) {
-            $c = "danger";
-        } elseif ($p <= 6) {
-            $c = "warning";
-        } elseif ($p >= 7) {
-            $c = "success";
-        }
-        $c = "bg-" . $c;
-
-    ?>
-        <tbody>
+    <tbody>
+        <?php
+        foreach ($datos as $i => $row) {
+            $p  =  $row['stok_prod'];
+            $c = "text";
+            if ($p < 2) {
+                $c = "danger";
+            } elseif ($p <= 6) {
+                $c = "warning";
+            } elseif ($p >= 7) {
+                $c = "success";
+            }
+            $c = "bg-" . $c;
+        ?>
             <tr>
                 <td><?php echo $row['nom_prod'] ?></td>
                 <td><?php echo "$" . number_format(($row['val_prod']), 0, ',', '.'); ?></td>
                 <td class=" <?php echo  $c  ?>"><?php echo $row['stok_prod'] ?></td>
                 <td><?php echo $row['estado_prod'] ?></td>
                 <td><?php echo $row['nom_categoria'] ?></td>
-                <td><img class="card card-body  mx-auto" src="fonts/img/<?= ($row['img'] != '')?  $row['img'] : imgProducto; ?>" alt="Card image cap" height="130px" width="150px"></td>
+                <td><img class="card card-body  mx-auto" src="fonts/img/<?= ($row['img'] != '') ?  $row['img'] : imgProducto; ?>" alt="Card image cap" height="130px" width="150px"></td>
                 <td><?php echo $row['nom_medida'] ?></td>
 
                 <?php// if ($s['usuario']['ID_rol_n'] == 1 || $s['usuario']['ID_rol_n'] == 1) {   ?>
-                    <td>
-                        <a class="btn  btn-success" href="CU003-ingresoProducto.php?consulta=Validar+exitencia&&p=<?php echo $row['ID_prod'] ?>"
-                        data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresar productos a inventario"
-                        >ingreso</a>
+                <td>
+                    <a class="btn btn-success mx-auto text-center" href="CU003-ingresoProducto.php?consulta=Validar+exitencia&&p=<?php echo $row['ID_prod'] ?>" data-bs-toggle="tooltip" data-bs-placement="right" title="Ingresar productos a inventario">
+                        <i class="fas fa-tags"></i>
+                        ingreso</a>
+                </td>
 
-
-                    </td>
+                <?php
+                if (isset($_GET['edit'])) {
+                ?>
                     <td>
-                        <?php
-                  if( isset( $_GET['edit'])){
-                        ?>
                         <form action="editarProducto.php" method="POST">
-                            <button class="btn-circle btn btn-dark mx-auto" type="submit" 
-                            data-bs-toggle="tooltip" data-bs-placement="right" title="Editar producto">
-                            <i class="fas fa-marker"></i></button>
+                            <button class="btn-circle btn btn-dark mx-auto" type="submit" data-bs-toggle="tooltip" data-bs-placement="right" title="Editar producto">
+                                <i class="fas fa-marker"></i></button>
                             <input type="hidden" name="id" value="<?= $row['ID_prod'] ?>">
                         </form>
-                        <?php if ($s['usuario']['ID_rol_n'] == 1) { 
-          
-                            ?>
-  
+                        <?php if ($s['usuario']['ID_rol_n'] == 1) {
+                        ?>
                             <form action="../controlador/api.php" method="POST">
                                 <button type="submit" class="btn-circle btn btn-danger mx-auto" data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar producto"><i class="far fa-trash-alt"></i></button>
                                 <input type="hidden" name="id" value="<?= $row['ID_prod'] ?>">
                                 <input type="hidden" name="apicalp" value="EliminarProducto">
                             </form>
-                        <?php
-                        }
-                        }
-                        ?>
                     </td>
-
-                <?php // }  ?>
-
-
+            <?php
+                        }
+                    }
+            ?>
             </tr>
-        </tbody>
-    <?php
-    } // fin de tabla StockGeneral
-    // } // fin de while tabla
-
-    if(isset($_GET['edit'])) echo '    <td colspan="10">
+        <?php
+        } // fin de tabla StockGenera
+        ?>
+    </tbody>
+    <tr>
+        <td class="text-center mx-auto" colspan="4">
+            <?php
+            if (isset($_GET['edit'])) echo '    <td colspan="10">
     <a href="CU004-crearProductos.php" class="btn btn-primary">Crear producto</a>
     </td>
     </tr>';
-
-    ?>
-
+            ?>
+        </td>
+    </tr>
 </table>
 
-
-
-<div class="col-lg-10 mb-4 mx-auto">
+<div class="col-lg-10 mb-4 mx-auto my-4">
     <!-- Project Card -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 shadow p-3 mb-5 bg-white">
@@ -168,5 +178,5 @@ if (isset($_SESSION['message'])) {  ?>
 
 <?php
 rutFinFooterFrom();
-rutFromFin();
+
 ?>

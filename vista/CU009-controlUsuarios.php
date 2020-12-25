@@ -40,10 +40,19 @@ if ($in == false) {
     $tabla = false;
     cardtituloS("Administrador de solicitiudes");
 
-
+    rutFromFin();
 ?>
 
-    <script>
+<script src="../public/js/tablesorter-master/jquery.tablesorter.js"></script>
+
+<script> 
+
+
+
+
+
+
+
         function desactivarCuenta(id_to_delete) {
             var confirmation = confirm('Esta seguro que desea desactivar: ' + id_to_delete + ' ?');
             if (confirmation) {
@@ -188,28 +197,28 @@ if ((isset($datos))  && ($tabla == true)) {
 ?>
         <div class="col-lg-12">
             <div class="table-responsive">
-                <table id="example" style="width:100%" class=" col-lg-12  table-bordered  table-striped bg-white  mx-auto">
-                    <thead  >
+                <table id="lis"  style="width:100%" class="tablesorte">
+                    <thead>
                         <tr>
                             <th>Foto</th>
                             <th>Tipo doc</th>
-                            <th>Documento</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Rol</th>
-                            <th>Correo</th>
-                            <th>Estado</th>
+                            <th> <i class="fas fa-arrows-alt-v"></i> Documento</th>
+                            <th><i class="fas fa-arrows-alt-v"></i>Nombres</th>
+                            <th><i class="fas fa-arrows-alt-v"></i>Apellidos</th>
+                            <th><i class="fas fa-arrows-alt-v"></i>Rol</th>
+                            <th><i class="fas fa-arrows-alt-v"></i>Correo</th>
+                            <th><i class="fas fa-arrows-alt-v"></i>Estado</th>
                             <th>Accion</th>
                         </tr>
+                        </thead>
+                    <tbody>
 
 <?php
 foreach ($datos as $i  => $d) {
     
 ?>
-                            </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Los nombres que estan en [''] son los mismos de los atributos de la base de datos de lo contrario dara un error -->
+
+                        <tr>                        <!-- Los nombres que estan en [''] son los mismos de los atributos de la base de datos de lo contrario dara un error -->
                         <td><img class="img-profile ml-3 rounded-circle mx-auto" src="fonts/us/<?=  ($d['foto'] != '' ) ?$d['foto']  :imgUsuario  ?>" alt="Card image cap" height="65" width="70"></td>
                         <td><?= $d['FK_tipo_doc'] ?></td>
                         <td><?= $d['ID_us'] ?></td>
@@ -242,11 +251,13 @@ foreach ($datos as $i  => $d) {
                                 </a>
                             <?php }  ?>
                         </td>
-                    </tbody>
-            <?php
+                        </tr>
+                        <?php
                         }
                     }
             ?>
+                    </tbody>
+
                 </table>
             </div>
         </div><!-- div de tablas -->
@@ -304,8 +315,57 @@ foreach ($datos as $i  => $d) {
         </div>
 <?php
 rutFinFooterFrom();
-rutFromFin();
+
+
 } // fin de validadcion y ejecucion de permisos por rol
 ?>
+
+
+
+
+<script>
+      $("table").addClass(" table bg-white table-sm table-bordered table-hover")
+      $("table td").addClass("p-1 aling-middle")
+      $("table thead th").addClass("text-center text-dark verdedown")
+      $("table thead th:nth-child(5)").addClass("azuldark")
+      $("table tbody td:nth-child(1) img").addClass("img-fluid")
+      $("table tbody td:nth-child(n+3):nth-child(-n+4)").addClass("text-center")
+      $("table tbody td:nth-child(4) span").addClass("grupos")
+      $("table tbody td:nth-last-child(4)").addClass("text-right")
+      $("table tbody td:nth-child(4)").addClass("pt-2")
+</script>
+
+
+
+
+
+
+
+<!-- 
+
+<script> 
+
+$(document).ready(function() 
+    { 
+        $("#lis").tablesorter({ 
+			widgets: ['zebra'] ,
+			sortList: [[14,0]],
+			headers: { 
+				0:{sorter:false},
+				1:{sorter:false},
+				2:{sorter:false}
+			}
+		});
+	}
+); 
+
+</script>
+
+
+
+ -->
+
+
+
 
     <script src="estilos/js/cUsuariosJquery.js"></script>
