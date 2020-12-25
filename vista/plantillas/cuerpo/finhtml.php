@@ -1,20 +1,17 @@
    <!-- Complementos bootstrap java script-->
-   <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-   <script src="https://kit.fontawesome.com/451d49791e.js" crossorigin="anonymous"></script>
-   
-   <!-- data tables----------------------------------------------------------------------------------  -->
-   <!-- jQuery, Popper.js, Bootstrap JS -->
 
+   <script src="../public/js/popper.min.js"></script>
 
-   <!-- datatables JS -->
+   <script src="../public/js/jquery-1.9.0.js"></script>
+   <script src="../public/js/bootstrap.min.js"></script>
+   <script src="../public/js/fontawasome-ico.js"></script>
 
-
-
-
-   
-
+   <script src="../public/js/tablesorter-master/jquery.tablesorter.js"></script>
+   <script>
+      $(document).ready(function() {
+         $("table").addClass("table-hover bg-white table-sm table-bordered table-striped table-sm table-response")
+      });
+   </script>
    </body>
 
    </html>

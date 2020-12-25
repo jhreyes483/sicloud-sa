@@ -1,12 +1,25 @@
 <?php
 
+include_once 'controladorrutas.php';
+conficController();
+
 require_once '../controlador/controlador.php';
 require_once '../controlador/controladorsession.php';
-//rutApi();
-$db = new ControllerDoc();
-//session_destroy();
-// se pasan los parametros requeridos a esta funcion
-function isTheseParametersAvailable($params){
+
+class apiController extends Controller{
+protected $db;
+
+public function __construct(){
+   parent::__construct();
+   $this->db  = new ControllerDoc();
+   $this->getApi();
+}
+
+public function index(){
+   die('Error, metodo index en api no definido');
+}
+              
+ public function isTheseParametersAvailable($params){
    $avaible = true;
    $missingparams = '';
 
@@ -27,6 +40,10 @@ function isTheseParametersAvailable($params){
       die();
    }
 }
+
+
+
+public function getApi(){
    //Una matriz que muestra la respuesta de la api
    $response = [];
    /*
@@ -40,25 +57,25 @@ if(isset($_GET['apicall'])){
       // Opcion crear usuarios
       case 'createusuario':
       // Primero haremos la verificacion de parametros.
-      isTheseParametersAvailable(  [ 'ID_us','nom1','nom2', 'ape1', 'ape2','fecha', 'pass', 'correo','FK_tipo_doc' ]  );
-     // $db = new ControllerDoc();
-      $result = $db->createUsuariosController(
-         $_POST['ID_us'], 
-         $_POST['nom1'],
-         $_POST['nom2'],
-         $_POST['ape1'],
-         $_POST['ape2'],
-         $_POST['fecha'],    
-         $_POST['pass'],
+     $this->isTheseParametersAvailable(  [ 'ID_us','nom1','nom2', 'ape1', 'ape2','fecha', 'pass', 'correo','FK_tipo_doc' ]  );
+     //  = new ControllerDoc();
+      $result = $this->db->createUsuariosController(
+         $this->getSql('ID_us'), 
+         $this->getSql('nom1'),
+         $this->getSql('nom2'),
+         $this->getSql('ape1'),
+         $this->getSql('ape2'),
+         $this->getSql('fecha'),    
+         $this->getSql('pass'),
         // $_POST['foto'],
          $_FILES['foto']['name'],
-         $_POST['correo'],
-         $_POST['FK_tipo_doc'],
-         $_POST['FK_rol'],
+         $this->getSql('correo'),
+         $this->getSql('FK_tipo_doc'),
+         $this->getSql('FK_rol'),
          date('Y-m-d'),
          0,
          $_FILES['foto']['tmp_name'],
-         $_POST['tel']
+         $this->getSql('tel')
       );  
       if($result){
          //esto significa que no hay ningun error
@@ -75,10 +92,10 @@ if(isset($_GET['apicall'])){
       case 'readusuario';
          $response['error']     = false;
          $response['message']   = 'Solicitud completada correctamente';
-         $response['contenido'] = $db->readUsuariosController();
+         $response['contenido'] = $this->db->readUsuariosController();
       break;
       case 'elimianarUsuario';
-         $bool =   $db->eliminarUsuario( $_GET['id'] );
+         $bool =   $this->db->eliminarUsuario( $_GET['id'] );
          if( $bool ){
             $response['error']   =  false;
             $response['message'] =  $_SESSION['message'] = 'Elimino usuario de manera exitosa';
@@ -94,20 +111,22 @@ if(isset($_GET['apicall'])){
       case 'actualizarUsuario';
          $array =
          [  
-         $_POST['ID_us'], 
-         $_POST['nom1'],
-         $_POST['nom2'],
-         $_POST['ape1'],
-         $_POST['ape2'],
-         $_POST['fecha'],    
-         '',
-         $_POST['foto' ],    
-         $_POST['correo'],
-         $_POST['FK_tipo_doc'],
-         $_POST['FK_rol']
+            $this->getSql('ID_us'), 
+            $this->getSql('nom1'),
+            $this->getSql('nom2'),
+            $this->getSql('ape1'),
+            $this->getSql('ape2'),
+            $this->getSql('fecha'),    
+            '',
+            $this->getSql('foto'),    
+            $this->getSql('correo'),
+            $this->getSql('FK_tipo_doc'),
+            $this->getSql('FK_rol')
          ];
-         $bool1 =   $db->actualizarDatosUsuario($_GET['id'], $array );
-         if( $bool ){
+
+        Controller::ver($array, 1);
+         $bool1 =   $this->db->actualizarDatosUsuario($_GET['id'], $array );
+         if( $bool1 ){
            $response['error']    = false;
            $response['message']  = $_SESSION['message']  = "Actualizo usuario";
            $_SESSION['color']    = "success";
@@ -120,11 +139,11 @@ if(isset($_GET['apicall'])){
          header( 'location:  ../vista/CU009-controlUsuarios.php?documento='.$_GET['id'].'&accion=bId');
       break;
       case 'loginusuario':
-         isTheseParametersAvailable( ['nDoc', 'pass', 'tDoc'] );
-         $result = $db->loginUsuarioController(
-            $_POST['nDoc'],
-            $_POST['pass'],
-            $_POST['tDoc']);
+        $this->isTheseParametersAvailable( ['nDoc', 'pass', 'tDoc'] );
+         $result = $this->db->loginUsuarioController(
+            $this->getSqlSinEspacios('nDoc'),
+            $this->getSqlSinEspacios('pass'),
+            $this->getSqlSinEspacios('tDoc'));
          if(!$result){
             $response['error']     = true;
             $response['menssage']  = $_SESSION['message'] = 'Credenciales no validas';
@@ -136,7 +155,7 @@ if(isset($_GET['apicall'])){
          }
       break;
       case 'activarCuenta':
-         $result = $db->activarCuenta($_GET['id'] );
+         $result = $this->db->activarCuenta($_GET['id'] );
          if(!$result){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message']    = 'No activo cuenta';
@@ -151,13 +170,12 @@ if(isset($_GET['apicall'])){
          header( 'location:  ../vista/CU009-controlUsuarios.php');
       break;
       case 'desactivarUsuario':
-         $result = $db->desactivarCuenta($_GET['id'] );
+         $result = $this->db->desactivarCuenta($_GET['id'] );
          if(!$result){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message'] = 'No desactivo cuenta';
             $response['contenido']  = $result;
             $_SESSION['color']      =  'danger';
-            
          }else{
             $response['error']      = false;
             $response['message']    = $_SESSION['message'] = 'Desactivo cuenta';
@@ -169,18 +187,18 @@ if(isset($_GET['apicall'])){
       // insertar producto modulo - CU004-crearproductos.php
       case 'insertProducto':
          $a =[
-            $_POST['ID_prod'],
-            $_POST['nom_prod'],
-            $_POST['val_prod'],
-            $_POST['stok_prod'],
-            $_POST['estado_prod'],
-            $_POST['CF_categoria'],
-            $_POST['CF_tipo_medida'],
+            $this->getSql('ID_prod'),
+            $this->getSql('nom_prod'),
+            $this->getSql('val_prod'),
+            $this->getSql('stok_prod'),
+            $this->getSql('estado_prod'),
+            $this->getSql('CF_categoria'),
+            $this->getSql('CF_tipo_medida'),
             $_FILES['foto']['name'],
             $_FILES['foto']['tmp_name']
 
          ];
-         $result = $db->insertarProducto( $a );
+         $result = $this->db->insertarProducto( $a );
          if(!$result){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message'] = 'No inserto producto';
@@ -199,11 +217,11 @@ if(isset($_GET['apicall'])){
       case 'IngresarCantidad':
           //$cant, $stock, $id
          $a =[
-            $_POST['cantidad'],
-            $_POST['stok'],
+            $this->getSql('cantidad'),
+            $this->getSql('stok'),
             $_GET['id'],
          ];
-         $result = $db->inserCatidadProducto( $a );
+         $result = $this->db->inserCatidadProducto( $a );
          if($result){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message'] = 'Registro entrega';
@@ -226,7 +244,7 @@ if(isset($_GET['apicall'])){
       
       
       case 'eliminarTelefono':
-         $r= $db->eliminarTelefono($_GET['id']);
+         $r= $this->db->eliminarTelefono($_GET['id']);
          if($r){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message'] = 'No elimino telefono';
@@ -240,43 +258,13 @@ if(isset($_GET['apicall'])){
             $_SESSION['color']      = 'success';
          }
       break;
-      case 'EliminarProducto':
-         $r= $db->EliminarProducto($_GET['id']);
-         if(!$r){
-            $response['error']      = true;
-            $response['menssage']   = $_SESSION['message'] = 'No elimino producto';
-            $response['contenido']  = $r;
-            $_SESSION['color']      = 'danger';
-         }else{
-            $response['error']      = false;
-            $response['message']    = $_SESSION['message'] = 'Elimino producto'; 
-            $response['contenido']  = $r;
-            $_SESSION['color']      = 'success';
-         }
-      break;
-      case 'insertcategoria':
-         $a = [
-            $_POST['nom_categoria']
-         ];
-          $r = $db->insertCategoria($a);
-          if(!$r){
-            $response['error']      = true;
-            $response['menssage']   =  $_SESSION['message'] = "Error no creo categoria";
-            $response['contenido']  = $r;    
-         }else{
-            $response['error']      = false;
-            $response['message']    = $_SESSION['message'] = 'Inserto categoria'; 
-            $response['contenido']  = $r;
-            $_SESSION['message']    = "Inserto categoria";
-            $_SESSION['color']      = "success";
-         }
-      header( 'location:  ../vista/formCategoria.php');
-      break;
+
+  
       case 'eliminarCategoria':
          $a = [
             $_GET['id']
          ];
-          $r = $db->eliminarCategoria($a);
+          $r = $this->db->eliminarCategoria($a);
           if(!$r){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message']  = "Error no creo categoria";
@@ -296,7 +284,7 @@ if(isset($_GET['apicall'])){
          $a = [
             $_GET['id']
          ];
-          $r = $db->eliminarEmpresa($a);
+          $r = $this->db->eliminarEmpresa($a);
           if($r){
             $response['error']      = true;
             $response['menssage']   = $_SESSION['message'] = "Elimino empresa";
@@ -310,90 +298,14 @@ if(isset($_GET['apicall'])){
          }
       header( 'location:  ../vista/formEmpresa.php');
       break;
-      case 'insertUdateCategoria':
-         $a = [
-            $_GET['id'], 
-            $_POST['categoria']
-         ];
-          $r = $db->actualizarDatosCategoria($a);
-          if($r){
-            $response['error']      = true;
-            $response['menssage']   = $_SESSION['message'] = "Error, no Actualizo empresa";
-            $response['contenido']  = $r;
-            $_SESSION['color']      = "danger";
-         }else{
-            $response['error']      = false;
-            $response['message']    = $_SESSION['message'] = "Actualizo empresa";
-            $response['contenido']  = $r;
-            $_SESSION['color']      = "success";
-         }
-      header( 'location:  ../vista/formCategoria.php');
-      break;
-      case 'insertUdateEmpresa':
-         $a = [
-            $_POST['ID_rut'],
-            $_POST['nom_empresa'],
-         ];
-          $r = $db->actualizarDatosEmpresa($a);
-          if($r){
-            $response['error']      = true;
-            $response['menssage']   = $_SESSION['message'] = "Error, no actualizo empresa";
-            $response['contenido']  = $r;
-            $_SESSION['color']      = "danger";
-         }else{
-            $response['error']      = false;
-            $response['message']    = $_SESSION['message']    = "Actualizo empresa";
-            $response['contenido']  = $r;
-            $_SESSION['color']      = "success";
-         }
-      header( 'location:  ../vista/formEmpresa.php');
-      break;
-      case 'insertEmpresa':
-         $a = [
-            $_POST['ID_rut'],
-            $_POST['nom_empresa']
-         ];
-          $r = $db->insertEmpresa($a);
-          if($r == false){
-            $response['error']      = true;
-            $response['menssage']   = $_SESSION['message'] = 'Error, no creo empresa';
-            $response['contenido']  = $r;
-            $_SESSION['color']      = "danger";
-         }else{
-            $response['error']      = false;
-            $response['message']    = $_SESSION['message']  = "Creo empresa";
-            $response['contenido']  = $r;
-
-            $_SESSION['color']      = "success";
-         }
-      header( 'location:  ../vista/formEmpresa.php');
-      break;
-      case 'insertMedida':
-         $a = [
-            $_POST['nom_medida'],
-            $_POST['acron_medida']
-         ];
-          $r = $db->insertMedia($a);
-          if($r){
-            $response['error']      = false;
-            $response['menssage']   = $_SESSION['message']  = 'Creo unidad medida';
-            $response['contenido']  = $r;
-            $_SESSION['color']      = 'success';
-         }else{
-            $response['error']      =  true;
-            $response['message']    = $_SESSION['message']  = "Error, no creo unidad de medida";
-            $response['contenido']  = $r;
-            
-            $_SESSION['color']      = 'danger';
-         }
-      header( 'location:  ../vista/formMedida.php');
-      break;
+  
+    
       case 'eliminarMedida':
          $a = [
             $_GET['id'],
          ];
   
-          $r = $db->eliminarDatosMedia($a);
+          $r = $this->db->eliminarDatosMedia($a);
           if($r){
             $response['error']      = false;
             $response['menssage']   = $_SESSION['message'] = 'Elimino medida';
@@ -407,39 +319,19 @@ if(isset($_GET['apicall'])){
          }
       header( 'location:  ../vista/formMedida.php');
       break;
-      case 'insertUdateMedia':
-         $a = [
-            $_GET['id'],
-            $_POST['nom'],
-            $_POST['acron']
-         ];
-  
-          $r = $db->actualizarDatosMedida($a);
-          if($r){
-            $response['error']      = false;
-            $response['menssage']   = $_SESSION['message'] = 'Actualizar medida';
-            $response['contenido']  = $r;
-            $_SESSION['color']      = 'success';
-         }else{
-            $response['error']      =  true;
-            $response['message']    = $_SESSION['message'] = 'Error, Al actulizar medida';
-            $response['contenido']  = $r;
-            $_SESSION['color']      = 'danger';
-         }
-      header( 'location:  ../vista/formMedida.php');
-      break;
+ 
       case 'actualizarDatosPers':
          $a = [
             $_GET['id'],
-            $_POST['nom1'],
-            $_POST['nom2'],
-            $_POST['ape1'],
-            $_POST['ape2'],
-            $_POST['fecha'],
-            $_POST['correo']
+            $this->getSql('nom1'),
+            $this->getSql('nom2'),
+            $this->getSql('ape1'),
+            $this->getSql('ape2'),
+            $this->getSql('fecha'),
+            $this->getSql('correo')
          ];
   
-          $r = $db->insertUpdateUsuarioCliente($a);
+          $r = $this->db->insertUpdateUsuarioCliente($a);
           if($r){
             $response['error']      = false;
             $response['menssage']   = $_SESSION['message'] = 'Actualizo datos';
@@ -455,12 +347,12 @@ if(isset($_GET['apicall'])){
       break;
       case 'cambioContrasena':
          $a = [
-            $_POST['id'],
-            $_POST['passA'],
-            $_POST['passN'],
-            $_POST['passN2']
+            $this->getSql('id'),
+            $this->getSql('passA'),
+            $this->getSql('passN'),
+            $this->getSql('passN2')
          ];
-          $r = $db->validaContraseña($a);
+          $r = $this->db->validaContraseña($a);
           if($r){
             $response['error']      = false;
             $response['menssage']   = $_SESSION['message'] ='Cambio contraseña de manera exitosa';
@@ -475,14 +367,14 @@ if(isset($_GET['apicall'])){
       break;
       case 'cambioContrasenaCorreo':
          $a = [
-            $_POST['tipo_doc'],
-            $_POST['documento'],
-            $_POST['email'],
-            $_POST['fActual'],
-            $_POST['fCaduc'],
-            $_POST['token']
+            $this->getSql('tipo_doc'),
+            $this->getSql('documento'),
+            $this->getSql('email'),
+            $this->getSql('fActual'),
+            $this->getSql('fCaduc'),
+            $this->getSql('token')
          ];
-          $r = $db->validarCredecilesCorrreo($a);
+          $r = $this->db->validarCredecilesCorrreo($a);
           if($r){
             $response['error']      = false;
             $response['menssage']   = $_SESSION['message'] = 'Cambio contraseña de manera exitosa';
@@ -502,7 +394,7 @@ if(isset($_GET['apicall'])){
           $objSession->verificarAcceso();
       break;
       case 'notificLeida':
-         $r = $db->notificacionLeida($_GET['id']);
+         $r = $this->db->notificacionLeida($_GET['id']);
          if($r){
            $response['error']      = false;
            $response['menssage']   = $_SESSION['message'] = 'Update exitoso exitosa';
@@ -516,7 +408,7 @@ if(isset($_GET['apicall'])){
      case 'deleteNotific':
       //die($_GET['id']);
             
-            $r = $db->deleteNotific( $_GET['id'] );
+            $r = $this->db->deleteNotific( $_GET['id'] );
             if($r){
               $response['error']      = false;
               $response['menssage']   = $_SESSION['message'] = 'Elimino log';
@@ -531,7 +423,7 @@ if(isset($_GET['apicall'])){
      case 'deleteLog':
 //die($_GET['id']);
       
-      $r = $db->deleteLog( $_GET['id'] );
+      $r = $this->db->deleteLog( $_GET['id'] );
       if($r){
         $response['error']      = false;
         $response['menssage']   = $_SESSION['message'] = 'Elimino log';
@@ -540,12 +432,11 @@ if(isset($_GET['apicall'])){
         $response['error']      =  true;
         $response['message']    = $_SESSION['message'] = 'Error al eliminar log'; 
         $_SESSION['color']      = 'danger';
-        
      }
      header( 'location:  ../vista/formControl.php');
    break;
    case 'selectUsuarioFactura':
-   $r = $db->selectUsuarioFac(6, 1);
+   $r = $this->db->selectUsuarioFac(6, 1);
    echo json_encode($r, JSON_UNESCAPED_UNICODE);
    die();
    break;
@@ -560,22 +451,200 @@ if(isset($_GET['apicall'])){
    // Empujar los valores apropiados en la consulta json
    if( !isset($_POST['apicalp'])){
    $response['message'] = 'Llamado invalido del api';
+}else{
+
 }
 }
 
-switch ($_POST['apicalp']) {
+if(isset($_POST['apicalp'])){
+   switch ($_POST['apicalp']) {
+   case 'insertUdateCategoria':
+      //ControllerDoc::ver($_POST, 1);
+      $a = [
+         $this->getSql('id'), 
+         $this->getSql('categoria')
+      ];
+       $r = $this->db->actualizarDatosCategoria($a);
+       if(!$r){
+         $response['error']      = true;
+         $response['menssage']   = $_SESSION['message'] = 'Error, no Actualizo Actegoria'.$_POST['categoria'];
+         $response['contenido']  = $r;
+         $_SESSION['color']      = "danger";
+      }else{
+         $response['error']      = false;
+         $response['message']    = $_SESSION['message'] = 'Actualizo Categoria '.$_POST['categoria'];
+         $response['contenido']  = $r;
+         $_SESSION['color']      = "success";
+      }
+   header( 'location:  ../vista/formCategoria.php');
+   break;
+
+
+   case 'insertcategoria':
+      $a = [
+         $this->getSql('nom_categoria')
+      ];
+       $r = $this->db->insertCategoria($a);
+       if(!$r){
+         $response['error']      = true;
+         $response['menssage']   =  $_SESSION['message'] = "Error no creo categoria";
+         $response['contenido']  = $r;    
+      }else{
+         $response['error']      = false;
+         $response['message']    = $_SESSION['message'] = 'Inserto categoria'; 
+         $response['contenido']  = $r;
+         $_SESSION['message']    = "Inserto categoria";
+         $_SESSION['color']      = "success";
+      }
+   header( 'location:  ../vista/formCategoria.php');
+   break;
+
+
+   case 'insertUdateEmpresa':
+      $a = [
+         $this->getSql('ID_rut'),
+         $this->getSql('nom_empresa')
+      ];
+   
+       $r = $this->db->actualizarDatosEmpresa($a);
+       if(!$r){
+         $response['error']      = true;
+         $response['menssage']   = $_SESSION['message'] = "Error, no actualizo empresa";
+         $response['contenido']  = $r;
+         $_SESSION['color']      = "danger";
+      }else{
+         $response['error']      = false;
+         $response['message']    = $_SESSION['message']    = "Actualizo empresa";
+         $response['contenido']  = $r;
+         $_SESSION['color']      = "success";
+      }
+   header( 'location:  ../vista/formEmpresa.php');
+   break;
+   case 'insertEmpresa':
+      $a = [
+         $this->getSql('ID_rut'),
+         $this->getSql('nom_empresa')
+      ];
+       $r = $this->db->insertEmpresa($a);
+       if($r){
+         $response['error']      = false;
+         $response['message']    = $_SESSION['message']  = "Creo empresa";
+         $response['contenido']  = $r;
+         $_SESSION['color']      = "success";
+      }else{
+
+         $response['error']      = true;
+         $response['menssage']   = $_SESSION['message'] = 'Error, no creo empresa';
+         $response['contenido']  = $r;
+         $_SESSION['color']      = "danger";
+      }
+
+   header( 'location:  ../vista/formEmpresa.php');
+   break;
+   case 'insertMedida':
+      $a = [
+         $this->getSql('nom_medida'),
+         $this->getSql('acron_medida')
+      ];
+       $r = $this->db->insertMedia($a);
+       if($r){
+         $response['error']      = false;
+         $response['menssage']   = $_SESSION['message']  = 'Creo unidad medida';
+         $response['contenido']  = $r;
+         $_SESSION['color']      = 'success';
+      }else{
+         $response['error']      =  true;
+         $response['message']    = $_SESSION['message']  = "Error, no creo unidad de medida";
+         $response['contenido']  = $r;
+         
+         $_SESSION['color']      = 'danger';
+      }
+   header( 'location:  ../vista/formMedida.php');
+   break;
    case 'venta':
       $a = $_SESSION['CARRITO'];
       require_once 'controllerFacturacion.php';
       $objFac = new  ControllerFactura();
       $objFac->facturar($a, 1);
       header( 'location:  ../vista/mostrarCarrito.php');
+   break;
+
+   case 'EliminarProducto':
+      $r= $this->db->EliminarProducto($this->getSql('id'));
+      if(!$r){
+         $response['error']      = true;
+         $response['menssage']   = $_SESSION['message'] = 'No elimino producto';
+         $response['contenido']  = $r;
+         $_SESSION['color']      = 'danger';
+      }else{
+         $response['error']      = false;
+         $response['message']    = $_SESSION['message'] = 'Elimino producto'; 
+         $response['contenido']  = $r;
+         $_SESSION['color']      = 'success';
+      }
+      header( 'location:  ../vista/edicionProductoTabla.php');
+   break;
+   case'updateProducto':
+   //  extract($_POST);
+      $a = [
+         $this->getSql('ID_prod'), // 0
+         $this->getSql('nom_prod'), // 1
+         $this->getSql('val_prod'), // 2
+         $this->getSql('stok_prod'), // 3
+         $this->getSql('estado_prod'), // 4
+         $this->getSql('CF_categoria'), // 5
+         $this->getSql('CF_tipo_medida') // 6
+         ];
+      
+      $r = $this->db->editarProducto($a);
+      if($r){
+         $response['error']      = false;
+         $response['menssage']   = $_SESSION['message'] = 'Edito producto '.$nom_prod.' de manera exitoza';
+         $_SESSION['color']      = 'success';
+      }else{
+         $response['error']      =  true;
+         $response['message']    = $_SESSION['message'] = 'Error al editar producto '.$nom_prod; 
+         $_SESSION['color']      = 'danger';
+      }
+      header( "location:  ../vista/edicionProductoTabla.php");
+      break;
+      case 'insertUdateMedia':
+       //  ControllerDoc::ver($_POST, 1);
+         $a = [
+            $this->getSql('id'),
+            $this->getSql('nom'),
+            $this->getSql('acron')
+         ];
+         // ControllerDoc::ver($a, 1);
+  
+          $r = $this->db->actualizarDatosMedida($a);
+          if($r){
+            $response['error']      = false;
+            $response['menssage']   = $_SESSION['message'] = 'Actualizar medida';
+            $response['contenido']  = $r;
+            $_SESSION['color']      = 'success';
+         }else{
+            $response['error']      =  true;
+            $response['message']    = $_SESSION['message'] = 'Error, Al actualizar medida no debe tener "" por seguridad';
+            $response['contenido']  = $r;
+            $_SESSION['color']      = 'danger';
+         }
+      header( 'location:  ../vista/formMedida.php');
       break;
    
    default:
-      # code...
+     echo 'no esta en metodo';
       break;
+   }
 }
 
 
-echo json_encode($response);
+ echo json_encode($response);
+
+}
+
+   
+}
+
+
+$obj = new apiController();

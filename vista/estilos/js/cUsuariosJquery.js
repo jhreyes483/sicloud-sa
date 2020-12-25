@@ -1,5 +1,25 @@
 
-
+$(document).ready(function() 
+{ 
+    $("#lis").tablesorter({ 
+  widgets: ['zebra'] ,
+  sortList: [
+    [3,0]
+],
+  headers: {
+    0: {
+        sorter: false
+    },
+    1: {
+      sorter: false
+  },
+    8: {
+        sorter: false
+    }
+}
+});
+}
+); 
 
 $(".form").hide(300);
 formFiltro = false;
@@ -38,3 +58,4 @@ $(document).ready(function() {
 
 
 });
+

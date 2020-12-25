@@ -1,8 +1,8 @@
 <?php
-
 include_once '../controlador/controladorrutas.php';
+include_once '../controlador/controllerFacturacion.php';
 rutFromIni();
-$objCon    = new ControllerDoc();
+$objConF    = new ControllerFactura();
 $objSession = new Session();
 $u = $objSession->desencriptaSesion();
 
@@ -27,99 +27,45 @@ if ($in == false) {
     echo "<script>alert('No tiene permiso para ingresar a este modulo');</script>";
     echo "<script>window.location.replace('index.php');</script>";
 } else {
-
-
     //------------------------------------------------------------------------------------
-  //  ControllerDoc::ver(  $_POST);
-    if (isset($_POST)) extract($_POST);
+
     if (isset($_GET)) extract($_GET);
-    // if($estado == "venta"){
-
-
-      //  if(isset($venta)){
-    $subTotal = ($cantidad *  $val_prod);
-    $_SESSION['venta'][] = [
-        $ID_prod,
-        $nom_prod,
-        $stok_prod,
-        $cantidad,
-        $val_prod,
-        $Cat,
-        $subTotal
-    ];
-//}
-
-
-    //}
-     ControllerDoc::ver($_POST);
-    ControllerDoc::ver($_SESSION['venta']);
-
-
-
-
-
-    if (isset($_POST))  extract($_POST);
-
-
-
-    $aC = $objCon->facturacion($ID);
-
-    if ($aC[0] == 'OK') {
-        $aU    = $aC[1];
-        $aP    = $aC[2];
-        // ControllerDoc::ver(  $aP);
-
-
-    } else {
-        $_SESSION['message'] = $aC[0];
-        $_SESSION['color'] = 'danger';
+    if (isset($_POST)) extract($_POST);
+    if (isset($ID)) {
+        $aC = $objConF->facturacion($ID);
+        if ($aC['response_status'] == 'OK') {
+            $aU    = $aC['response_msg'][0];
+            $aP    = $aC['response_msg'][1];
+            $aPgo  = $aC['response_msg'][2];
+            $aTipV = $aC['response_msg'][3];
+        } else {
+            $error = '<div class="col-lg-6 col-12 col-sm-12 shadow-lg mx-auto text-center my-4  alert alert-danger alert-dismissible fade show" role="alert">
+            <h1>' . $aC['response_msg'] . '</h1> <br> 
+            <a class="btn btn-outline-primary"  href="">Seleccionar otra fecha</a>
+         </div>';
+        }
     }
 
-    if(  isset( $id_prod ) &&  isset($delete) ){
-        unset($_SESSION['venta'][$id_prod]);
-    }
-
-    if(isset($facturacion)){
-        $totFactura = array_sum(array_column($_SESSION['venta'], 6));
-        $a=[
-            $_SESSION['venta'],
-            $totFactura
-        ];
-
-        $objCon->insertFactura($a);
-    }
-
-
-    /*
-
-
-    INSERT INTO `factura` (`ID_factura`, `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`, `claveTransaccion`, `PaypalDatos`) VALUES (NULL, '40000', '2020-11-24', NULL, '123', '1', NULL, NULL);
-*/
-
-
+    $v = new CifrasEnLetras();
+    //Convertimos el total en letras
 ?>
-    <!-- col 12 -->
+
+
+
     <!DOCTYPE html>
     <html lang="es">
 
     <head>
         <meta charset="UTF-8">
-        <?php //include_once 'js/scripts.php';  
-
-        ?>
-
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Facturacion</title>
-        <script type="text/javascript" src="js/funcions.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css" />
     </head>
 
     <body>
-
         <div class="container-fluid col-md-8 my-4">
-
             <?php
-
+            if (isset($error)) die($error);
             if (isset($_SESSION['message'])) {
             ?>
                 <!-- alerta boostrap -->
@@ -129,399 +75,347 @@ if ($in == false) {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-            <?php  // session_unset();
+            <?php
                 setMessage();
             }
-
             ?>
-
             <div class="row">
                 <!-- Formulario datos cliente---------------------------------------------------------------------------------------------- -->
                 <div class="col-md-12">
                     <h2 class="my-4 e">Nueva venta</h2>
                     <p class="e">Datos de cliente</p>
                     <div class="card card-body">
-         <form action="" method="post">
+
+                        <form action="" method="post">
+                            <i class="fas fa-user-plus mr-2"></i>
                             <button type="submit" class="btn btn-outline-success col-md-1 my-1 btn-sm">Buscar</button>
+
                             <div class="card card-body shadow">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="form-group"><label for="">Cedula Cliente</label><input type="text" value="<?php $ID ?>" class="form-control" name="ID" id="nit_cliente" /></div>
+                                        <div class="form-group"><label for="">Cedula Cliente</label><input type="text" value="" class="form-control" name="ID" id="nit_cliente" /></div>
                                     </div><!-- fin de primera divicion de 3 -->
-                                    </form>
-
+                        </form>
                         <?php
-                        if ($aC[0] == 'OK') {  ?>
+                        if (isset($aU) && ($aU > 0)) {
+                        ?>
                             <div class="col-md-4">
-                                <div class="form-group"><label for="">Nombre</label><input type="text" value="<?= $aU[0][2]  ?>" class="form-control" name="nom1" id="nit_cliente" /></div>
+                                <div class="form-group"><label for="">Nombre</label><input type=»text» readonly=»readonly» value="<?= $aU[0][2]  ?>" class="form-control" name="nom1" id="nit_cliente" /></div>
                             </div><!-- fin de primera divicion de 3 -->
-                            <div class="form-group"><label for="">Telefono</label><input type="text" value="<?= $aU[0][13]  ?>" class="form-control" name="tel" id="nit_cliente" /></div>
-                    </div><!-- fin de primera divicion de 3 -->
-                    <div class="row">
-                        <label for="" class="text center mx-auto">Direccion</label>
-                        <div class="col-md-12"><input class="form-control" type="text" value="<?= $aU[0][14] ?>"></div>
+                            <div class="col-md-4">
+                                <div class="form-group"><label for="">Telefono</label><input type=»text» readonly=»readonly» value="<?= $aU[0][13]  ?>" class="form-control" name="tel" id="nit_cliente" /></div>
+                            </div><!-- fin de primera divicion de 3 -->
                     </div>
-                </div>
+                    <div class="row">
 
-
-
-            <?php
-                        }
-            ?>
-
-
-
-
-
-
-
-
-            <?php
-            if ($aC == 'OK') {
-                $id_us = $_GET['ID'];
-                $objModFact = new ControllerDoc();
-                $datos = $objModFact->verUsuarioFactura($id_us);
-                //$us = Factura::verUsuarioFactura($_GET['ID']);
-                //while ($row = $us->fetch_assoc()) {
-                foreach ($datos as $i => $row) {
-            ?>
-
-                    <div class="col-md-4">
-                        <div class="form-group"><label for="">Nombre</label><input type=»text» readonly=»readonly» class="form-control" value="<?php echo $row['nom1'] . $row['nom2'] . " " . $row['ape1'] . " " . $row['ape2'];  ?>" /></div>
-                    </div><!-- fin de segunda divicion de 3 -->
-                    <div class="col-md-4">
-                        <div class="form-group"><label for="">Telefono</label><input type=»text» readonly=»readonly» class="form-control" value="<?php echo $row['tel'] ?>" /></div>
-                    </div><!-- fin de tercera divicion de 3 -->
-                    <div class="form-group col-md-12"><label for="">Direccion</label><input type=»text» readonly=»readonly» class="form-control" value="<?php echo $row['dir'] ?>" /></div>
-            <?php       }
-            } ?>
-            </div><!-- fin de div row -->
-        </div><!-- fin de card -->
-        </div><!-- fin de card -->
-        </div>
-        <!-- Formulario datos cliente---------------------------------------------------------------------------------------------- -->
-
-        <?php
-        if ($aC[0] == 'OK') {
-        ?>
-            <table class="table table-striped bg-bordered bg-white table-sm col-md-10 col-sm-4 col-xs-12 mx-auto">
-                <thead>
-                    <tr>
-                        <th>Id producto</th>
-                        <th>Producto</th>
-                        <th>Valor</th>
-                        <th>Cantidad</th>
-                        <th>Stock</th>
-                        <th>Categora</th>
-                        <th>
-                            Agregar
-                        </th>
-                    </tr>
-                </thead>
+                        <div class="col-md-12">
+                            <label for="" class="text center mx-auto">Direccion</label>
+                            <input class="form-control" type=»text» readonly=»readonly» value="<?= $aU[0][14] ?>"></div>
+                    </div>
                 <?php
-                //$datos = Factura::verjoinFactura();
-
-                //while($row = $datos->fetch_array()  ){
-                foreach ($aP as $i => $d) {
-
+                        }
                 ?>
-                    <form action="" method="POST">
-                        <tbody>
-                            <tr>
+                </div>
+            </div>
+        </div>
 
-                                <td><input class="form-control" type="text" name="ID_prod" value="<?php echo $d[0] ?>"></td>
-                                <td><input class="form-control" type="text" name="nom_prod" value="<?php echo $d[2] ?>"></td>
-                                <td><input class="form-control" type="text" name="stok_prod" value="<?php echo $d[3] ?>"></td>
-                                <td><input class="form-control" type="number" name="cantidad" value="<?= 1 ?>"></td>
-                                <td><input class="form-control" type="text" name="val_prod" value="<?php echo $d[4] ?>"></td>
-                                <td><input class="form-control" type="text" name="Cat" value="<?php echo $d[6] ?>"></td>
-                                <input type="hidden" name="ID" value="<?= $ID ?>">
-                                <input type="hidden" name="estado" value="Venta">
+        <table id="productos" class="tablesorter">
+            <thead class="bg-dark text-white text-center">
+                <tr>
+                    <th>Id producto</th>
+                    <th>Producto</th>
+                    <th>Stock</th>
+                    <th>Cantidad</th>
+                    <th><i class="fas fa-dollar-sign mr-2"></i>Valor</th>
+                    <th>Categora</th>
+                    <th>
+                        Agregar
+                    </th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+                <?php
+
+                if (isset($aP)) {
+                    $ID = (isset($ID)) ? $ID : 0;
+                    foreach ($aP as $i => $d) {
+                ?>
+
+                        <tr>
+                            <form action="../controlador/controllerFacturacion.php" method="POST">
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[2] ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="stok_prod" value="<?= $d[4] ?>"></td>
+                                <td><input class="form-control" type=number name="cantidad" value="<?= 1 ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="val_prod" value="<?= ($d[3])  ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="<?= $d[6] ?>"></td>
+                                <input type="hidden" name="ID" value="<?= $ID ?? 0 ?>">
+                                <input type="hidden" name="accion" value="agregar">
                                 <td>
-                                    <button type="submit" class="btn btn-success btn-sm" href="">Agregar</button>
+                                    <button type="submit" class="btn btn-circle btn-success btn-sm" href="" data-bs-toggle="tooltip" data-bs-placement="right" title="Agragar producto a factura">
+                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                    </button>
                                 </td>
+                            </form>
+                        </tr>
 
-                            </tr>
-                        </tbody>
-
-                    </form>
-
-            <?php  }
-            } ?>
-
-            <label for="">
-                <h1>Compras</h1>
-            </label>
-            </table>
-
-
-            <table class="table table-striped bg-bordered bg-white table-sm col-md-10 col-sm-4 col-xs-12 mx-auto shadow rounded">
-                <thead>
+            <?php
+                    }
+                }
+                echo '</tbody>
+                   ';
+            }
+            ?>
+            <p class="e">Productos disponibles</p>
+        </table>
+        <?php
+        if (isset($_SESSION['venta'])) {
+        ?>
+            <p class="e">Productos a facturar</p>
+            <table>
+                <thead class="bg-dark text-white text-center">
                     <tr>
                         <th>Id producto</th>
                         <th>Producto</th>
-                        <th>Valor</th>
+                        <th>Stock</th>
                         <th>Cantidad</th>
-                        <th>Categoria</th>
+                        <th><i class="fas fa-dollar-sign mr-2"></i>Valor</th>
                         <th>Sub total</th>
                         <th></th>
                     </tr>
                 </thead>
+                <tbody>
+                    <?php
 
-
-
-                <form action="" method="post">
-                <?php
-                //$datos = Factura::verjoinFactura();
-
-                //while($row = $datos->fetch_array()  )
-
-        if(isset($_SESSION['venta'])){
-                foreach ($_SESSION['venta'] as $i => $d) {
-
-                ?>
-
-                    <tbody>
+                    $ID = (isset($ID)) ? $ID : $u['usuario']['ID_us'];
+                    foreach ($_SESSION['venta'] as $i => $d) {
+                    ?>
                         <tr>
-                            <td><input class="form-control" type="text" name="ID_prod" value="<?= $d[0] ?>"></td>
-                            <td><input class="form-control" type="text" name="nom_prod" value="<?= $d[1] ?>"></td>
-                            <td><input class="form-control" type="text" name="stok_prod" value="<?= $d[2] ?>"></td>
-                            <td><input class="form-control" type="text" name="val_prod" value="<?= $d[3] ?>"></td>
-                            <td><input class="form-control" type="text" name="Cat" value="<?= $d[4] ?>"></td>
-                            <td><input class="form-control" type="text" name="Cat" value="<?= $d[6] ?? 0 ?>"></td>
-                            <td> 
-                            <a class = "btn btn-primary"href="CU005-facturacion.php?delete&id_prod=<?php echo $i.'&ID='.$ID; ?>">Eliminar</a>
-                            </td>
-                            <input type="hidden" name="ID" value="<?= $ID ?>">
-                            <input type="hidden" name="estado" value="Venta">
+                            <form action="" method="post">
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="ID_prod" value="<?= $d[0] ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="nom_prod" value="<?= $d[1] ?>"></td>
+                                <td><input class="form-control" type=»number» readonly=»readonly» name="stok_prod" value="<?= $d[2] ?>"></td>
+                                <td><input class="form-control" type=»number» readonly=»readonly» name="val_prod" value="<?= $d[3] ?>"></td>
+                                <td><input class="form-control" type=»text» readonly=»readonly» name="Cat" value="$<?= number_format(($d[4] ?? 0), 0, ',', '.')  ?>"></td>
+                                <td><input class="form-control" type=»number» readonly=»readonly» name="sub_total" value="$<?= number_format(($d[6] ?? 0), 0, ',', '.')  ?>"></td>
+                                <td>
+                                    <a class="btn btn-circle btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar porducto de factura" href="../controlador/controllerFacturacion.php?accion=eliminar&id_prod=<?php echo $i . '&ID=' . $ID; ?>">
+                                        <i class="far fa-trash-alt" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                                <input type="hidden" name="ID" value="<?= $ID ?>">
+                                <input type="hidden" name="estado" value="Venta">
+                            </form>
                         </tr>
-                <?php  }  ?>
+                    <?php
+                    }
+                    $totFactura =  array_sum(array_column($_SESSION['venta'], 6));
+                    $letra           =  ucfirst(($v->convertirEurosEnLetras($totFactura)));
+                    $totFactura       =  number_format(($totFactura ?? 0), 0, ',', '.');
 
-                <!-- la de los perros, no se acepta -->
-                 <div class="col-md-2"> <td colspan="5"     class="mt-2" align="right"> <label for="total" class="lead">Total:</label> </td></div>
-                 <?php $totFactura =  array_sum(array_column($_SESSION['venta'], 6)) ?>
-                 <div class="col-md-2 ">  <td  colspan="6" class="mt-2 lead" align="right" > $ <?= $totFactura ?> </td></div>
-                </tr>
-                
+                    ?>
+                    <tr>
+                        <!-- la de los perros, no se acepta -->
+                        <td colspan="4"> <em><?= $letra ?></em></td>
+                        <div class="col-md-2">
+                            <td colspan="1" class="mt-2" align="right"> <label for="total" class="lead">Total:</label> </td>
+                        </div>
+                        <div class="col-md-2 ">
+                            <td colspan="" class="mt-2 lead" align="right"> $ <?= $totFactura ?> </td>
+                        </div>
+                    </tr>
                 </tbody>
             </table>
 
-            </form>
 
-
-
-            <form action=""   method="post">
-                    <input type="hidden" name='facturacion' value="facturacion">
-                <input class = "btn btn-success" value = "facturar"type="submit">
-            </form>
-
-            <?php  }?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card my-4">
-                        <div class="card-header bg-primary"><label for="" class="lead">Lista de Usuarios</label> </div>
-                        <div class="card-body">
-
-                            <table id="tablaUsuarios" class="table-striped mb-3">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Numero de Documento</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
-                                        <th>Correo</th>
-                                        <th>Rol</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Formulario datos cliente---------------------------------------------------------------------------------------------- -->
+            <!-- Datos venta---------------------------------------------------------------------------------------------- -->
             <div class="col-md-12">
                 <br><br><br>
                 <p class="e">Datos de venta</p>
                 <div class="card card-body ">
                     <div class="card card-body  shadow">
                         <div class="row">
-                            <p>
-                                <label for="">Vendedor</label><br>
-                                <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
-                            </p>
+                            <form action="../controlador/controllerFacturacion.php" method="post">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <select class="form-control" name="pago">
+                                            <?php
+                                            foreach ($aPgo as $i => $row) {
+                                            ?>
+                                                <option value="<?= $row[0] ?>"><?= $row[1] ?></option>
+                                            <?php }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" name="tipo">
+                                            <?php
+                                            foreach ($aTipV as $i => $row) {
+                                            ?>
+                                                <option value="<?= $row[0] ?>"><?= $row[1] ?></option>
+                                            <?php }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-12"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 ">
+                                        <input type="hidden" name="FK_tipo_doc" value="<?= $aU[0][0] ?>">
+                                        <input type="hidden" name='ID' value="<?= $ID  ?>">
+                                        <input type="hidden" name='accion' value="facturarInterno">
+                                        <hr>
+                                        <div class="card card-body shadow-lg">
+                                            <button class="btn btn-success  my-2" type="submit"><i class="fas fa-file "></i>Facturar </button>
+                                        </div>
 
-                            <div class="ml-auto"><label for="">Accion</label><br><a href="#" class="btn btn-danger  ">Anular</a></div>
-                        </div><!-- fin de row -->
-                    </div><!-- fin de row -->
-                </div><!-- fin de card -->
-            </div><br><br>
-            <!-- Formulario datos cliente---------------------------------------------------------------------------------------------- -->
-            </div>
+                                    </div>
+                                    <div class="col-lg-6 ">
 
+                            </form>
 
-            <!-- tabla de productos 01-------------------------------------------------------------------------------------- -->
+                            <form action="../controlador/controllerFacturacion.php" method="post">
+                                <input type="hidden" name="accion" value="anular">
+                                <hr>
+                                <div class="card card-body shadow-lg">
+                                    <button class="btn btn-danger  my-2" type="submit"><i class="far fa-trash-alt"></i>Anular </button>
+                                </div>
 
+                            </form>
+                        </div>
 
-
-            <div class="col-md-12">
-                <table class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 my-4 text-center mx-auto">
-                    <thead class="bg-dark text-white text-center">
-                        <tr>
-                            <th>Codigo</th>
-                            <th>Producto</th>
-                            <th>Existencia</th>
-                            <th>Cantidad</th>
-                            <th>Precio</th>
-                            <th>Precio Total</th>
-                            <th>Accion</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            <td><input type="text" name="txt_cod_producto" id="txt_cod_producto"></td>
-                            <td id="txt_description">-</td>
-                            <td id="txt_existencia">-</td>
-                            <td><input type="text" name="txt_cant_producto" id="txt_cant_producto" value="0" min="1" disabled></td>
-                            <td id="txt_precion" class="text-right">0.00</td>
-                            <td id="txt_precion" class="text-right">0.00</td>
-                            <td><a href="#" id="add_product_venta" class="btn btn-circle btn-success"><i class="fass fa-plus"></i>
-                                </a></td>
-                        </tr>
-
-                        <?php
-                        if (isset($_GET['id_p'])) {
-                            //     $datos = Producto::verProductosId($_GET['id_p']);
-                            $objModProd = new ControllerDoc();
-                            $datos = $objModProd->verProductosId($id_p);
-                            //     while ($row = $datos->fetch_array()) {
-                            foreach ($datos as $i => $row) {
-                        ?>
-
-                                <thead class="bg-dark text-white text-center">
-                                    <tr>
-                                        <th>Codigo</th>
-                                        <th colspan="2">Descripcion</th>
-                                        <th>Cavtidad</th>
-                                        <th class="text-right">Precio</th>
-                                        <th class="text-right">Precio Total</th>
-                                        <th>Accion</th>
-                                    </tr>
-                                </thead>
-                    </tbody>
-                <?php  } ?>
-                </table>
-
-                <div class="col-lg-2 mx-auto">
-                    <div class="card card-body ">
-                        <!--  -->
-                        <a class="btn btn-blok btn-dark" type="text" href="ajax/showFactura.php">Factura</a>
                     </div>
+                    <img class="ml-auto" height="150" width="150" src="fonts/factura.png" alt="">
+                </div>
+
+                <p class="ml-auto">
+
+
+                    <label for="">Vendedor</label><br>
+                    <i class="fas fa-user-plus mr-2"></i>
+                    <?php echo $u['usuario']['nom1'] . " " . $u['usuario']['ape1']; ?>
+                </p>
+            </div><!-- fin de row -->
+            </div><!-- fin de row -->
+            </div><!-- fin de card -->
+            </div><br><br>
+        <?php
+        }
+        ?>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 mx-auto">
+                <div class="card my-4">
+                    <table id="tablaUsuarios" class="table table-striped bg-bordered bg-white table-sm col-md-12 col-sm-4 col-xs-12 mx-auto shadow rounded">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Numero de Documento</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Correo</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            </div>
-    <?php
+        </div>
+        </div>
+        <?php
+        rutFromFin();
+        ?>
 
+
+        <script>
+            $(document).ready(function() {
+                $("#productos").tablesorter({
+                    widgets: ['zebra'],
+                    sortList: [
+                        [4, 0]
+                    ],
+                    headers: {
+                        0: {
+                            sorter: false
+                        },
+                        1: {
+                            sorter: false
+                        },
+                        2: {
+                            sorter: false
                         }
-                    }; // fin de validacion permisos de ingreso
-
-
-                    rutFromFin();
-    ?>
-
-    <!--    Datatables-->
-
-
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#tablaUsuarios').DataTable({
-                language: {
-                    processing: "Tratamiento en curso...",
-                    search: "Buscar&nbsp;:",
-                    lengthMenu: "Ordenar por _MENU_ ",
-                    info: "Mostrando _START_ al _END_ de un total de _TOTAL_",
-                    infoEmpty: "No existen datos.",
-                    infoFiltered: "(filtrado de _MAX_ elementos en total)",
-                    infoPostFix: "",
-                    loadingRecords: "Cargando...",
-                    zeroRecords: "No se encontraron datos con tu busqueda",
-                    emptyTable: "No hay datos disponibles en la tabla.",
-                    paginate: {
-                        first: "Primero",
-                        previous: "Anterior",
-                        next: "Siguiente",
-                        last: "Ultimo"
-                    },
-                    aria: {
-                        sortAscending: ": active para ordenar la columna en orden ascendente",
-                        sortDescending: ": active para ordenar la columna en orden descendente"
                     }
-                },
-                scrollY: 400,
-                lengthMenu: [
-                    [10, 25, -1],
-                    [10, 25, "All"]
-                ],
-
-                "ajax": {
-                    "url": "../controlador/api.php?apicall=selectUsuarioFactura",
-                    "dataSrc": ""
-                },
-                "columns": [{
-                        "data": "ID_us"
-                    },
-                    {
-                        "data": "nom1"
-                    },
-                    {
-                        "data": "ape1"
-                    },
-                    {
-                        "data": "correo"
-                    },
-                    {
-                        "data": "nom_rol"
-                    },
-                    {
-                        "data": "estado"
-                    },
-                    {
-                        "defaultContent": "<button class='btn btn-primary'>Detalles</button>"
-                    }
-                ]
+                });
             });
-        });
-    </script>
+        </script>
+        <!--    Datatables-->
+
+
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('#tablaUsuarios').DataTable({
+                    language: {
+                        processing: "Tratamiento en curso...",
+                        search: "Buscar&nbsp;:",
+                        lengthMenu: "Ordenar por _MENU_ ",
+                        info: "Mostrando _START_ al _END_ de un total de _TOTAL_",
+                        infoEmpty: "No existen datos.",
+                        infoFiltered: "(filtrado de _MAX_ elementos en total)",
+                        infoPostFix: "",
+                        loadingRecords: "Cargando...",
+                        zeroRecords: "No se encontraron datos con tu busqueda",
+                        emptyTable: "No hay datos disponibles en la tabla.",
+                        paginate: {
+                            first: "Primero",
+                            previous: "Anterior",
+                            next: "Siguiente",
+                            last: "Ultimo"
+                        },
+                        aria: {
+                            sortAscending: ": active para ordenar la columna en orden ascendente",
+                            sortDescending: ": active para ordenar la columna en orden descendente"
+                        }
+                    },
+                    scrollY: 400,
+                    lengthMenu: [
+                        [10, 25, -1],
+                        [10, 25, "All"]
+                    ],
+
+                    "ajax": {
+                        "url": "../controlador/api.php?apicall=selectUsuarioFactura",
+                        "dataSrc": ""
+                    },
+                    "columns": [{
+                            "data": "ID_us"
+                        },
+                        {
+                            "data": "nom1"
+                        },
+                        {
+                            "data": "ape1"
+                        },
+                        {
+                            "data": "correo"
+                        },
+                        {
+                            "data": "nom_rol"
+                        },
+                        {
+                            "data": "estado"
+                        },
+                        {
+                            "defaultContent": "<button class='btn btn-primary'>Detalles</button>"
+                        }
+                    ]
+                });
+            });
+        </script>

@@ -7,6 +7,16 @@ function rutApi(){
 
 
 
+function conficController(){
+  // include_once '../application/Bootstrap.php';
+   include_once '../application/Config.php';
+   include_once '../application/Controller.php';
+   //include_once '../aplication/DataBase.php';
+   //include_once '../application/Request.php';
+  // include_once '../application/View.php';
+}
+
+
 
 function rutConIni(){
    include_once $_SERVER['DOCUMENT_ROOT'].'/sicloud/modelo/class.documento.php';
@@ -84,7 +94,7 @@ if (  !isset($cons)  ){
 
    function rutFinFooterFromRaiz(){
       include_once 'vista/plantillas/cuerpo/footerN0.php';
-      include_once 'vista/plantillas/cuerpo/finhtml.php';
+      include_once 'vista/plantillas/cuerpo/finhtml0.php';
    }
 
    function rutIniInactiva(){
@@ -137,7 +147,7 @@ if (  !isset($cons)  ){
    }
 
    function rutFromFinN3(){ 
-      include_once '../../plantillas/cuerpo/finhtml.php';
+      include_once '../../plantillas/cuerpo/finhtml3.php';
       include_once '../../plantillas/cuerpo/footerN3.php';
    }
 

@@ -7,7 +7,7 @@ date_default_timezone_set("America/Bogota");
 
 <article>
     <div class="container-jav">
-        <video loop autoplay muted muted poster="fonts/banner01.jpg" width="100%" class="bk-rgb-video">
+        <video loop autoplay muted muted poster="./vista/fonts/banner01.jpg" width="100%" class="bk-rgb-video">
             <source src="./vista/fonts/boston.mp4" type="video/mp4">
         </video>
         <div class="textSobreVideo">
@@ -157,10 +157,10 @@ date_default_timezone_set("America/Bogota");
     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.92411032952!2d-74.20988058573687!3d4.607607443741915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9e22e1a69dad%3A0x37ca3bcc91bfba65!2sCl.%2078%20Sur%20%2378-71%2C%20Bogot%C3%A1!5e0!3m2!1ses!2sco!4v1590105646415!5m2!1ses!2sco" width="900" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
     </div>
 </div>
-<script src="./vista/estilos/js/funcions.js"></script>
+<script src="public/js/funcions.js"></script>
 
 <?php
 rutFinFooterFromRaiz();
 ?>
-<script src="./vista/estilos/js/login.js"></script>
+<script src="public/js/login.js"></script>
 <!--    IMPORTANTE VERIFICAR CONDIGO JQUERY -->

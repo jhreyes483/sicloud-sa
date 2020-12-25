@@ -8,10 +8,8 @@ cardtitulo('Edicion de empresa');
 
 
 //accion editar 
-if ((isset($_GET['id']))) {
-    $id = $_GET['id'];
-    echo $id;
-
+if ((isset($_POST['id']))) {
+    $id = $_POST['id'];
 ?>
 
 
@@ -21,7 +19,7 @@ if ((isset($_GET['id']))) {
                 <div class="card">
                     <div class="card-header">Registro</div>
                     <div class="card-body">
-                        <form action="../controlador/api.php?id=<?= $_GET['id'] ?>&&apicall=insertUdateEmpresa" method="POST">
+                        <form action="../controlador/api.php" method="POST">
 
                             <?php 
                             $objModEmp = new ControllerDoc();
@@ -32,8 +30,8 @@ if ((isset($_GET['id']))) {
                                 <div class="form-group"><input class="form-control" type="text" name="ID_rut" placeholder="ID_rut" value="<?php echo $row['ID_rut']  ?>" required autofocus maxlength="35"></div>
                                 <div class="form-group"><input class="form-control" type="text" name="nom_empresa" placeholder="nom_empresa" value="<?php echo $row['nom_empresa']  ?>" required autofocus maxlength="50"></div>
                             <?php  } ?>
-
-                            <input type="hidden" name="accion" value="insertUdateEmpresa">
+                            <input type="hidden" name="id" value="<?= $id ?>"  >
+                            <input type="hidden" name="apicalp" value="insertUdateEmpresa">
                             <div class="form-group"><input class="form-control btn btn-primary" type="submit" name="submit"></div>
                         </form>
                     </div><!-- fin card body -->

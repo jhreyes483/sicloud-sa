@@ -12,56 +12,74 @@ $objCon = new ControllerDoc();
     <?php
     if (isset($_SESSION['message'])) {
     ?>
-        <div class="mx-auto col-lg-4 text-center alert alert-<?php echo $_SESSION['color']   ?> alert-dismissible fade show" role="alert">
-            <?php
-            echo  $_SESSION['message']  ?>
+        <div class="mx-auto col-lg-4 text-center alert alert-<?= $_SESSION['color'] ?> alert-dismissible fade show" role="alert">
+            <?= $_SESSION['message'] ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-
     <?php setMessage();
-    } ?>
+    }
+    rutFromFin();
+    ?>
+
+    <script>
+        $(document).ready(function() {
+            $("table").addClass("table-hover bg-white table-sm table-bordered")
+            $("#notificacion").tablesorter({
+                widgets: ['zebra'],
+                sortList: [
+                    [3, 0],[4, 0],[1,0]
+                ],
+                headers: {
+                    5: {
+                        sorter: false
+                    },
+                }
+            });
+        });
+    </script>
 
 
     <!-- inicia segunda divicion -->
     <div class="col-md-8 p-2 mx-auto ">
-        <table class=" table table-bordered table-sm table-striped bg-white  mx-auto   text-center">
+        <table id="notificacion" class="tablesorter  mx-auto text-center">
             <thead>
-                <th>ID notificacion</th>
-                <th>Estado</th>
-                <th>Descripcion</th>
-                <th>Rol</th>
-                <th>Tipo de notificacion</th>
+                <tr>
+                    <th> <i class="fas fa-arrows-alt-v"></i> ID notificacion</th>
+                    <th> <i class="fas fa-arrows-alt-v"></i> Estado</th>
+                    <th> <i class="fas fa-arrows-alt-v"></i> Descripcion</th>
+                    <th> <i class="fas fa-arrows-alt-v"></i> Rol</th>
+                    <th> <i class="fas fa-arrows-alt-v"></i> Tipo de notificacion</th>
+                    <th> Actividad</th>
                 </tr>
-
-
+            </thead>
+            <tbody>
                 <?php
-
                 $datos = $objCon->verNotificacionesT();
-
-               // ControllerDoc::ver($datos, 1);
                 foreach ($datos as $d) {
                 ?>
                     </tr>
-            </thead>
-            <tbody>
-                <!-- Los nombres que estan son los mismos de los atributos de la base de datos de lo contrario dara un error -->
-                <td><?= $d[0] ?></td>
-                <td><?= $d[1] ?></td>
-                <td><?= $d[2] ?></td>
-                <td><?= $d[3] ?></td>
-                <td><?= $d[4] ?></td>
-                <td>
-                    <a href="../controlador/api.php?apicall=deleteNotific&&id=<?= $d[0]  ?>" class="btn btn-circle btn-danger"><i class="far fa-trash-alt"></i></a>
-                    <a href="../controlador/api.php?apicall=notificLeida&&id=<?= $d[0]  ?>" class="btn btn-circle btn-success btn-"><i class="fas fa-arrow-right"></i></a>
-                </td>
-            </tbody>
-        <?php
+                    <td><?= $d[0] ?></td>
+                    <td><?= $d[1] ?></td>
+                    <td><?= $d[2] ?></td>
+                    <td><?= $d[3] ?></td>
+                    <td><?= $d[4] ?></td>
+                    <td>
+                        <a href="../controlador/api.php?apicall=deleteNotific&&id=<?= $d[0]  ?>" class="btn btn-circle btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar notificacion">
+                            <i class="far fa-trash-alt"></i>
+                        </a>
+                        <a href="../controlador/api.php?apicall=notificLeida&&id=<?= $d[0]  ?>" class="btn btn-circle btn-success btn" data-bs-toggle="tooltip" data-bs-placement="right" title="Marcar como leida"><i class="fas fa-arrow-right"></i>
+                        </a>
+                    </td>
+                    </tr>
+
+                <?php
 
                 } //fin del while
 
-        ?>
+                ?>
+            </tbody>
         </table>
 
 
@@ -70,5 +88,5 @@ $objCon = new ControllerDoc();
 
 <?php
 rutFinFooterFrom();
-rutFromFin();
+
 ?>

@@ -39,36 +39,28 @@ function eliminarMed(id_med){
             ?>
 
 <div class="container">
-            <div class="   card ">
-                <div class="card-header">Registro</div>
-                <div class="card-body">
-                    <form action="../controlador/api.php?apicall=insertMedida" method="POST">
-                        <div class="form-group"><input class="form-control" type="text" name="nom_medida" placeholder="Medida" required autofocus maxlength="35"></div>
-                        <div class="form-group"><input class="form-control" type="text" name="acron_medida" placeholder="Acronimo" required autofocus maxlength="5"></div>
-                        <input type="hidden" name="accion" value="insertMedida">
-                        <div class="form-group"><input class="form-control btn btn-primary" type="submit" name="submit" value="enviar"></div>
-                    </form>
-                </div><!-- fin card body -->
-            </div><!-- fin de card -->
-  
-
+    <div class="   card ">
+        <div class="card-header">Registro</div>
+        <div class="card-body">
+            <form action="../controlador/api.php" method="POST">
+                <div class="form-group"><input class="form-control" type="text" name="nom_medida" placeholder="Medida" required autofocus maxlength="35"></div>
+                <div class="form-group"><input class="form-control" type="text" name="acron_medida" placeholder="Acronimo" required autofocus maxlength="5"></div>
+                <input type="hidden" name="apicalp" value="insertMedida">
+                <div class="form-group"><input class="form-control btn btn-primary" type="submit" name="submit" value="Crear Medida"></div>
+            </form>
+        </div><!-- fin card body -->
+    </div><!-- fin de card -->
+</div>
     </div>
-
-    </div>
-
-
         <div class="col-lg-6 p2 mt-3">
             <table class=" table table-bordered  table-striped bg-white table-sm text-center">
                 <thead>
-
                     <tr>
                         <th>ID_medida</th>
                         <th>Medida</th>
                         <th>Acronimo</th>
                         <th>Accion</th>
-                        <?php 
-
-                        
+                        <?php   
                         $objModMed = new ControllerDoc();
                         $datos  = $objModMed->verMedida();
                         if (isset($datos)) {
@@ -79,12 +71,23 @@ function eliminarMed(id_med){
                 </thead>
                 <tbody>
                     <!-- Los nombres que estan son los mismos de los atributos de la base de datos de lo contrario dara un error -->
-                    <td><?php echo $row['ID_medida'] ?></td>
-                    <td><?php echo $row['nom_medida'] ?></td>
-                    <td><?php echo $row['acron_medida'] ?></td>
+                    <td><?= $row['ID_medida'] ?></td>
+                    <td><?= $row['nom_medida'] ?></td>
+                    <td><?= $row['acron_medida'] ?></td>
                     <td>
-                        <a href=" formEdicionMedida.php?accion=editarMedia&&id=<?php echo $row['ID_medida'] ?> " class="btn btn-circle btn-secondary"><i class="fas fa-marker"></i></a>
-                        <a onclick="eliminarMed(<?php echo $row['ID_medida'] ?>)" href="#" class="btn btn-circle btn-danger"><i class="far fa-trash-alt"></i></a>
+                        <form action="formEdicionMedida.php" method="POST">
+                            <button type="submit"  class="btn btn-circle btn-secondary"
+                                data-bs-toggle="tooltip" data-bs-placement="right" title="Editar Medida">
+                                <i class="fas fa-marker"></i>
+                            </button >
+                            <input type="hidden" name="id" value="<?= $row['ID_medida'] ?>"  >
+                        </form>
+
+                        <a onclick="eliminarMed(<?= $row['ID_medida'] ?>)" href="#"
+                        data-bs-toggle="tooltip" data-bs-placement="right" title="Eliminar Medida"
+                        class="btn btn-circle btn-danger">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
                     </td>
                 </tbody>
         <?php

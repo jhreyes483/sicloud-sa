@@ -13,13 +13,10 @@ class SQL extends Conexion{
    
    //==================================================
 
-   
-   
-   
-
    public function verPuntosYusuario($id){
-      $sql = " SELECT U.ID_us  , U.nom1 , U.nom2 , U.ape1 , U.ape2 , U.fecha , U.pass , U.foto , U.correo , 
-      TD.nom_doc , 
+      $sql = " SELECT U.ID_us  , U.nom1 , U.nom2 , U.ape1 , 
+      U.ape2 , U.fecha , U.pass , U.foto , U.correo , 
+      U.FK_tipo_doc , 
       RU.estado , 
       R.ID_rol_n , R.nom_rol , 
       P.puntos
@@ -592,7 +589,7 @@ public function loginUsuarioModel($datosModel){
          WHERE ID_categoria = :ID_categoria ";
       $consulta = $this->db->prepare($sql);
       $consulta->bindValue(":ID_categoria", $a[0], PDO::PARAM_INT );
-      $consulta->bindValue(":nom_categoria", $a[1], PDO::PARAM_STR);
+      $consulta->bindValue(":nom_categoria", $a[1], PDO::PARAM_STR );
       $result = $consulta->execute();
       if($result){ 
          return true;
@@ -846,21 +843,29 @@ public function eliminarErrorLog($id)
 
 
    public function facturar($a){
-      ControllerDoc::ver($a);
-      $sql ="INSERT INTO `factura`( `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`) 
-      VALUES (  :total , :fecha , :status ,:iva, :tipo_pago )";
+      $sql ="INSERT INTO `factura`( `total`, `fecha`, `status`, `iva`, `FK_c_tipo_pago`,`FK_tipoV`) 
+      VALUES (  :total , :fecha , :status ,:iva, :tipo_pago , :pago)";
       $consulta = $this->db->prepare($sql);
       $consulta->bindValue(":total", $a[0], PDO::PARAM_INT);
       $consulta->bindValue(":fecha", $a[1], PDO::PARAM_STR);
       $consulta->bindValue(":status", $a[2], PDO::PARAM_STR);
       $consulta->bindValue(":iva", $a[3], PDO::PARAM_STR);
       $consulta->bindValue(":tipo_pago", $a[4], PDO::PARAM_INT);
+      $consulta->bindValue(":pago", $a[5], PDO::PARAM_INT);
       $result = $consulta->execute();
       $id = $this->db->lastInsertId();
 
       return $id;
    }
 
+
+
+     public function verTipoV(){
+        $sql= "SELECT * FROM `tipo_venta`";
+        $stm = $this->db->prepare($sql);
+        $stm->execute();
+        return $stm->fetchAll(); 
+     }
    public function insertaProductosFactura($a){
       $sql = "INSERT INTO det_factura( FK_det_factura ,  FK_det_prod, precio_unt, estado, cantidad, CF_us, CF_tipo_doc) 
       VALUES (:FK_factura, :FK_prod, :precioU, :estado, :cantidad, :CF_us, :CF_tipo_doc)";
@@ -971,13 +976,23 @@ public function eliminarErrorLog($id)
       return $result;
    }
 // valida factura en un periodo de fechas
-   public function verIntervaloFecha($fechaIni, $fechaFin){
-      $sql = "SELECT * FROM factura
-          WHERE fecha <= '$fechaFin' AND  fecha >= '$fechaIni' 
+   public function verIntervaloFecha($fF, $fI){
+      $sql = "SELECT  DISTINCT TD.nom_doc , U.ID_us,  U.nom1,  U.nom2 , U.ape1 , U.ape2 , U.correo, 
+      F.ID_factura, F.fecha, D.dir , TP.nom_tipo_pago , F.total
+               FROM factura F 
+               LEFT JOIN tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
+               LEFT JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               LEFT JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
+               LEFT JOIN usuario U  on U.ID_us =  DF.CF_us
+               LEFT JOIN direccion D on D.CF_us = U.ID_us
+               LEFT JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+       WHERE F.fecha BETWEEN  '$fF' AND  '$fI' 
           ORDER BY fecha ASC";
       $stm = $this->db->prepare($sql);
       $stm->execute();
       $result = $stm->fetchAll(); 
+      //echo $sql;
+      //die();
       return $result;
    }
 // Ver datos  usuario en factura
@@ -994,32 +1009,36 @@ public function eliminarErrorLog($id)
       return $result;
    }
    public function verFactura($id){
-      $sql = "SELECT   U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , F.ID_factura, F.fecha   , 
-      D.dir , TP.nom_tipo_pago , DF.cantidad , Pr.val_prod , TD.nom_doc , U.ID_us
-         FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-         JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
-         JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
-         JOIN usuario U  on U.ID_us =  DF.CF_us
-         JOIN direccion D on D.CF_us = U.ID_us
-         JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
-         WHERE ID_factura = '$id'
+      $sql = "SELECT  TD.nom_doc , U.ID_us,  U.nom1,  U.nom2 , U.ape1 , U.ape2 , U.correo, 
+      F.ID_factura, F.fecha, D.dir , TP.nom_tipo_pago , F.total, V.tipo
+               FROM factura F 
+               LEFT JOIN tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
+               LEFT JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               LEFT JOIN producto Pr on Pr.ID_prod = DF.FK_det_prod
+               LEFT JOIN usuario U  on U.ID_us =  DF.CF_us
+               LEFT JOIN direccion D on D.CF_us = U.ID_us
+               LEFT JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               JOIN tipo_venta V ON V.id_tipoV =  FK_tipoV
+               WHERE ID_factura = ?
          LIMIT 1";
       $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id, PDO::PARAM_INT );
       $stm->execute();
       $result = $stm->fetchAll(); 
       return $result;
    }
-   public function verFactural($id){
-      $sql = "SELECT  U.nom2 , U.ape1 , U.ape2 , U.correo , U.nom1 , 
-      F.ID_factura, F.fecha   , D.dir , TP.nom_tipo_pago , DF.cantidad , 
-      Pr.val_prod , Pr.nom_prod
-         from factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago
-         join det_factura DF on F.ID_factura = DF.FK_det_factura
-         join producto Pr on Pr.ID_prod = DF.FK_det_prod
-         join usuario U  on U.ID_us =  DF.CF_us
-         join direccion D on D.CF_us = U.ID_us
-         where ID_factura = '$id'";
-      $stm = $this->db->prepare($sql);
+   public function consProductosFactura($id){
+      $sql = "SELECT   DF.FK_det_factura, DF.FK_det_prod, PR.nom_prod,
+      DF.cantidad , PR.val_prod , TD.nom_doc , U.ID_us
+               FROM factura F join tipo_pago TP on F.FK_c_tipo_pago = TP.ID_tipo_pago 
+               LEFT JOIN det_factura DF on F.ID_factura = DF.FK_det_factura
+               LEFT JOIN producto PR on PR.ID_prod = DF.FK_det_prod
+               LEFT JOIN usuario U  on U.ID_us =  DF.CF_us
+               LEFT JOIN direccion D on D.CF_us = U.ID_us
+               LEFT JOIN tipo_doc TD on U.FK_tipo_doc = TD.ID_acronimo
+               WHERE ID_factura = ?";
+               $stm = $this->db->prepare($sql);
+      $stm->bindValue( 1, $id, PDO::PARAM_INT );
       $stm->execute();
       $result = $stm->fetchAll(); 
       return $result;
@@ -1189,12 +1208,12 @@ public function delteNotificacion($id){
 //ver join de modificaciones
    public function verJoinModificacionesDB(){
       $sql = "SELECT M.ID_modifc , M.descrip , M.fecha , M.hora , 
-      M.FK_us , M.FK_doc  ,  U.nom1 , U.ape1 ,  T_M.nom_modific , R.nom_rol  
+      M.FK_us , M.FK_doc  ,  U.nom1 , U.ape1 ,  T_M.nom_modific , R.nom_rol , U.nom2 , U.ape2 
          from tipo_modific T_M JOIN modific M on T_M.ID_t_modific =  M.FK_modific
          JOIN usuario U ON M.FK_us = U.ID_us
          JOIN rol_usuario R_U on U.ID_us = R_U.FK_us
          JOIN rol R on R_U.FK_rol = R.ID_rol_n
-         ORDER BY fecha";
+         ORDER BY fecha, hora";
       $consulta= $this->db->prepare($sql);
       $result = $consulta->execute();
       $result = $consulta->fetchAll();
@@ -1253,12 +1272,11 @@ public function delteNotificacion($id){
    } // fin de javaScript
 
 
-
    //query ver productos                                        R
    public function verProductos(){
       $sql = "SELECT P.ID_prod , P.img , P.nom_prod , 
       P.val_prod , P.stok_prod , P.estado_prod , 
-      C.nom_categoria , M.nom_medida
+      C.nom_categoria , M.nom_medida , P.img
       from producto P join categoria C on C.ID_categoria = P.CF_categoria
       join tipo_medida M on P.CF_tipo_medida = M.ID_medida
       order by  P.stok_prod  desc , P.nom_prod asc;";
@@ -1297,12 +1315,16 @@ public function delteNotificacion($id){
    //query ver productos                                       
    public function verProductosId($id){
       $sql = "SELECT P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , 
-      C.nom_categoria, T_M.nom_medida
-         from producto P 
-         join categoria C on P.CF_categoria = C.ID_categoria 
-         join tipo_medida T_M on P.CF_tipo_medida = T_M.ID_medida 
-         WHERE ID_prod = '$id' ";
+      C.nom_categoria, T_M.nom_medida, 
+      P.CF_categoria, P.CF_tipo_medida, 
+      FK_rut
+         FROM producto P 
+         LEFT JOIN categoria C ON P.CF_categoria = C.ID_categoria 
+         LEFT JOIN tipo_medida T_M ON P.CF_tipo_medida = T_M.ID_medida 
+         LEFT JOIN det_producto DP ON P.ID_prod = DP.FK_prod
+         WHERE ID_prod = :ID_prod ";
       $stm = $this->db->prepare($sql);
+      $stm->bindValue(":ID_prod", $id, PDO::PARAM_STR );;
       $stm->execute();
       $result = $stm->fetchAll();
       return $result;
@@ -1312,12 +1334,12 @@ public function delteNotificacion($id){
    public function verJoin($id){
       $sql = "SELECT C.ID_categoria , C.nom_categoria, 
          P.ID_prod , P.nom_prod , P.val_prod , P.stok_prod , P.estado_prod , P.estado_prod , 
-         T.ID_medida , T.nom_medida , T.acron_medida, EP.nom_empresa
+         T.ID_medida , T.nom_medida , T.acron_medida, EP.nom_empresa , P.img
          FROM categoria C 
-         JOIN producto P ON C.ID_categoria = P.CF_categoria 
-         JOIN tipo_medida T ON T.ID_medida = P.CF_tipo_medida
-         JOIN det_producto DP ON P.ID_prod = DP.FK_prod
-         JOIN empresa_provedor EP ON DP.FK_rut = EP.ID_rut 
+         LEFT JOIN producto P ON C.ID_categoria = P.CF_categoria 
+         LEFT JOIN tipo_medida T ON T.ID_medida = P.CF_tipo_medida
+         LEFT JOIN det_producto DP ON P.ID_prod = DP.FK_prod
+         LEFT JOIN empresa_provedor EP ON DP.FK_rut = EP.ID_rut 
          WHERE  P.ID_prod = '$id' LIMIT 1";
       $stm = $this->db->prepare($sql);
       $stm->execute();
@@ -1329,11 +1351,13 @@ public function delteNotificacion($id){
 
    //EDITAR PRODUCTO                                             U
    public function editarProducto($a){
+    //  ControllerDoc::ver($a, 1);
+      //die('modelo');
       $sql = "UPDATE producto SET ID_prod = :ID_prod , 
          nom_prod = :nom_prod , val_prod = :val_prod , 
          stok_prod = :stok_prod , estado_prod = :estado_prod, 
          CF_categoria = :CF_categoria , CF_tipo_medida = :CF_tipo_medida  
-      WHERE ID_prod = ? ";
+      WHERE ID_prod = :ID_prod";
       $stm = $this->db->prepare($sql);
       $stm = $this->db->prepare($sql);
       $stm->bindValue(":ID_prod",        $a[0] , PDO::PARAM_STR );
@@ -1590,7 +1614,7 @@ public function insertPuntos( $a ){
 
    // metodo ver roles                            R
    public function verRol(){
-      $sql = "SELECT * FROM rol";
+      $sql = "SELECT DISTINCT * FROM rol";
       $consulta = $this->db->prepare($sql);
       $consulta->execute();
       $result = $consulta->fetchAll();
@@ -1643,6 +1667,38 @@ public function insertPuntos( $a ){
          return false;
       }
    }
+
+
+
+//Borrar registro de rol de tabla Rol_usuario
+public function eliminarRoldeUsuario($id){ 
+   $sql1 = "SET FOREIGN_KEY_CHECKS = 0 ";
+   $stm = $this->db->prepare($sql1);
+   $res = $stm->execute();
+      $res  = true;
+   if($res){
+      $sql2 = "DELETE FROM rol_usuario WHERE FK_us = $id";
+      $stm = $this->db->prepare($sql2);
+      $res1 = $stm->execute(); 
+   }
+   if($res1){
+      $sql3 = "SET FOREIGN_KEY_CHECKS = 1";
+      $stm = $this->db->prepare($sql3);
+      $res2 = $stm->execute();
+   }
+   if($res2){
+      return true;
+   }else{
+      return false;
+   }
+}
+
+
+
+
+
+
+
 //======================================
 //======================================
 //CTELEFONO
